@@ -1,0 +1,17 @@
+[package]
+name = "liqledger"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Open liquidation and MEV observatory: reconstruct every Aave V3, Spark and Morpho Blue liquidation from an Ethereum node and publish who won, what they paid, and how close to the oracle update they landed."
+repository = "https://github.com/Intermountainh8ter/liqledger"
+
+[dependencies]
+alloy = { version = "2.5", features = ["provider-http", "rpc-types", "sol-types", "json", "contract"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+clap = { version = "4", features = ["derive", "env"] }
+anyhow = "1"
+sha2 = "0.10"
+hex = "0.4"
