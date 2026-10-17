@@ -1,0 +1,12 @@
+{
+  "n_files": 4,
+  "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)",
+  "sha256": {
+    "results/SCAN_HEAD.txt": "40892b91fdb584ab3fb886c56b8905090dad44e0d114b0c2f267d36a7c6b1cb4",
+    "results/baseline.json": "ce8b14d79d1eac73c04ad967ddac60220b95c2a0b4c2ce91387a21b9fb398aef",
+    "results/mainnet.jsonl": "0dad7821bb739bdcb8c149cfbacb5a18338158501eb5eca7839d0126aedf74fc",
+    "results/summary.json": "e385a11c6ecd14895ab345d9620a977932a2e40af8064d4d8595924edb983453"
+  },
+  "tool": "bench-report 0.1.0",
+  "unix_time": 1792234560
+}

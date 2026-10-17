@@ -1,0 +1,77 @@
+{
+  "tool": "liqledger 0.1.0",
+  "first_block": 22432941,
+  "last_block": 26210252,
+  "n_liquidations": 20930,
+  "n_transactions": 16510,
+  "by_protocol": {
+    "aave-v3": 14283,
+    "morpho-blue": 5301,
+    "spark": 1346
+  },
+  "unique_liquidators": 787,
+  "unique_tx_senders": 902,
+  "top1_share": 0.19608217869087435,
+  "top3_share": {
+    "point": 0.3,
+    "lo": 0.2935977066411849,
+    "hi": 0.30592451027233636
+  },
+  "top10_share": 0.5406115623506927,
+  "median_priority_fee_gwei_total": 0.0,
+  "p90_priority_fee_gwei_total": 29394259.596297123,
+  "share_zero_priority_fee": {
+    "point": 0.5165312947921643,
+    "lo": 0.5098901098901099,
+    "hi": 0.5234591495461061
+  },
+  "share_tx_index_0": 0.05193502150023889,
+  "share_tx_index_lt_5": {
+    "point": 0.31290014333492594,
+    "lo": 0.3067367415193502,
+    "hi": 0.31915910176779744
+  },
+  "share_same_block_oracle_update": {
+    "point": 0.6084089823220258,
+    "lo": 0.6015766841853798,
+    "hi": 0.6152412804586718
+  },
+  "share_oracle_update_within_2_blocks": 0.8240802675585285,
+  "median_blocks_since_oracle_update": 0.0,
+  "contract_liquidator_share": 0.9684663162924032,
+  "builders_top5": [
+    [
+      "Titan (titanbuilder.xyz)",
+      10595
+    ],
+    [
+      "BuilderNet (Flashbots)",
+      3266
+    ],
+    [
+      "BuilderNet (Nethermind)",
+      1799
+    ],
+    [
+      "BuilderNet (Beaver)",
+      1320
+    ],
+    [
+      "beaverbuild.org",
+      1135
+    ]
+  ],
+  "baseline_share_blocks_with_oracle_update": {
+    "point": 0.19,
+    "lo": 0.1725,
+    "hi": 0.208
+  },
+  "oracle_enrichment_ratio": {
+    "point": 3.2021525385369776,
+    "lo": 2.93032636260061,
+    "hi": 3.515216771700922
+  },
+  "h1_concentration": "not supported: top-3 share 0.300 [0.294, 0.306] vs lower bound > 0.50",
+  "h2_oracle_adjacency": "supported: enrichment 3.20 [2.93, 3.52] vs lower bound > 1.5",
+  "h3_block_position": "not supported: tx index < 5 share 0.313 [0.307, 0.319] vs lower bound > 0.50"
+}
