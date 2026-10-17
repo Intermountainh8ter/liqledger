@@ -34,6 +34,18 @@ Source: `results/summary.json`, blocks 22432941 to 26210252 (20930 liquidation e
 | Builders, top 5 by liquidations included | Titan (titanbuilder.xyz) (10595); BuilderNet (Flashbots) (3266); BuilderNet (Nethermind) (1799); BuilderNet (Beaver) (1320); beaverbuild.org (1135) |
 <!-- RESULTS:END -->
 
+### What the numbers say
+
+Two of my three pre-registered predictions were wrong, and the table says so.
+
+- **The market is less concentrated than I expected.** 787 distinct liquidator addresses won at least one liquidation in 17 months; the top three took 30%, the top ten 54%. I predicted the top three would take more than half. They did not. The one-bot-takes-everything picture that circulates about liquidations does not describe mainnet Aave V3, Spark, and Morpho Blue over this window.
+- **Liquidations ride the oracle.** 60.8% landed in the same block as a Chainlink price update, against 19.0% for blocks in general: a 3.2x enrichment with an interval well clear of the 1.5x threshold. 82.4% landed within two blocks of an update, and the median distance is zero. Whatever else winners do, they are reacting to the oracle transaction, not to the position drifting underwater.
+- **Winners do not buy the top of the block.** Only 31.3% sat in the first five transaction slots and 5.2% at index zero. That is consistent with the previous point: the liquidation has to follow the oracle update inside the block, so it cannot be first.
+- **Half the winners paid the builder off the books.** 51.7% of liquidations carried a priority fee of exactly zero, which on a builder-built block means the payment went by direct transfer, which this node cannot see. The median visible payment is therefore zero and the p90 is 0.029 ETH; both are lower bounds, as the pre-registration said they would be.
+- **Almost everything is a contract, and half of it goes through Titan.** 96.8% of liquidations were executed by a contract rather than the signing wallet. Titan built 50.6% of the blocks containing a liquidation; the three BuilderNet operators together built another 30.5%.
+
+Window: blocks 22,431,084 to 26,211,500 (2025-05-07 to 2026-10-17). 16,510 transactions produced 20,930 liquidation events; Aave V3 14,283, Morpho Blue 5,301, Spark 1,346.
+
 ## What a full node cannot show, said up front
 
 - **Direct coinbase transfers.** Searchers commonly pay the builder with a transfer inside the transaction rather than a priority fee. Seeing that needs traces. The `priority_fee_wei` column is therefore a lower bound, and the share of liquidations with a priority fee of exactly zero is reported as the signature of that payment path, not as "paid nothing".
