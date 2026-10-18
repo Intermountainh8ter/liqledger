@@ -1,0 +1,166 @@
+{
+  "tool": "liqledger 0.1.0",
+  "n_records": 20930,
+  "n_priced": 3182,
+  "unpriced_reasons": {
+    "adapter exposes no known components and is not constant": 143,
+    "component aggregator() reverted": 49,
+    "getPriceCap() failed": 388,
+    "morpho-blue: market oracle, not priced in v2": 5301,
+    "no answer at or before block": 11867
+  },
+  "gross_profit_usd_total": 140175115.62279326,
+  "gross_profit_usd_by_protocol": {
+    "aave-v3": 138611912.42911333,
+    "spark": 1563203.1936800438
+  },
+  "gross_profit_usd_median": 14.24978966500504,
+  "gross_profit_usd_p90": 1360.477339725512,
+  "top10pct_profit_share": {
+    "point": 0.9979275461710019,
+    "lo": 0.9346785730709744,
+    "hi": 0.9993513937587261
+  },
+  "n_with_visible_fee": 1583,
+  "visible_bid_share_median": {
+    "point": 0.7257064742811964,
+    "lo": 0.6409024879156542,
+    "hi": 0.814795531166727
+  },
+  "visible_bid_share_by_size_decile": [
+    [
+      1,
+      158,
+      59.95471714218535
+    ],
+    [
+      2,
+      158,
+      0.2937041874468483
+    ],
+    [
+      3,
+      158,
+      0.4115913072963612
+    ],
+    [
+      4,
+      159,
+      0.5937504673612158
+    ],
+    [
+      5,
+      158,
+      0.4540425300064659
+    ],
+    [
+      6,
+      158,
+      0.9355800959315914
+    ],
+    [
+      7,
+      159,
+      0.9184103196690062
+    ],
+    [
+      8,
+      158,
+      0.8906487791709307
+    ],
+    [
+      9,
+      158,
+      0.16510361596743883
+    ],
+    [
+      10,
+      159,
+      0.019037619926223933
+    ]
+  ],
+  "visible_bid_share_by_builder_top5": [
+    [
+      "Titan (titanbuilder.xyz)",
+      834,
+      0.8359647725350073
+    ],
+    [
+      "BuilderNet (Flashbots)",
+      242,
+      0.5988948333604116
+    ],
+    [
+      "BuilderNet (Beaver)",
+      124,
+      0.3754123230933726
+    ],
+    [
+      "beaverbuild.org",
+      120,
+      1.0194544590325094
+    ],
+    [
+      "BuilderNet (Nethermind)",
+      118,
+      0.5748610750437209
+    ]
+  ],
+  "own_feed_same_block_share": {
+    "point": 0.22365523749606794,
+    "lo": 0.2094998427178358,
+    "hi": 0.2384397609311104
+  },
+  "median_blocks_since_own_feed": 2.0,
+  "h4_visible_bids_small": "not supported: median visible bid share 0.726 [0.641, 0.815] vs upper bound < 0.50 (n=1583)",
+  "h5_own_feed_adjacency": "not supported: own-feed same-block share 0.224 [0.209, 0.238] vs lower bound > 0.608 (n=3179)",
+  "h6_bonus_concentration": "supported: top-10% profit share 0.998 [0.935, 0.999] vs lower bound > 0.80",
+  "n_priced_exact": 1700,
+  "n_priced_approx": 1482,
+  "priced_by_kind_pair": {
+    "aggregate/aggregate": 20,
+    "aggregate/fixed": 1163,
+    "aggregate/synchronicity": 1,
+    "fixed/aggregate": 2,
+    "fixed/fixed": 3,
+    "fixed/ratio-cap": 1,
+    "fixed/stable-cap": 1,
+    "plain/fixed": 496,
+    "plain/plain": 314,
+    "plain/ratio-cap": 56,
+    "plain/stable-cap": 426,
+    "plain/synchronicity": 107,
+    "ratio-cap/fixed": 99,
+    "ratio-cap/plain": 43,
+    "ratio-cap/ratio-cap": 13,
+    "ratio-cap/stable-cap": 52,
+    "ratio-cap/synchronicity": 10,
+    "stable-cap/fixed": 5,
+    "stable-cap/plain": 37,
+    "stable-cap/ratio-cap": 11,
+    "stable-cap/stable-cap": 13,
+    "stable-cap/synchronicity": 9,
+    "synchronicity/aggregate": 2,
+    "synchronicity/fixed": 81,
+    "synchronicity/plain": 59,
+    "synchronicity/ratio-cap": 9,
+    "synchronicity/stable-cap": 132,
+    "synchronicity/synchronicity": 17
+  },
+  "exact_only_visible_bid_share_median": {
+    "point": 0.39841411130208687,
+    "lo": 0.2733957942709892,
+    "hi": 0.5807128340142668
+  },
+  "exact_only_own_feed_same_block_share": {
+    "point": 0.2657631113730112,
+    "lo": 0.24454920447849146,
+    "hi": 0.2869770182675309
+  },
+  "exact_only_top10pct_profit_share": {
+    "point": 0.8929238509596071,
+    "lo": 0.8517348993430882,
+    "hi": 0.9240289953631678
+  },
+  "n_in_h5": 3179
+}

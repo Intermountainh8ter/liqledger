@@ -156,12 +156,15 @@ enum Cmd {
         summary: PathBuf,
         #[arg(long)]
         summary_v2: Option<PathBuf>,
+        /// Addendum B summary (adapter-kind pricing), rendered as a second v2 section.
+        #[arg(long)]
+        summary_v2b: Option<PathBuf>,
         #[arg(long)]
         readme: PathBuf,
     },
 }
 
-fn report_v2(summary_v2: &PathBuf) -> anyhow::Result<String> {
+fn report_v2(summary_v2: &PathBuf, label: &str) -> anyhow::Result<String> {
     let v: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(summary_v2)?)?;
     let ci = |c: &serde_json::Value| -> String {
         if c.is_null() { return "not evaluated".into(); }
@@ -169,7 +172,7 @@ fn report_v2(summary_v2: &PathBuf) -> anyhow::Result<String> {
     };
     let mut t = String::new();
     t.push_str(&format!(
-        "\n### v2: USD valuation and per-feed attribution (pre-registration addendum A)\n\nSource: `{}`. {} of {} records priced from Chainlink answers at the record's block (Aave V3 and Spark only; Morpho Blue and custom-adapter assets unpriced).\n\n",
+        "\n### v2: USD valuation and per-feed attribution ({label})\n\nSource: `{}`. {} of {} records priced from Chainlink answers at the record's block (Aave V3 and Spark only; Morpho Blue out of scope).\n\n",
         summary_v2.display(), v["n_priced"], v["n_records"]
     ));
     t.push_str("| Pre-registered hypothesis | Measurement | Verdict |\n|---|---|---|\n");
@@ -196,11 +199,22 @@ fn report_v2(summary_v2: &PathBuf) -> anyhow::Result<String> {
         let parts: Vec<String> = m.iter().map(|(k, x)| format!("{k}: {x}")).collect();
         t.push_str(&format!("| Unpriced records, by reason | {} |\n", parts.join("; ")));
     }
+    if v.get("n_priced_exact").and_then(|x| x.as_u64()).unwrap_or(0) > 0 {
+        t.push_str(&format!("| Priced exactly / approximately (ratio-cap or aggregate on either side) | {} / {} |\n", v["n_priced_exact"], v["n_priced_approx"]));
+        if let Some(m) = v["priced_by_kind_pair"].as_object() {
+            let mut parts: Vec<(String, u64)> = m.iter().map(|(k, x)| (k.clone(), x.as_u64().unwrap_or(0))).collect();
+            parts.sort_by(|a, b| b.1.cmp(&a.1));
+            t.push_str(&format!("| Source kinds (collateral/debt), top 8 | {} |\n", parts.iter().take(8).map(|(k, n)| format!("{k} {n}")).collect::<Vec<_>>().join("; ")));
+        }
+        t.push_str(&format!("| Sensitivity, exact-priced records only (n={}): H4 median visible bid share | {} |\n", v["n_priced_exact"], ci(&v["exact_only_visible_bid_share_median"])));
+        t.push_str(&format!("| Sensitivity, exact only: H5 own-feed same-block share | {} |\n", ci(&v["exact_only_own_feed_same_block_share"])));
+        t.push_str(&format!("| Sensitivity, exact only: H6 top-10% profit share | {} |\n", ci(&v["exact_only_top10pct_profit_share"])));
+    }
     t.push_str("\nVisible bid share counts only the priority fee; direct coinbase transfers are not in it, so every bid-share number here is a lower bound.\n");
     Ok(t)
 }
 
-fn report(summary: &PathBuf, summary_v2: Option<&PathBuf>, readme: &PathBuf) -> anyhow::Result<()> {
+fn report(summary: &PathBuf, summary_v2: Option<&PathBuf>, summary_v2b: Option<&PathBuf>, readme: &PathBuf) -> anyhow::Result<()> {
     let v: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(summary)?)?;
     let get = |k: &str| -> anyhow::Result<&serde_json::Value> { v.get(k).ok_or_else(|| anyhow::anyhow!("summary missing `{k}`")) };
     let f = |k: &str| -> anyhow::Result<f64> { get(k)?.as_f64().ok_or_else(|| anyhow::anyhow!("`{k}` not a number")) };
@@ -274,7 +288,10 @@ fn report(summary: &PathBuf, summary_v2: Option<&PathBuf>, readme: &PathBuf) -> 
     ));
     t.push_str(&format!("| Builders, top 5 by liquidations included | {} |\n", builders.join("; ")));
     if let Some(v2) = summary_v2 {
-        t.push_str(&report_v2(v2)?);
+        t.push_str(&report_v2(v2, "pre-registration addendum A: plain Chainlink proxies only")?);
+    }
+    if let Some(v2b) = summary_v2b {
+        t.push_str(&report_v2(v2b, "pre-registration addendum B: pricing through the protocols' adapter contracts")?);
     }
     const START: &str = "<!-- RESULTS:START -->";
     const END: &str = "<!-- RESULTS:END -->";
@@ -776,7 +793,7 @@ async fn main() -> anyhow::Result<()> {
             }
             Ok(())
         }
-        Cmd::Report { summary, summary_v2, readme } => report(&summary, summary_v2.as_ref(), &readme),
+        Cmd::Report { summary, summary_v2, summary_v2b, readme } => report(&summary, summary_v2.as_ref(), summary_v2b.as_ref(), &readme),
     }
 }
 

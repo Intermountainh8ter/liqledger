@@ -33,9 +33,9 @@ Source: `results/summary.json`, blocks 22432941 to 26210252 (20930 liquidation e
 | Median blocks since last oracle update (any feed, 50-block lookback) | 0 |
 | Builders, top 5 by liquidations included | Titan (titanbuilder.xyz) (10595); BuilderNet (Flashbots) (3266); BuilderNet (Nethermind) (1799); BuilderNet (Beaver) (1320); beaverbuild.org (1135) |
 
-### v2: USD valuation and per-feed attribution (pre-registration addendum A)
+### v2: USD valuation and per-feed attribution (pre-registration addendum A: plain Chainlink proxies only)
 
-Source: `results/summary-v2.json`. 314 of 20930 records priced from Chainlink answers at the record's block (Aave V3 and Spark only; Morpho Blue and custom-adapter assets unpriced).
+Source: `results/summary-v2.json`. 314 of 20930 records priced from Chainlink answers at the record's block (Aave V3 and Spark only; Morpho Blue out of scope).
 
 | Pre-registered hypothesis | Measurement | Verdict |
 |---|---|---|
@@ -55,7 +55,34 @@ Source: `results/summary-v2.json`. 314 of 20930 records priced from Chainlink an
 
 Visible bid share counts only the priority fee; direct coinbase transfers are not in it, so every bid-share number here is a lower bound.
 
-**Coverage, stated plainly.** Only 314 of 20,930 records (1.5%) could be priced under addendum A, all Aave V3. 15,315 Aave/Spark records use an oracle source without `aggregator()` (Aave's price-cap adapters for LSTs, LRTs and stablecoins, and Pendle PT adapters), and 5,301 Morpho Blue records were out of scope. The priced sample is therefore the plain-Chainlink-feed assets (WETH, WBTC, LINK and similar) and is not representative of the book; the verdicts above are verdicts about that slice. The size-decile row shows median visible bid share above 1.0 in the smallest decile: the priority fee exceeded the gross bonus on dust liquidations, which only makes sense if those transactions also captured value outside the liquidation event. H6's interval exceeds 1.0 because three priced records have a negative gross bonus. Reading the cap adapters' underlying aggregators is the obvious next step and will be pre-registered as addendum B before it is computed.
+### v2: USD valuation and per-feed attribution (pre-registration addendum B: pricing through the protocols' adapter contracts)
+
+Source: `results/summary-v2b.json`. 3182 of 20930 records priced from Chainlink answers at the record's block (Aave V3 and Spark only; Morpho Blue out of scope).
+
+| Pre-registered hypothesis | Measurement | Verdict |
+|---|---|---|
+| H4 visible bids are small: median priority-fee share of gross profit < 0.50 | 0.726 [0.641, 0.815] (n with visible fee 1583) | not supported: median visible bid share 0.726 [0.641, 0.815] vs upper bound < 0.50 (n=1583) |
+| H5 own-feed adjacency > 0.608 | 0.224 [0.209, 0.238] | not supported: own-feed same-block share 0.224 [0.209, 0.238] vs lower bound > 0.608 (n=3179) |
+| H6 top-10% of liquidations carry > 80% of gross profit | 0.998 [0.935, 0.999] | supported: top-10% profit share 0.998 [0.935, 0.999] vs lower bound > 0.80 |
+
+| Descriptive | Value |
+|---|---|
+| Gross profit, total (USD, before gas and builder payment) | 140175116 |
+| Gross profit by protocol (USD) | aave-v3 138611912; spark 1563203 |
+| Gross profit per liquidation, median / p90 (USD) | 14 / 1360 |
+| Median blocks since the position's own feed last updated | 2 |
+| Median visible bid share by gross-profit decile (D1 smallest) | D1 (n=158) 59.955; D2 (n=158) 0.294; D3 (n=158) 0.412; D4 (n=159) 0.594; D5 (n=158) 0.454; D6 (n=158) 0.936; D7 (n=159) 0.918; D8 (n=158) 0.891; D9 (n=158) 0.165; D10 (n=159) 0.019 |
+| Median visible bid share by builder, top 5 | Titan (titanbuilder.xyz) (n=834) 0.836; BuilderNet (Flashbots) (n=242) 0.599; BuilderNet (Beaver) (n=124) 0.375; beaverbuild.org (n=120) 1.019; BuilderNet (Nethermind) (n=118) 0.575 |
+| Unpriced records, by reason | adapter exposes no known components and is not constant: 143; component aggregator() reverted: 49; getPriceCap() failed: 388; morpho-blue: market oracle, not priced in v2: 5301; no answer at or before block: 11867 |
+| Priced exactly / approximately (ratio-cap or aggregate on either side) | 1700 / 1482 |
+| Source kinds (collateral/debt), top 8 | aggregate/fixed 1163; plain/fixed 496; plain/stable-cap 426; plain/plain 314; synchronicity/stable-cap 132; plain/synchronicity 107; ratio-cap/fixed 99; synchronicity/fixed 81 |
+| Sensitivity, exact-priced records only (n=1700): H4 median visible bid share | 0.398 [0.273, 0.581] |
+| Sensitivity, exact only: H5 own-feed same-block share | 0.266 [0.245, 0.287] |
+| Sensitivity, exact only: H6 top-10% profit share | 0.893 [0.852, 0.924] |
+
+Visible bid share counts only the priority fee; direct coinbase transfers are not in it, so every bid-share number here is a lower bound.
+
+**Addendum B, read before the verdicts.** Coverage rose from 314 to 3,182 records (15.2% of all records, 20.4% of Aave V3 and Spark), far short of the >80% target stated in B.3. The reason is now known and was not anticipated: Chainlink proxies rotate their aggregator contract, and the `aggregator()` a proxy returns today has only the most recent phase's logs (USDC/USD and USDT/USD: 33 answers in the whole window), so 11,867 records fall before the current phase's first answer and are unpriced by rule A.1. Earlier phases are reachable through `phaseAggregators()`; that is addendum C, pre-registered before it is computed. Two further honest notes: (1) **H6 is carried by one transaction.** Block 25,037,701, tx `0xe2391ea4…478f`, contains two `LiquidationCall` events that repaid 2.2e-7 and 1.7e-9 WETH and seized 53,000 and 400 rsETH; priced at the oracle, that is $134.5M of the $140.2M total gross bonus. The on-chain log data confirm the amounts; this tool does not explain them. The exact-only sensitivity line (which excludes ratio-cap pricing and therefore this transaction) still clears the H6 bound, 0.893 [0.852, 0.924]. (2) **One false positive in the fixed rule.** `MKR/USD (calculated)` was constant over the 100 recent blocks and so was classified fixed; it is a live computed price. Four priced records touch it. Addendum C tightens the rule.
 <!-- RESULTS:END -->
 
 ### What the numbers say
