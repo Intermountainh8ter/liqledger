@@ -173,3 +173,34 @@ H4, H5, H6 exactly as in A.4, computed over all priced records (exact and approx
 as the addendum B verdicts next to the addendum A verdicts. One pre-specified sensitivity line: the same
 three statistics over exact-priced records only. Coverage target, stated in advance: more than 80% of
 Aave V3 and Spark records priced. Nothing else changes; Morpho Blue stays out of scope.
+
+---
+
+## Addendum C (2026-10-18, after the addendum B results, before any addendum C computation): aggregator phases, and a tighter fixed rule
+
+Addendum B priced 3,182 records (20.4% of Aave V3 and Spark), against a stated target above 80%. The
+gap has one cause: a Chainlink proxy's `aggregator()` is only the current phase. Records older than the
+current phase's first `AnswerUpdated` are unpriced under rule A.1 (11,867 records). B also classified
+`MKR/USD (calculated)` as fixed because it happened to be constant over the 100 recent blocks.
+
+### C.1 Aggregator phases
+
+For every proxy the pricing rules reach (plain, the stable cap's underlying, both synchronicity
+components, the ratio cap's base, the aggregate's Chainlink component), read `phaseId()` and
+`phaseAggregators(i)` for i = 1..phaseId, stream `AnswerUpdated` from every phase aggregator over the
+window, and merge the points by block. A phase aggregator with no logs in the window contributes
+nothing. Everything else in A.1 and B.1 is unchanged, including the head check.
+
+### C.2 Fixed rule
+
+A source is fixed only if it exposes none of the known component getters **and** its description starts
+with "Fixed" or equals "ONE USD", or it is one of Spark's undescribed constant feeds (description absent,
+`latestAnswer()` constant over the 100 recent blocks). A described source that is merely constant over
+100 blocks is unpriced with reason "constant over 100 blocks but described as a live price".
+
+### C.3 What is tested
+
+H4, H5, H6 exactly as in A.4 and B.3, over the addendum C sample, reported as the addendum C verdicts
+next to A and B; the exact-only sensitivity line as in B.3. Coverage target restated: more than 80% of
+Aave V3 and Spark records. The rsETH transaction noted in the README is not excluded: a pre-registered
+statistic is reported as computed, and the exact-only line is the sensitivity to it.
