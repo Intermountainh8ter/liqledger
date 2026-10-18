@@ -12,6 +12,9 @@
 //! `priority_fee_wei` column is a lower bound on what the winner paid.
 //! See docs/PREREGISTRATION.md.
 
+mod follow;
+mod price;
+
 use alloy::eips::BlockId;
 use alloy::primitives::{Address, B256};
 use alloy::providers::{Provider, ProviderBuilder};
@@ -53,9 +56,9 @@ sol! {
     event AnswerUpdated(int256 indexed current, uint256 indexed roundId, uint256 updatedAt);
 }
 
-const AAVE_V3_POOL: &str = "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2";
-const SPARK_POOL: &str = "0xC13e21B648A5Ee794902342038FF3aDAB66BE987";
-const MORPHO_BLUE: &str = "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb";
+pub(crate) const AAVE_V3_POOL: &str = "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2";
+pub(crate) const SPARK_POOL: &str = "0xC13e21B648A5Ee794902342038FF3aDAB66BE987";
+pub(crate) const MORPHO_BLUE: &str = "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb";
 
 /// How many blocks before a liquidation to look for the most recent oracle update.
 const ORACLE_LOOKBACK: u64 = 50;
@@ -113,6 +116,36 @@ enum Cmd {
         baseline: Option<PathBuf>,
         #[arg(long)]
         out: PathBuf,
+    },
+    /// v2 (addendum A): price Aave V3 and Spark records in USD from Chainlink AnswerUpdated logs
+    /// and attribute each to its own collateral and debt feeds. Writes priced.jsonl and feeds.json.
+    Price {
+        #[arg(long, env = "LIQLEDGER_RPC_URL", hide_env_values = true, default_value = "http://127.0.0.1:8545")]
+        rpc: String,
+        #[arg(long)]
+        records: PathBuf,
+        #[arg(long)]
+        out: PathBuf,
+        #[arg(long)]
+        feeds_out: PathBuf,
+    },
+    /// v2 summary over priced.jsonl: H4-H6, gross profit, the visible clearing-price curve.
+    SummarizeV2 {
+        #[arg(long)]
+        priced: PathBuf,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// v2 (addendum A.3): live follower writing per-block builder-payment bounds (coinbase balance delta
+    /// minus priority fees minus withdrawals) and the liquidation transactions in each block.
+    Follow {
+        #[arg(long, env = "LIQLEDGER_RPC_URL", hide_env_values = true, default_value = "http://127.0.0.1:8545")]
+        rpc: String,
+        #[arg(long)]
+        out: PathBuf,
+        /// Stop after this many blocks (default: run until interrupted).
+        #[arg(long)]
+        blocks: Option<u64>,
     },
     /// Print the event signatures this tool filters on (for the pre-registration).
     Topics,
@@ -257,7 +290,7 @@ pub struct Baseline {
     pub flags: Vec<bool>,
 }
 
-#[derive(Debug, Clone, Copy, Serialize)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub struct Ci {
     pub point: f64,
     pub lo: f64,
@@ -510,7 +543,7 @@ async fn baseline(rpc: String, from: u64, to: u64, n: usize, seed: u64, out: Pat
     Ok(())
 }
 
-fn percentile(sorted: &[f64], q: f64) -> f64 {
+pub(crate) fn percentile(sorted: &[f64], q: f64) -> f64 {
     if sorted.is_empty() {
         return f64::NAN;
     }
@@ -519,7 +552,7 @@ fn percentile(sorted: &[f64], q: f64) -> f64 {
 }
 
 /// Percentile bootstrap of `stat` over resampled indices 0..n. Deterministic for a seed.
-fn bootstrap(n: usize, stat: impl Fn(&[usize]) -> f64, seed: u64) -> Ci {
+pub(crate) fn bootstrap(n: usize, stat: impl Fn(&[usize]) -> f64, seed: u64) -> Ci {
     let all: Vec<usize> = (0..n).collect();
     let point = stat(&all);
     let mut rng = rand_pcg::Pcg64Mcg::seed_from_u64(seed);
@@ -533,7 +566,7 @@ fn bootstrap(n: usize, stat: impl Fn(&[usize]) -> f64, seed: u64) -> Ci {
     Ci { point, lo: percentile(&vals, 0.025), hi: percentile(&vals, 0.975) }
 }
 
-fn share_of(flags: &[bool]) -> impl Fn(&[usize]) -> f64 + '_ {
+pub(crate) fn share_of(flags: &[bool]) -> impl Fn(&[usize]) -> f64 + '_ {
     move |idx| idx.iter().filter(|&&i| flags[i]).count() as f64 / idx.len().max(1) as f64
 }
 
@@ -685,6 +718,9 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Scan { rpc, from, to, chunk, out } => scan(rpc, from, to, chunk, out).await,
         Cmd::Baseline { rpc, from, to, n, seed, out } => baseline(rpc, from, to, n, seed, out).await,
         Cmd::Summarize { records, baseline, out } => summarize(records, baseline, out),
+        Cmd::Price { rpc, records, out, feeds_out } => price::price(rpc, records, out, feeds_out).await,
+        Cmd::SummarizeV2 { priced, out } => price::summarize_v2(priced, out),
+        Cmd::Follow { rpc, out, blocks } => follow::follow(rpc, out, blocks).await,
         Cmd::Topics => {
             for (name, h) in topics() {
                 println!("{h:#x}  {name}");
