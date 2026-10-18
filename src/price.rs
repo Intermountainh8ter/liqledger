@@ -33,6 +33,14 @@ sol! {
     }
 }
 
+
+/// Persisted reason strings must never carry raw transport error text: a keyed RPC URL can appear
+/// in it, and feeds.json is committed to a public repository. Classify instead.
+fn classify_call_error(what: &str, e: &impl std::fmt::Display) -> String {
+    let msg = e.to_string().to_lowercase();
+    if msg.contains("revert") || msg.contains("execution reverted") { format!("{what} reverted") } else { format!("{what} transport error") }
+}
+
 const AAVE_ORACLE: &str = "0x54586bE62E3c3580375aE3723C145253060Ca0C2";
 const SPARK_ORACLE: &str = "0x8105f69D9C41644c6A0803fDA7D03Aa70996cFD9";
 const WETH: &str = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
@@ -94,10 +102,17 @@ fn to_f64_scaled(v: &str, decimals: u8) -> Option<f64> {
 async fn stream_answers<P: Provider>(p: &P, aggregator: Address, from: u64, to: u64, feed_decimals: u8) -> anyhow::Result<Answers> {
     let mut points = Vec::new();
     let mut start = from;
+    let mut chunk = CHUNK;
     while start <= to {
-        let end = (start + CHUNK - 1).min(to);
+        let end = (start + chunk - 1).min(to);
         let f = Filter::new().address(aggregator).event_signature(AnswerUpdated::SIGNATURE_HASH).from_block(start).to_block(end);
-        let logs = p.get_logs(&f).await?;
+        // Busy feeds (ETH/USD updates every few blocks) can time out a 50k-block query on a full
+        // node; halve the window and retry instead of failing the whole pass.
+        let logs = match p.get_logs(&f).await {
+            Ok(l) => l,
+            Err(e) if chunk > 500 && e.to_string().contains("timed out") => { chunk /= 2; continue; }
+            Err(e) => return Err(e.into()),
+        };
         for l in logs {
             let Some(bn) = l.block_number else { continue };
             // topics[1] = current (int256 indexed)
@@ -146,7 +161,7 @@ pub async fn price(rpc: String, records: PathBuf, out: PathBuf, feeds_out: PathB
         let mut info = FeedInfo { protocol: proto.clone(), asset: asset.clone(), source: String::new(), aggregator: None, description: None, feed_decimals: None, token_decimals: None, n_answers_in_window: 0, unpriced_reason: None };
         let source = match tokio::time::timeout(call_timeout, IOracle::new(oracle, &provider).getSourceOfAsset(asset_addr).call()).await {
             Ok(Ok(s)) => s,
-            Ok(Err(e)) => { info.unpriced_reason = Some(format!("getSourceOfAsset failed: {e}")); feeds.insert(format!("{proto}:{asset}"), info); continue; }
+            Ok(Err(e)) => { info.unpriced_reason = Some(classify_call_error("getSourceOfAsset", &e)); feeds.insert(format!("{proto}:{asset}"), info); continue; }
             Err(_) => { info.unpriced_reason = Some("getSourceOfAsset timed out".into()); feeds.insert(format!("{proto}:{asset}"), info); continue; }
         };
         info.source = format!("{source:#x}");
@@ -160,7 +175,7 @@ pub async fn price(rpc: String, records: PathBuf, out: PathBuf, feeds_out: PathB
         if let Ok(Ok(d)) = tokio::time::timeout(call_timeout, feed.description().call()).await { info.description = Some(d); }
         match tokio::time::timeout(call_timeout, IErc20::new(asset_addr, &provider).decimals().call()).await {
             Ok(Ok(d)) => info.token_decimals = Some(d),
-            Ok(Err(e)) => { info.unpriced_reason.get_or_insert(format!("token decimals() failed: {e}")); }
+            Ok(Err(e)) => { info.unpriced_reason.get_or_insert(classify_call_error("token decimals()", &e)); }
             Err(_) => { info.unpriced_reason.get_or_insert("token decimals() timed out".into()); }
         }
         if info.aggregator.is_some() && info.feed_decimals.is_none() { info.unpriced_reason = Some("feed decimals() failed".into()); }
