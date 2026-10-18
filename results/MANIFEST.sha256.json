@@ -1,19 +1,22 @@
 {
-  "n_files": 11,
+  "n_files": 14,
   "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)",
   "sha256": {
-    "results/MANIFEST.sha256.json": "c11ca5874e0caf5e335ed5fd60589ebacd6ea690eebdc6cd6dfaf29a9f486b1d",
+    "results/MANIFEST.sha256.json": "db99c8a19b5515de400f2f3f04d21cae433d3458459c7cf904f3d8366e9fb29a",
     "results/SCAN_HEAD.txt": "40892b91fdb584ab3fb886c56b8905090dad44e0d114b0c2f267d36a7c6b1cb4",
     "results/baseline.json": "ce8b14d79d1eac73c04ad967ddac60220b95c2a0b4c2ce91387a21b9fb398aef",
     "results/feeds-b.json": "76f1a069ee3effb7d13998503bd1bba7c9d96ac3572fd0c0c897c4ba99205ba2",
+    "results/feeds-c.json": "e7c72122745e04c4ff47d6e3e259d63e76865069a70fd6277d2ed17bace32e65",
     "results/feeds.json": "cbef381d9cb3848d19c70217d24a74356bc9bce5acd84f8e376723aa6245080d",
     "results/mainnet.jsonl": "0dad7821bb739bdcb8c149cfbacb5a18338158501eb5eca7839d0126aedf74fc",
     "results/priced-b.jsonl": "709d7ec2fed0b3a82552b83e56dd9469f181e550cb521521eebd2b30e386a04a",
+    "results/priced-c.jsonl": "d753be98ce8f8ceed88b229ec17d74ca02553ffee4b7278deabb3d403d7d476b",
     "results/priced.jsonl": "823ba4eebfc8e4901cea0d445338d5bb3266a4a89f161f334d27cb7cbf967667",
     "results/summary-v2.json": "d4d713846245b5d33d1aa3bfa654a8ab3c3e7723e1cf884184619b6244aebfbc",
     "results/summary-v2b.json": "197f5523e6dcedd1c6f6d7ce0e3023118ed7e6f7701fc4387a45f2eafb5a1b83",
+    "results/summary-v2c.json": "3b2fe1b1d5aec7bff3f6b9b012308630e96b6023c12cd11914ececf92e433e73",
     "results/summary.json": "e385a11c6ecd14895ab345d9620a977932a2e40af8064d4d8595924edb983453"
   },
   "tool": "bench-report 0.1.0",
-  "unix_time": 1792315486
+  "unix_time": 1792329437
 }

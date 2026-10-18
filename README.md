@@ -82,7 +82,36 @@ Source: `results/summary-v2b.json`. 3182 of 20930 records priced from Chainlink 
 
 Visible bid share counts only the priority fee; direct coinbase transfers are not in it, so every bid-share number here is a lower bound.
 
-**Addendum B, read before the verdicts.** Coverage rose from 314 to 3,182 records (15.2% of all records, 20.4% of Aave V3 and Spark), far short of the >80% target stated in B.3. The reason is now known and was not anticipated: Chainlink proxies rotate their aggregator contract, and the `aggregator()` a proxy returns today has only the most recent phase's logs (USDC/USD and USDT/USD: 33 answers in the whole window), so 11,867 records fall before the current phase's first answer and are unpriced by rule A.1. Earlier phases are reachable through `phaseAggregators()`; that is addendum C, pre-registered before it is computed. Two further honest notes: (1) **H6 is carried by one transaction.** Block 25,037,701, tx `0xe2391ea4…478f`, contains two `LiquidationCall` events that repaid 2.2e-7 and 1.7e-9 WETH and seized 53,000 and 400 rsETH; priced at the oracle, that is $134.5M of the $140.2M total gross bonus. The on-chain log data confirm the amounts; this tool does not explain them. The exact-only sensitivity line (which excludes ratio-cap pricing and therefore this transaction) still clears the H6 bound, 0.893 [0.852, 0.924]. (2) **One false positive in the fixed rule.** `MKR/USD (calculated)` was constant over the 100 recent blocks and so was classified fixed; it is a live computed price. Four priced records touch it. Addendum C tightens the rule.
+### v2: USD valuation and per-feed attribution (pre-registration addendum C: all aggregator phases)
+
+Source: `results/summary-v2c.json`. 15030 of 20930 records priced from Chainlink answers at the record's block (Aave V3 and Spark only; Morpho Blue out of scope).
+
+| Pre-registered hypothesis | Measurement | Verdict |
+|---|---|---|
+| H4 visible bids are small: median priority-fee share of gross profit < 0.50 | 0.432 [0.386, 0.499] (n with visible fee 6565) | supported: median visible bid share 0.432 [0.386, 0.499] vs upper bound < 0.50 (n=6565) |
+| H5 own-feed adjacency > 0.608 | 0.284 [0.277, 0.291] | not supported: own-feed same-block share 0.284 [0.277, 0.291] vs lower bound > 0.608 (n=15027) |
+| H6 top-10% of liquidations carry > 80% of gross profit | 0.984 [0.938, 0.994] | supported: top-10% profit share 0.984 [0.938, 0.994] vs lower bound > 0.80 |
+
+| Descriptive | Value |
+|---|---|
+| Gross profit, total (USD, before gas and builder payment) | 190346279 |
+| Gross profit by protocol (USD) | aave-v3 188783076; spark 1563203 |
+| Gross profit per liquidation, median / p90 (USD) | 93 / 3399 |
+| Median blocks since the position's own feed last updated | 1 |
+| Median visible bid share by gross-profit decile (D1 smallest) | D1 (n=656) 12.189; D2 (n=657) 0.446; D3 (n=656) 0.669; D4 (n=657) 0.868; D5 (n=656) 0.808; D6 (n=657) 0.653; D7 (n=656) 0.229; D8 (n=657) 0.094; D9 (n=656) 0.030; D10 (n=657) 0.007 |
+| Median visible bid share by builder, top 5 | Titan (titanbuilder.xyz) (n=3269) 0.580; BuilderNet (Flashbots) (n=1199) 0.406; BuilderNet (Nethermind) (n=671) 0.225; BuilderNet (Beaver) (n=556) 0.260; beaverbuild.org (n=400) 0.816 |
+| Unpriced records, by reason | adapter exposes no known components and is not constant: 143; component aggregator() reverted: 49; constant over 100 blocks but described as a live price: 15; getPriceCap() failed: 392; morpho-blue: market oracle, not priced in v2: 5301 |
+| Priced exactly / approximately (ratio-cap or aggregate on either side) | 12803 / 2227 |
+| Source kinds (collateral/debt), top 8 | plain/stable-cap 8343; synchronicity/stable-cap 2264; aggregate/fixed 1163; ratio-cap/stable-cap 763; plain/fixed 494; fixed/stable-cap 456; plain/plain 314; stable-cap/plain 284 |
+| Sensitivity, exact-priced records only (n=12803): H4 median visible bid share | 0.350 [0.313, 0.401] |
+| Sensitivity, exact only: H5 own-feed same-block share | 0.297 [0.289, 0.305] |
+| Sensitivity, exact only: H6 top-10% profit share | 0.935 [0.921, 0.948] |
+
+Visible bid share counts only the priority fee; direct coinbase transfers are not in it, so every bid-share number here is a lower bound.
+
+**Addendum C, read before the verdicts.** Coverage is now 15,030 of 20,930 records: 96.2% of Aave V3 and Spark, above the 80% target, with 12,803 priced exactly and 2,227 through a ratio-cap or multi-source adapter. What remains unpriced on those two protocols: 392 records behind stable-cap adapters without `getPriceCap()`, 143 behind adapters with no known components (Pendle PT linear-discount feeds), 49 whose component is itself an adapter, and 15 touching `MKR/USD (calculated)`, now correctly left unpriced. Verdicts on this sample: **H4 supported**, median visible bid share 0.432 with an upper bound of 0.499, a hair under the 0.50 line (exact-only 0.350 [0.313, 0.401]); **H5 not supported**, 0.284 [0.277, 0.291], so most liquidations do not land in the block of their own feed's update, a result that reverses the reading of v1's any-feed adjacency; **H6 supported**, 0.984 [0.938, 0.994]. The rsETH transaction in block 25,037,701 is still 70.7% of all gross bonus; the exact-only line, which excludes it, still clears the H6 bound at 0.935 [0.921, 0.948], so concentration does not depend on that one transaction. 487 priced records have a negative gross bonus (seized worth less than repaid at oracle prices), which is possible when a position's debt and collateral feeds updated at different blocks; they are kept. The decile row shows the clearing-price curve: visible bids are a large share of small bonuses and a small share of large ones (D1 median above 1.0, D10 0.007), which is what one expects when the big liquidations are paid for by coinbase transfers the priority fee does not show.
+
+**Follower caveat (A.3).** The first liquidation block the follower recorded had a negative "direct transfers" figure: the builder paid the proposer from the coinbase address in the block's last transaction, so the coinbase balance delta nets that payment out. The per-block bound in A.3 holds only after the proposer payment is identified and added back; the follower will be amended to do that before any follower numbers are reported.
 <!-- RESULTS:END -->
 
 ### What the numbers say

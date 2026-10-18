@@ -159,6 +159,9 @@ enum Cmd {
         /// Addendum B summary (adapter-kind pricing), rendered as a second v2 section.
         #[arg(long)]
         summary_v2b: Option<PathBuf>,
+        /// Addendum C summary (all aggregator phases), rendered as a third v2 section.
+        #[arg(long)]
+        summary_v2c: Option<PathBuf>,
         #[arg(long)]
         readme: PathBuf,
     },
@@ -214,7 +217,7 @@ fn report_v2(summary_v2: &PathBuf, label: &str) -> anyhow::Result<String> {
     Ok(t)
 }
 
-fn report(summary: &PathBuf, summary_v2: Option<&PathBuf>, summary_v2b: Option<&PathBuf>, readme: &PathBuf) -> anyhow::Result<()> {
+fn report(summary: &PathBuf, summary_v2: Option<&PathBuf>, summary_v2b: Option<&PathBuf>, summary_v2c: Option<&PathBuf>, readme: &PathBuf) -> anyhow::Result<()> {
     let v: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(summary)?)?;
     let get = |k: &str| -> anyhow::Result<&serde_json::Value> { v.get(k).ok_or_else(|| anyhow::anyhow!("summary missing `{k}`")) };
     let f = |k: &str| -> anyhow::Result<f64> { get(k)?.as_f64().ok_or_else(|| anyhow::anyhow!("`{k}` not a number")) };
@@ -292,6 +295,9 @@ fn report(summary: &PathBuf, summary_v2: Option<&PathBuf>, summary_v2b: Option<&
     }
     if let Some(v2b) = summary_v2b {
         t.push_str(&report_v2(v2b, "pre-registration addendum B: pricing through the protocols' adapter contracts")?);
+    }
+    if let Some(v2c) = summary_v2c {
+        t.push_str(&report_v2(v2c, "pre-registration addendum C: all aggregator phases")?);
     }
     const START: &str = "<!-- RESULTS:START -->";
     const END: &str = "<!-- RESULTS:END -->";
@@ -793,7 +799,7 @@ async fn main() -> anyhow::Result<()> {
             }
             Ok(())
         }
-        Cmd::Report { summary, summary_v2, summary_v2b, readme } => report(&summary, summary_v2.as_ref(), summary_v2b.as_ref(), &readme),
+        Cmd::Report { summary, summary_v2, summary_v2b, summary_v2c, readme } => report(&summary, summary_v2.as_ref(), summary_v2b.as_ref(), summary_v2c.as_ref(), &readme),
     }
 }
 
