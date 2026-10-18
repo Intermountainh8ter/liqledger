@@ -31,7 +31,11 @@ struct BlockPayment {
     coinbase_delta_wei: String,
     priority_fees_wei: String,
     withdrawals_to_coinbase_wei: String,
-    /// delta - priority fees - withdrawals: direct payments (and any other inflow) net of outflows.
+    /// The block's last transaction sent from the coinbase with value > 0 (the builder paying the
+    /// proposer's fee recipient), added back so the delta reflects what the builder received.
+    proposer_payment_wei: String,
+    proposer_fee_recipient: Option<String>,
+    /// delta + proposer payment - priority fees - withdrawals: direct payments (and any other inflow) net of other outflows.
     direct_transfers_wei: String,
     liquidation_txs: Vec<String>,
     n_liquidations: usize,
@@ -74,7 +78,20 @@ pub async fn follow(rpc: String, out: PathBuf, blocks: Option<u64>) -> anyhow::R
             let bal_now = provider.get_balance(coinbase).block_id(BlockId::number(bn)).await?;
             let bal_prev = provider.get_balance(coinbase).block_id(BlockId::number(bn - 1)).await?;
             let delta: i128 = i128::try_from(bal_now).unwrap_or(i128::MAX) - i128::try_from(bal_prev).unwrap_or(0);
-            let direct: i128 = delta - i128::try_from(fees).unwrap_or(0) - i128::try_from(withdrawals).unwrap_or(0);
+            // A.3 amendment (2026-10-18): builders pay the proposer from the coinbase address in the
+            // block's last transaction; that outflow is not a cost of any searcher and is added back.
+            let (mut proposer_payment, mut fee_recipient): (U256, Option<Address>) = (U256::ZERO, None);
+            if let Some(txs) = block.transactions.as_transactions() {
+                for tx in txs.iter().rev() {
+                    use alloy::consensus::Transaction as _;
+                    if tx.inner.signer() == coinbase && tx.inner.value() > U256::ZERO {
+                        proposer_payment = tx.inner.value();
+                        fee_recipient = tx.inner.to();
+                        break;
+                    }
+                }
+            }
+            let direct: i128 = delta + i128::try_from(proposer_payment).unwrap_or(0) - i128::try_from(fees).unwrap_or(0) - i128::try_from(withdrawals).unwrap_or(0);
             let rec = BlockPayment {
                 block: bn,
                 timestamp: block.header.timestamp,
@@ -85,6 +102,8 @@ pub async fn follow(rpc: String, out: PathBuf, blocks: Option<u64>) -> anyhow::R
                 coinbase_delta_wei: delta.to_string(),
                 priority_fees_wei: fees.to_string(),
                 withdrawals_to_coinbase_wei: withdrawals.to_string(),
+                proposer_payment_wei: proposer_payment.to_string(),
+                proposer_fee_recipient: fee_recipient.map(|a| format!("{a:#x}")),
                 direct_transfers_wei: direct.to_string(),
                 n_liquidations: liq_txs.len(),
                 liquidation_txs: liq_txs,
