@@ -80,3 +80,55 @@ by extra-data tag; distribution of blocks-since-oracle-update.
 Coinbase-transfer capture from a live follower (balances are available for the most recent blocks
 only); USD valuation from oracle answers; per-liquidation feed attribution; L2 coverage via an
 external RPC supplied by environment variable; a weekly automated refresh.
+
+---
+
+## Addendum A (2026-10-18, before any v2 computation): USD valuation, per-feed attribution, builder-payment bounds
+
+Written after the v1 results above were published and before any v2 number exists. v1 hypotheses and
+verdicts are unchanged.
+
+### A.1 USD valuation (Aave V3 and Spark only)
+
+- For each asset in a record, the protocol oracle's `getSourceOfAsset(asset)` is read at the head block
+  (Aave V3 oracle `0x54586bE62E3c3580375aE3723C145253060Ca0C2`; Spark oracle as returned by Spark's
+  PoolAddressesProvider, recorded in `results/feeds.json`). If the source exposes `aggregator()`, that
+  aggregator's `AnswerUpdated` logs are the price history; otherwise the asset is **unpriced** (custom
+  adapters, synchronicity oracles) and counted as such. Sources are read at head only, so feed changes
+  during the window are a known error source and are reported, not corrected.
+- Price at a block = the latest `AnswerUpdated` on that aggregator at or before the block, within the
+  node's history. Records before the current aggregator's first log are unpriced.
+- `seized_usd` = collateral seized × price; `repaid_usd` = debt repaid × price; `gross_profit_usd` =
+  seized − repaid (the liquidation bonus before gas and builder payment). Token decimals via `decimals()`.
+- `visible_bid_share` = priority fee (ETH, via the WETH feed at the block) ÷ gross_profit_usd. This is a
+  lower bound on what the winner paid.
+- Morpho Blue records are not priced in v2 (market-specific oracles).
+
+### A.2 Per-feed oracle attribution
+
+For each priced record: blocks since the collateral feed's and the debt feed's own last `AnswerUpdated`
+(not "any feed"), and whether either own feed updated in the same block.
+
+### A.3 Builder-payment bounds from a live follower
+
+`liqledger follow` runs against the local node from its start time forward and records, per block: the
+coinbase address, its balance delta from block N−1 to N, the sum of priority fees in the block, the
+withdrawals credited to that address in the block, and `direct_transfers = delta − fees − withdrawals`.
+For blocks containing a liquidation this is an **upper bound** on that liquidation's direct payment (other
+transactions in the block may have paid too). Exact per-transaction attribution needs traces and is
+deferred to the archive endpoint. Balance reads are only possible for recent blocks, which is why this is
+a follower and not a backfill.
+
+### A.4 Hypotheses fixed now (95% bootstrap intervals, seed 42, 2,000 resamples; ≥100 priced records)
+
+- **H4 (visible bids are small).** Among priced Aave/Spark records with a non-zero priority fee, the
+  median `visible_bid_share` is below 0.50. Supported if the interval's upper bound is below 0.50.
+- **H5 (own-feed adjacency).** Among priced records, the share whose own collateral or debt feed updated
+  in the same block exceeds the any-feed share measured in v1 (0.608). Supported if the lower bound
+  exceeds 0.608.
+- **H6 (bonus concentration).** The top 10% of priced liquidations by `gross_profit_usd` carry more than
+  80% of total gross profit. Supported if the lower bound exceeds 0.80.
+
+Descriptive: gross profit by protocol, pair and size decile; unpriced share and why; the clearing-price
+curve (visible bid share by size decile and by builder); from the follower, the distribution of
+`direct_transfers` in liquidation blocks versus non-liquidation blocks.
