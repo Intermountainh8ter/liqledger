@@ -132,3 +132,44 @@ a follower and not a backfill.
 Descriptive: gross profit by protocol, pair and size decile; unpriced share and why; the clearing-price
 curve (visible bid share by size decile and by builder); from the follower, the distribution of
 `direct_transfers` in liquidation blocks versus non-liquidation blocks.
+
+---
+
+## Addendum B (2026-10-18, after the addendum A results, before any addendum B computation): pricing through Aave and Spark adapter contracts
+
+Addendum A priced 314 of 20,930 records because most Aave V3 and Spark assets sit behind adapter
+contracts that have no `aggregator()`. Probing those adapters at the head block (eth_call only) shows
+they expose their components. This addendum fixes how each adapter kind is priced before any record is
+priced that way. Addendum A's results stand as the first test of H4 to H6; this addendum re-tests the
+same three hypotheses, with the same thresholds, on the enlarged sample, and reports both.
+
+### B.1 Adapter kinds, detected by which getters answer at head
+
+| Kind | Detected by | Price at block b | Exactness |
+|---|---|---|---|
+| plain proxy | `aggregator()` | latest `AnswerUpdated` of that aggregator at or before b (addendum A) | exact |
+| stable cap (`PriceCapAdapterStable`) | `ASSET_TO_USD_AGGREGATOR()`, `getPriceCap()` | min(underlying aggregator's answer at or before b, cap read at head) | exact when uncapped; cap governance changes inside the window are an unmeasured error source |
+| peg-to-base synchronicity (wBTC/BTC/USD) | `ASSET_TO_PEG()`, `PEG_TO_BASE()`, `DENOMINATOR()` | (asset-to-peg answer at or before b) × (peg-to-base answer at or before b), each from its own aggregator's logs | exact |
+| ratio cap (`PriceCapAdapter`, wstETH, weETH, …) | `BASE_TO_USD_AGGREGATOR()`, `RATIO_PROVIDER()`, `getRatio()`, `getSnapshotRatio()`, `getSnapshotTimestamp()`, `RATIO_DECIMALS()` | (base answer at or before b) × ratio(t_b), where ratio(t) is linear in time through the two points the contract gives: (snapshot timestamp, snapshot ratio) and (head timestamp, head ratio), extrapolated with the same slope before the snapshot. The cap is not applied (`isCapped()` is false at head for every such adapter; applying it needs the ratio at b). | **approximate**: the exchange rate drifts a few percent a year, so the interpolation error over this window is a fraction of a percent; it is stated, not corrected |
+| multi-source aggregate (Spark ETH/USD, BTC/USD from Chronicle, Chainlink, RedStone) | `chainlink()`, `chronicle()`, `redstone()` | the Chainlink component's answer at or before b | **approximate**: the adapter reports a median of three sources; the deviation from Chainlink alone is normally a few basis points |
+| fixed | none of the above; `latestAnswer()` identical at head and at head − 100 blocks | that constant | exact if the adapter was the asset's source for the whole window; a mid-window switch from a live feed to a fixed value is an unmeasured error source |
+| anything else (Pendle PT linear-discount adapters, MKR/USD calculated, unknown) | — | unpriced, counted by reason | — |
+
+Every adapter is checked at head: the price composed by the rule above, evaluated at the head block,
+must match the adapter's own `latestAnswer()` within 0.5%, or the adapter is left unpriced with reason
+"head check failed". The relative error is recorded per adapter in `results/feeds.json`.
+
+### B.2 Record fields added
+
+`collateral_source_kind`, `debt_source_kind` (the kinds above), `approx` (true when either side is a
+ratio-cap or multi-source aggregate). "Blocks since own feed" uses the underlying aggregator (stable cap),
+the fresher of the two components (synchronicity), the Chainlink component (aggregate), the base
+aggregator (ratio cap); a fixed side has no updates and does not count toward own-feed adjacency. A record
+whose both sides are fixed is excluded from H5.
+
+### B.3 What is tested
+
+H4, H5, H6 exactly as in A.4, computed over all priced records (exact and approximate together), reported
+as the addendum B verdicts next to the addendum A verdicts. One pre-specified sensitivity line: the same
+three statistics over exact-priced records only. Coverage target, stated in advance: more than 80% of
+Aave V3 and Spark records priced. Nothing else changes; Morpho Blue stays out of scope.
