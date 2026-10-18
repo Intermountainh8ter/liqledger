@@ -32,6 +32,30 @@ Source: `results/summary.json`, blocks 22432941 to 26210252 (20930 liquidation e
 | Oracle update within 2 blocks before (any feed) | 0.824 |
 | Median blocks since last oracle update (any feed, 50-block lookback) | 0 |
 | Builders, top 5 by liquidations included | Titan (titanbuilder.xyz) (10595); BuilderNet (Flashbots) (3266); BuilderNet (Nethermind) (1799); BuilderNet (Beaver) (1320); beaverbuild.org (1135) |
+
+### v2: USD valuation and per-feed attribution (pre-registration addendum A)
+
+Source: `results/summary-v2.json`. 314 of 20930 records priced from Chainlink answers at the record's block (Aave V3 and Spark only; Morpho Blue and custom-adapter assets unpriced).
+
+| Pre-registered hypothesis | Measurement | Verdict |
+|---|---|---|
+| H4 visible bids are small: median priority-fee share of gross profit < 0.50 | 0.848 [0.474, 0.936] (n with visible fee 144) | not supported: median visible bid share 0.848 [0.474, 0.936] vs upper bound < 0.50 (n=144) |
+| H5 own-feed adjacency > 0.608 | 0.261 [0.213, 0.309] | not supported: own-feed same-block share 0.261 [0.213, 0.309] vs lower bound > 0.608 |
+| H6 top-10% of liquidations carry > 80% of gross profit | 0.936 [0.765, 1.460] | not supported: top-10% profit share 0.936 [0.765, 1.460] vs lower bound > 0.80 |
+
+| Descriptive | Value |
+|---|---|
+| Gross profit, total (USD, before gas and builder payment) | 164353 |
+| Gross profit by protocol (USD) | aave-v3 164353 |
+| Gross profit per liquidation, median / p90 (USD) | 31 / 1438 |
+| Median blocks since the position's own feed last updated | 2 |
+| Median visible bid share by gross-profit decile (D1 smallest) | D1 (n=14) 148.514; D2 (n=14) 1.839; D3 (n=15) 0.408; D4 (n=14) 0.323; D5 (n=15) 0.853; D6 (n=14) 0.962; D7 (n=14) 1.020; D8 (n=15) 0.886; D9 (n=14) 0.004; D10 (n=15) 0.076 |
+| Median visible bid share by builder, top 5 | Titan (titanbuilder.xyz) (n=78) 0.756; BuilderNet (Flashbots) (n=19) 0.343; BuilderNet (Beaver) (n=14) 0.886; BuilderNet (Nethermind) (n=9) 0.881; beaverbuild.org (n=9) 0.882 |
+| Unpriced records, by reason | morpho-blue: market oracle, not priced in v2: 5301; source has no aggregator(): custom adapter: 15315 |
+
+Visible bid share counts only the priority fee; direct coinbase transfers are not in it, so every bid-share number here is a lower bound.
+
+**Coverage, stated plainly.** Only 314 of 20,930 records (1.5%) could be priced under addendum A, all Aave V3. 15,315 Aave/Spark records use an oracle source without `aggregator()` (Aave's price-cap adapters for LSTs, LRTs and stablecoins, and Pendle PT adapters), and 5,301 Morpho Blue records were out of scope. The priced sample is therefore the plain-Chainlink-feed assets (WETH, WBTC, LINK and similar) and is not representative of the book; the verdicts above are verdicts about that slice. The size-decile row shows median visible bid share above 1.0 in the smallest decile: the priority fee exceeded the gross bonus on dust liquidations, which only makes sense if those transactions also captured value outside the liquidation event. H6's interval exceeds 1.0 because three priced records have a negative gross bonus. Reading the cap adapters' underlying aggregators is the obvious next step and will be pre-registered as addendum B before it is computed.
 <!-- RESULTS:END -->
 
 ### What the numbers say

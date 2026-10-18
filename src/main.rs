@@ -149,16 +149,58 @@ enum Cmd {
     },
     /// Print the event signatures this tool filters on (for the pre-registration).
     Topics,
-    /// Render `summary.json` into the README between `<!-- RESULTS:START -->` and `<!-- RESULTS:END -->`.
+    /// Render `summary.json` (and, if given, `summary-v2.json`) into the README between
+    /// `<!-- RESULTS:START -->` and `<!-- RESULTS:END -->`.
     Report {
         #[arg(long)]
         summary: PathBuf,
+        #[arg(long)]
+        summary_v2: Option<PathBuf>,
         #[arg(long)]
         readme: PathBuf,
     },
 }
 
-fn report(summary: &PathBuf, readme: &PathBuf) -> anyhow::Result<()> {
+fn report_v2(summary_v2: &PathBuf) -> anyhow::Result<String> {
+    let v: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(summary_v2)?)?;
+    let ci = |c: &serde_json::Value| -> String {
+        if c.is_null() { return "not evaluated".into(); }
+        format!("{:.3} [{:.3}, {:.3}]", c["point"].as_f64().unwrap_or(f64::NAN), c["lo"].as_f64().unwrap_or(f64::NAN), c["hi"].as_f64().unwrap_or(f64::NAN))
+    };
+    let mut t = String::new();
+    t.push_str(&format!(
+        "\n### v2: USD valuation and per-feed attribution (pre-registration addendum A)\n\nSource: `{}`. {} of {} records priced from Chainlink answers at the record's block (Aave V3 and Spark only; Morpho Blue and custom-adapter assets unpriced).\n\n",
+        summary_v2.display(), v["n_priced"], v["n_records"]
+    ));
+    t.push_str("| Pre-registered hypothesis | Measurement | Verdict |\n|---|---|---|\n");
+    t.push_str(&format!("| H4 visible bids are small: median priority-fee share of gross profit < 0.50 | {} (n with visible fee {}) | {} |\n", ci(&v["visible_bid_share_median"]), v["n_with_visible_fee"], v["h4_visible_bids_small"].as_str().unwrap_or("?")));
+    t.push_str(&format!("| H5 own-feed adjacency > 0.608 | {} | {} |\n", ci(&v["own_feed_same_block_share"]), v["h5_own_feed_adjacency"].as_str().unwrap_or("?")));
+    t.push_str(&format!("| H6 top-10% of liquidations carry > 80% of gross profit | {} | {} |\n\n", ci(&v["top10pct_profit_share"]), v["h6_bonus_concentration"].as_str().unwrap_or("?")));
+    t.push_str("| Descriptive | Value |\n|---|---|\n");
+    t.push_str(&format!("| Gross profit, total (USD, before gas and builder payment) | {:.0} |\n", v["gross_profit_usd_total"].as_f64().unwrap_or(0.0)));
+    if let Some(m) = v["gross_profit_usd_by_protocol"].as_object() {
+        let parts: Vec<String> = m.iter().map(|(k, x)| format!("{k} {:.0}", x.as_f64().unwrap_or(0.0))).collect();
+        t.push_str(&format!("| Gross profit by protocol (USD) | {} |\n", parts.join("; ")));
+    }
+    t.push_str(&format!("| Gross profit per liquidation, median / p90 (USD) | {:.0} / {:.0} |\n", v["gross_profit_usd_median"].as_f64().unwrap_or(0.0), v["gross_profit_usd_p90"].as_f64().unwrap_or(0.0)));
+    t.push_str(&format!("| Median blocks since the position's own feed last updated | {} |\n", v["median_blocks_since_own_feed"].as_f64().map(|x| format!("{x:.0}")).unwrap_or("none".into())));
+    if let Some(d) = v["visible_bid_share_by_size_decile"].as_array() {
+        let parts: Vec<String> = d.iter().map(|r| format!("D{} (n={}) {:.3}", r[0], r[1], r[2].as_f64().unwrap_or(f64::NAN))).collect();
+        t.push_str(&format!("| Median visible bid share by gross-profit decile (D1 smallest) | {} |\n", parts.join("; ")));
+    }
+    if let Some(b) = v["visible_bid_share_by_builder_top5"].as_array() {
+        let parts: Vec<String> = b.iter().map(|r| format!("{} (n={}) {:.3}", r[0].as_str().unwrap_or("?"), r[1], r[2].as_f64().unwrap_or(f64::NAN))).collect();
+        t.push_str(&format!("| Median visible bid share by builder, top 5 | {} |\n", parts.join("; ")));
+    }
+    if let Some(m) = v["unpriced_reasons"].as_object() {
+        let parts: Vec<String> = m.iter().map(|(k, x)| format!("{k}: {x}")).collect();
+        t.push_str(&format!("| Unpriced records, by reason | {} |\n", parts.join("; ")));
+    }
+    t.push_str("\nVisible bid share counts only the priority fee; direct coinbase transfers are not in it, so every bid-share number here is a lower bound.\n");
+    Ok(t)
+}
+
+fn report(summary: &PathBuf, summary_v2: Option<&PathBuf>, readme: &PathBuf) -> anyhow::Result<()> {
     let v: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(summary)?)?;
     let get = |k: &str| -> anyhow::Result<&serde_json::Value> { v.get(k).ok_or_else(|| anyhow::anyhow!("summary missing `{k}`")) };
     let f = |k: &str| -> anyhow::Result<f64> { get(k)?.as_f64().ok_or_else(|| anyhow::anyhow!("`{k}` not a number")) };
@@ -231,6 +273,9 @@ fn report(summary: &PathBuf, readme: &PathBuf) -> anyhow::Result<()> {
         get("median_blocks_since_oracle_update")?.as_f64().map(|x| format!("{x:.0}")).unwrap_or_else(|| "none within lookback".into())
     ));
     t.push_str(&format!("| Builders, top 5 by liquidations included | {} |\n", builders.join("; ")));
+    if let Some(v2) = summary_v2 {
+        t.push_str(&report_v2(v2)?);
+    }
     const START: &str = "<!-- RESULTS:START -->";
     const END: &str = "<!-- RESULTS:END -->";
     let text = std::fs::read_to_string(readme)?;
@@ -562,7 +607,11 @@ pub(crate) fn bootstrap(n: usize, stat: impl Fn(&[usize]) -> f64, seed: u64) -> 
             stat(&idx)
         })
         .collect();
-    vals.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    // A resample can leave a statistic undefined (NaN); drop those and say so rather than panic.
+    let before = vals.len();
+    vals.retain(|v| !v.is_nan());
+    if vals.len() < before { eprintln!("bootstrap: {} of {before} resamples undefined (NaN), excluded from the interval", before - vals.len()); }
+    vals.sort_by(|a, b| a.total_cmp(b));
     Ci { point, lo: percentile(&vals, 0.025), hi: percentile(&vals, 0.975) }
 }
 
@@ -727,7 +776,7 @@ async fn main() -> anyhow::Result<()> {
             }
             Ok(())
         }
-        Cmd::Report { summary, readme } => report(&summary, &readme),
+        Cmd::Report { summary, summary_v2, readme } => report(&summary, summary_v2.as_ref(), &readme),
     }
 }
 

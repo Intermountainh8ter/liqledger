@@ -1,12 +1,16 @@
 {
-  "n_files": 4,
+  "n_files": 8,
   "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)",
   "sha256": {
+    "results/MANIFEST.sha256.json": "d31431660cd17a06befb6d09e36df608409d5880781633a3effa78bdd86a79f1",
     "results/SCAN_HEAD.txt": "40892b91fdb584ab3fb886c56b8905090dad44e0d114b0c2f267d36a7c6b1cb4",
     "results/baseline.json": "ce8b14d79d1eac73c04ad967ddac60220b95c2a0b4c2ce91387a21b9fb398aef",
+    "results/feeds.json": "cbef381d9cb3848d19c70217d24a74356bc9bce5acd84f8e376723aa6245080d",
     "results/mainnet.jsonl": "0dad7821bb739bdcb8c149cfbacb5a18338158501eb5eca7839d0126aedf74fc",
+    "results/priced.jsonl": "823ba4eebfc8e4901cea0d445338d5bb3266a4a89f161f334d27cb7cbf967667",
+    "results/summary-v2.json": "d4d713846245b5d33d1aa3bfa654a8ab3c3e7723e1cf884184619b6244aebfbc",
     "results/summary.json": "e385a11c6ecd14895ab345d9620a977932a2e40af8064d4d8595924edb983453"
   },
   "tool": "bench-report 0.1.0",
-  "unix_time": 1792234560
+  "unix_time": 1792308872
 }
