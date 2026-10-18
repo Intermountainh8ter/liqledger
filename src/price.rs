@@ -24,6 +24,8 @@ sol! {
     #[sol(rpc)]
     interface IFeed {
         function aggregator() external view returns (address);
+        function phaseId() external view returns (uint16);
+        function phaseAggregators(uint16 id) external view returns (address);
         function decimals() external view returns (uint8);
         function description() external view returns (string);
     }
@@ -104,6 +106,11 @@ pub struct FeedInfo {
     pub head_check_rel_err: Option<f64>,
     #[serde(default)]
     pub approx: bool,
+    /// Addendum C.1: every phase aggregator of the primary proxy (current phase last).
+    #[serde(default)]
+    pub phase_aggregators: Vec<String>,
+    #[serde(default)]
+    pub phase_aggregators2: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -192,6 +199,23 @@ async fn agg_of<P: Provider>(p: &P, proxy: Address, t: std::time::Duration) -> R
     Ok((format!("{a:#x}"), d))
 }
 
+/// Addendum C.1: all phase aggregators of a Chainlink proxy, oldest first, current phase last.
+/// A proxy without `phaseId()` yields just its current aggregator.
+async fn phases_of<P: Provider>(p: &P, proxy: Address, current: &str, t: std::time::Duration) -> Vec<String> {
+    let f = IFeed::new(proxy, p);
+    let mut out = Vec::new();
+    if let Ok(Ok(n)) = tokio::time::timeout(t, f.phaseId().call()).await {
+        for i in 1..=n {
+            if let Ok(Ok(a)) = tokio::time::timeout(t, f.phaseAggregators(i).call()).await {
+                let s = format!("{a:#x}");
+                if a != Address::ZERO && s != current { out.push(s); }
+            }
+        }
+    }
+    out.push(current.to_string());
+    out
+}
+
 fn i256_to_f64(v: alloy::primitives::I256, decimals: u8) -> f64 {
     v.to_string().parse::<f64>().unwrap_or(f64::NAN) / 10f64.powi(decimals as i32)
 }
@@ -210,6 +234,7 @@ async fn resolve_kind<P: Provider + Clone>(p: &P, source: Address, info: &mut Fe
     if let Some(a) = ok(tokio::time::timeout(t, feed.aggregator().call()).await) {
         info.kind = Some("plain".into());
         info.aggregator = Some(format!("{a:#x}"));
+        info.phase_aggregators = phases_of(p, source, &format!("{a:#x}"), t).await;
         info.head_check_rel_err = Some(0.0);
         return Ok(());
     }
@@ -218,6 +243,7 @@ async fn resolve_kind<P: Provider + Clone>(p: &P, source: Address, info: &mut Fe
         let (agg, dec) = agg_of(p, under, t).await?;
         let cap = ok(tokio::time::timeout(t, ad.getPriceCap().call()).await).ok_or("getPriceCap() failed")?;
         info.kind = Some("stable-cap".into());
+        info.phase_aggregators = phases_of(p, under, &agg, t).await;
         info.aggregator = Some(agg); info.feed_decimals = Some(dec);
         info.price_cap = Some(i256_to_f64(cap, src_decimals));
         // head check: min(underlying latestAnswer, cap) vs adapter latestAnswer
@@ -233,6 +259,7 @@ async fn resolve_kind<P: Provider + Clone>(p: &P, source: Address, info: &mut Fe
         let snap_ts = ok(tokio::time::timeout(t, ad.getSnapshotTimestamp().call()).await).ok_or("getSnapshotTimestamp() failed")?;
         let head_ts = p.get_block_by_number(head_block.into()).await.ok().flatten().map(|b| b.header.timestamp).ok_or("head block timestamp")?;
         info.kind = Some("ratio-cap".into()); info.approx = true;
+        info.phase_aggregators = phases_of(p, base, &agg, t).await;
         info.aggregator = Some(agg); info.feed_decimals = Some(dec);
         info.ratio_snapshot = Some(snap.to_string().parse::<f64>().unwrap_or(f64::NAN) / 10f64.powi(rd as i32));
         info.ratio_snapshot_ts = Some(snap_ts.to_string().parse().unwrap_or(0));
@@ -246,6 +273,8 @@ async fn resolve_kind<P: Provider + Clone>(p: &P, source: Address, info: &mut Fe
         let (agg1, dec1) = agg_of(p, a2p, t).await?;
         let (agg2, dec2) = agg_of(p, p2b, t).await?;
         info.kind = Some("synchronicity".into());
+        info.phase_aggregators = phases_of(p, a2p, &agg1, t).await;
+        info.phase_aggregators2 = phases_of(p, p2b, &agg2, t).await;
         info.aggregator = Some(agg1); info.feed_decimals = Some(dec1);
         info.aggregator2 = Some(agg2); info.feed2_decimals = Some(dec2);
         let x = ok(tokio::time::timeout(t, IAdapter::new(a2p, p).latestAnswer().call()).await).map(|a| i256_to_f64(a, dec1)).ok_or("asset-to-peg latestAnswer() failed")?;
@@ -256,6 +285,7 @@ async fn resolve_kind<P: Provider + Clone>(p: &P, source: Address, info: &mut Fe
     if let Some(cl) = ok(tokio::time::timeout(t, ad.chainlink().call()).await) {
         let (agg, dec) = agg_of(p, cl, t).await?;
         info.kind = Some("aggregate".into()); info.approx = true;
+        info.phase_aggregators = phases_of(p, cl, &agg, t).await;
         info.aggregator = Some(agg); info.feed_decimals = Some(dec);
         let c = ok(tokio::time::timeout(t, IAdapter::new(cl, p).latestAnswer().call()).await).map(|a| i256_to_f64(a, dec)).ok_or("chainlink component latestAnswer() failed")?;
         return head_check(info, c, head_answer);
@@ -264,6 +294,10 @@ async fn resolve_kind<P: Provider + Clone>(p: &P, source: Address, info: &mut Fe
     if let Some(h) = head_answer {
         let earlier = ok(tokio::time::timeout(t, ad.latestAnswer().block(alloy::eips::BlockId::number(head_block.saturating_sub(100))).call()).await).map(|a| i256_to_f64(a, src_decimals));
         if earlier == Some(h) && h.is_finite() && h > 0.0 {
+            // Addendum C.2: constant alone is not enough; the source must say it is fixed, or be one of
+            // Spark's undescribed constant feeds.
+            let described_fixed = match info.description.as_deref() { None => true, Some(d) => d.starts_with("Fixed") || d == "ONE USD" };
+            if !described_fixed { return Err("constant over 100 blocks but described as a live price".into()); }
             info.kind = Some("fixed".into());
             info.fixed_price = Some(h);
             info.head_check_rel_err = Some(0.0);
@@ -341,7 +375,7 @@ pub async fn price(rpc: String, records: PathBuf, out: PathBuf, feeds_out: PathB
     for (i, (proto, asset)) in keys.iter().enumerate() {
         let oracle: Address = if proto == "aave-v3" { AAVE_ORACLE.parse()? } else { SPARK_ORACLE.parse()? };
         let asset_addr: Address = asset.parse()?;
-        let mut info = FeedInfo { protocol: proto.clone(), asset: asset.clone(), source: String::new(), aggregator: None, description: None, feed_decimals: None, token_decimals: None, n_answers_in_window: 0, unpriced_reason: None, kind: None, aggregator2: None, feed2_decimals: None, price_cap: None, ratio_snapshot: None, ratio_snapshot_ts: None, ratio_head: None, ratio_head_ts: None, fixed_price: None, head_check_rel_err: None, approx: false };
+        let mut info = FeedInfo { protocol: proto.clone(), asset: asset.clone(), source: String::new(), aggregator: None, description: None, feed_decimals: None, token_decimals: None, n_answers_in_window: 0, unpriced_reason: None, kind: None, aggregator2: None, feed2_decimals: None, price_cap: None, ratio_snapshot: None, ratio_snapshot_ts: None, ratio_head: None, ratio_head_ts: None, fixed_price: None, head_check_rel_err: None, approx: false, phase_aggregators: vec![], phase_aggregators2: vec![] };
         let source = match tokio::time::timeout(call_timeout, IOracle::new(oracle, &provider).getSourceOfAsset(asset_addr).call()).await {
             Ok(Ok(s)) => s,
             Ok(Err(e)) => { info.unpriced_reason = Some(classify_call_error("getSourceOfAsset", &e)); feeds.insert(format!("{proto}:{asset}"), info); continue; }
@@ -367,13 +401,21 @@ pub async fn price(rpc: String, records: PathBuf, out: PathBuf, feeds_out: PathB
     let mut answers: HashMap<String, Answers> = HashMap::new();
     for info in feeds.values_mut() {
         if info.unpriced_reason.is_some() { continue; }
-        let pairs: Vec<(String, u8)> = [(info.aggregator.clone(), info.feed_decimals), (info.aggregator2.clone(), info.feed2_decimals)]
-            .into_iter().filter_map(|(a, d)| Some((a?, d?))).collect();
-        for (agg, dec) in pairs {
+        let pairs: Vec<(String, u8, Vec<String>)> = [(info.aggregator.clone(), info.feed_decimals, info.phase_aggregators.clone()), (info.aggregator2.clone(), info.feed2_decimals, info.phase_aggregators2.clone())]
+            .into_iter().filter_map(|(a, d, ph)| Some((a?, d?, ph))).collect();
+        for (agg, dec, phases) in pairs {
             if !answers.contains_key(&agg) {
-                let a = stream_answers(&provider, agg.parse()?, window_from, max_block, dec).await?;
-                eprintln!("{} ({}): {} answers in window", info.description.as_deref().unwrap_or("?"), &agg[..10], a.points.len());
-                answers.insert(agg.clone(), a);
+                // Addendum C.1: the current aggregator's key holds the merged history of every phase.
+                let mut merged: Vec<(u64, f64)> = Vec::new();
+                let list = if phases.is_empty() { vec![agg.clone()] } else { phases.clone() };
+                for ph in &list {
+                    let a = stream_answers(&provider, ph.parse()?, window_from, max_block, dec).await?;
+                    if list.len() > 1 { eprintln!("  phase {} : {} answers", &ph[..10], a.points.len()); }
+                    merged.extend(a.points);
+                }
+                merged.sort_by_key(|(b, _)| *b);
+                eprintln!("{} ({}): {} answers in window over {} phase(s)", info.description.as_deref().unwrap_or("?"), &agg[..10], merged.len(), list.len());
+                answers.insert(agg.clone(), Answers { points: merged });
             }
             if Some(&agg) == info.aggregator.as_ref() { info.n_answers_in_window = answers[&agg].points.len(); }
             if answers[&agg].points.is_empty() { info.unpriced_reason = Some("no AnswerUpdated logs in window (aggregator newer than the records?)".into()); }
