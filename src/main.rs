@@ -63,8 +63,8 @@ pub(crate) const MORPHO_BLUE: &str = "0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb
 /// How many blocks before a liquidation to look for the most recent oracle update.
 const ORACLE_LOOKBACK: u64 = 50;
 /// Bootstrap resamples and seed, fixed in the pre-registration.
-const BOOT_ITERS: usize = 2000;
-const BOOT_SEED: u64 = 42;
+pub(crate) const BOOT_ITERS: usize = 2000;
+pub(crate) const BOOT_SEED: u64 = 42;
 
 #[derive(Parser)]
 #[command(name = "liqledger", version, about)]
@@ -147,6 +147,15 @@ enum Cmd {
         #[arg(long)]
         blocks: Option<u64>,
     },
+    /// v2 (addendum A.3 / A.4 descriptive): summarise a follower file into the distribution of per-block
+    /// direct transfers in liquidation blocks against all other blocks. Rows written before the
+    /// proposer-payment amendment are counted and excluded.
+    FollowSummarize {
+        #[arg(long)]
+        records: PathBuf,
+        #[arg(long)]
+        out: PathBuf,
+    },
     /// Print the event signatures this tool filters on (for the pre-registration).
     Topics,
     /// Render `summary.json` (and, if given, `summary-v2.json`) into the README between
@@ -162,6 +171,9 @@ enum Cmd {
         /// Addendum C summary (all aggregator phases), rendered as a third v2 section.
         #[arg(long)]
         summary_v2c: Option<PathBuf>,
+        /// Follower summary (addendum A.3), rendered as a fourth v2 section.
+        #[arg(long)]
+        summary_follow: Option<PathBuf>,
         #[arg(long)]
         readme: PathBuf,
     },
@@ -217,7 +229,44 @@ fn report_v2(summary_v2: &PathBuf, label: &str) -> anyhow::Result<String> {
     Ok(t)
 }
 
-fn report(summary: &PathBuf, summary_v2: Option<&PathBuf>, summary_v2b: Option<&PathBuf>, summary_v2c: Option<&PathBuf>, readme: &PathBuf) -> anyhow::Result<()> {
+fn report_follow(path: &PathBuf) -> anyhow::Result<String> {
+    let v: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(path)?)?;
+    let ci = |c: &serde_json::Value| -> String {
+        format!("{:.4} [{:.4}, {:.4}]", c["point"].as_f64().unwrap_or(f64::NAN), c["lo"].as_f64().unwrap_or(f64::NAN), c["hi"].as_f64().unwrap_or(f64::NAN))
+    };
+    let f = |x: &serde_json::Value| x.as_f64().unwrap_or(f64::NAN);
+    let liq = &v["direct_transfers_liquidation_blocks"];
+    let oth = &v["direct_transfers_other_blocks"];
+    let mut t = String::new();
+    t.push_str(&format!(
+        "\n### v2: builder-payment bounds from the live follower (pre-registration addendum A.3)\n\nSource: `{}`, blocks {} to {} ({:.1} hours, {} blocks, {} containing a liquidation; {} earlier rows written before the proposer-payment amendment are excluded{}). `direct transfers` = coinbase balance delta + the builder's proposer payment - priority fees - withdrawals, per block; in a liquidation block it is an upper bound on what that liquidation paid the builder directly. Medians carry 95% percentile bootstrap intervals, 2,000 resamples, seed 42.\n\n",
+        v["source"].as_str().unwrap_or("?"), v["first_block"], v["last_block"], f(&v["span_hours"]), v["n_blocks"], v["n_liquidation_blocks"], v["n_pre_amendment_excluded"],
+        match v["pre_amendment_liquidation_blocks"].as_array() { Some(a) if !a.is_empty() => format!(", among them liquidation blocks {}", a.iter().map(|b| b.to_string()).collect::<Vec<_>>().join(", ")), _ => String::new() }
+    ));
+    t.push_str("| Descriptive | Liquidation blocks | Other blocks |\n|---|---|---|\n");
+    t.push_str(&format!("| Blocks | {} | {} |\n", liq["n"], oth["n"]));
+    t.push_str(&format!("| Direct transfers, median (ETH) | {} | {} |\n", ci(&liq["median_ci"]), ci(&oth["median_ci"])));
+    t.push_str(&format!("| Direct transfers, p25 / p75 (ETH) | {:.4} / {:.4} | {:.4} / {:.4} |\n", f(&liq["p25_eth"]), f(&liq["p75_eth"]), f(&oth["p25_eth"]), f(&oth["p75_eth"])));
+    t.push_str(&format!("| Direct transfers, p90 (ETH) | {:.4} | {:.4} |\n", f(&liq["p90_eth"]), f(&oth["p90_eth"])));
+    t.push_str(&format!("| Direct transfers, mean (ETH) | {:.4} | {:.4} |\n", f(&liq["mean_eth"]), f(&oth["mean_eth"])));
+    t.push_str(&format!("| Share of blocks with a negative figure (unidentified outflow) | {:.3} | {:.3} |\n", f(&liq["share_negative"]), f(&oth["share_negative"])));
+    t.push_str(&format!("| Median difference, liquidation minus other (ETH) | {} | |\n\n", ci(&v["median_difference_eth"])));
+    if let Some(a) = v["liquidation_blocks"].as_array() {
+        t.push_str("| Liquidation block | Builder | Direct transfers (ETH) | Priority fees (ETH) | Proposer payment (ETH) | Liquidations |\n|---|---|---|---|---|---|\n");
+        for b in a {
+            t.push_str(&format!("| {} | {} | {:.4} | {:.4} | {:.4} | {} |\n", b["block"], b["builder"].as_str().unwrap_or("?"), f(&b["direct_transfers_eth"]), f(&b["priority_fees_eth"]), f(&b["proposer_payment_eth"]), b["n_liquidations"]));
+        }
+        t.push('\n');
+    }
+    if let Some(a) = v["by_builder_top5"].as_array() {
+        let parts: Vec<String> = a.iter().map(|r| format!("{} ({} blocks, {} with a liquidation, median {:.4} ETH)", r[0].as_str().unwrap_or("?"), r[1], r[2], f(&r[3]))).collect();
+        t.push_str(&format!("Builders with most blocks in the window: {}.\n\n", parts.join("; ")));
+    }
+    t.push_str("The proposer payment is identified heuristically as the block's last value-carrying transaction sent from the coinbase; a block where the builder pays differently, or spends from the coinbase for other reasons, shows up as a negative or understated figure. With a handful of liquidation blocks per day this table is descriptive and carries no verdict.\n");
+    Ok(t)
+}
+
+fn report(summary: &PathBuf, summary_v2: Option<&PathBuf>, summary_v2b: Option<&PathBuf>, summary_v2c: Option<&PathBuf>, summary_follow: Option<&PathBuf>, readme: &PathBuf) -> anyhow::Result<()> {
     let v: serde_json::Value = serde_json::from_str(&std::fs::read_to_string(summary)?)?;
     let get = |k: &str| -> anyhow::Result<&serde_json::Value> { v.get(k).ok_or_else(|| anyhow::anyhow!("summary missing `{k}`")) };
     let f = |k: &str| -> anyhow::Result<f64> { get(k)?.as_f64().ok_or_else(|| anyhow::anyhow!("`{k}` not a number")) };
@@ -298,6 +347,9 @@ fn report(summary: &PathBuf, summary_v2: Option<&PathBuf>, summary_v2b: Option<&
     }
     if let Some(v2c) = summary_v2c {
         t.push_str(&report_v2(v2c, "pre-registration addendum C: all aggregator phases")?);
+    }
+    if let Some(fs) = summary_follow {
+        t.push_str(&report_follow(fs)?);
     }
     const START: &str = "<!-- RESULTS:START -->";
     const END: &str = "<!-- RESULTS:END -->";
@@ -799,7 +851,8 @@ async fn main() -> anyhow::Result<()> {
             }
             Ok(())
         }
-        Cmd::Report { summary, summary_v2, summary_v2b, summary_v2c, readme } => report(&summary, summary_v2.as_ref(), summary_v2b.as_ref(), summary_v2c.as_ref(), &readme),
+        Cmd::FollowSummarize { records, out } => follow::follow_summarize(records, out),
+        Cmd::Report { summary, summary_v2, summary_v2b, summary_v2c, summary_follow, readme } => report(&summary, summary_v2.as_ref(), summary_v2b.as_ref(), summary_v2c.as_ref(), summary_follow.as_ref(), &readme),
     }
 }
 
