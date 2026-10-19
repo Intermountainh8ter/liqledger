@@ -109,9 +109,34 @@ Source: `results/summary-v2c.json`. 15030 of 20930 records priced from Chainlink
 
 Visible bid share counts only the priority fee; direct coinbase transfers are not in it, so every bid-share number here is a lower bound.
 
-**Addendum C, read before the verdicts.** Coverage is now 15,030 of 20,930 records: 96.2% of Aave V3 and Spark, above the 80% target, with 12,803 priced exactly and 2,227 through a ratio-cap or multi-source adapter. What remains unpriced on those two protocols: 392 records behind stable-cap adapters without `getPriceCap()`, 143 behind adapters with no known components (Pendle PT linear-discount feeds), 49 whose component is itself an adapter, and 15 touching `MKR/USD (calculated)`, now correctly left unpriced. Verdicts on this sample: **H4 supported**, median visible bid share 0.432 with an upper bound of 0.499, a hair under the 0.50 line (exact-only 0.350 [0.313, 0.401]); **H5 not supported**, 0.284 [0.277, 0.291], so most liquidations do not land in the block of their own feed's update, a result that reverses the reading of v1's any-feed adjacency; **H6 supported**, 0.984 [0.938, 0.994]. The rsETH transaction in block 25,037,701 is still 70.7% of all gross bonus; the exact-only line, which excludes it, still clears the H6 bound at 0.935 [0.921, 0.948], so concentration does not depend on that one transaction. 487 priced records have a negative gross bonus (seized worth less than repaid at oracle prices), which is possible when a position's debt and collateral feeds updated at different blocks; they are kept. The decile row shows the clearing-price curve: visible bids are a large share of small bonuses and a small share of large ones (D1 median above 1.0, D10 0.007), which is what one expects when the big liquidations are paid for by coinbase transfers the priority fee does not show.
+### v2: builder-payment bounds from the live follower (pre-registration addendum A.3)
 
-**Follower caveat (A.3).** The first liquidation block the follower recorded had a negative "direct transfers" figure: the builder paid the proposer from the coinbase address in the block's last transaction, so the coinbase balance delta nets that payment out. The per-block bound in A.3 holds only after the proposer payment is identified and added back; the follower will be amended to do that before any follower numbers are reported.
+Source: `results/summary-follow.json` (the follower's per-block records are kept outside the repository), blocks 26219854 to 26227080 (24.2 hours, 7227 blocks, 8 containing a liquidation; 2416 earlier rows written before the proposer-payment amendment are excluded, among them liquidation blocks 26219106, 26219648). `direct transfers` = coinbase balance delta + the builder's proposer payment - priority fees - withdrawals, per block; in a liquidation block it is an upper bound on what that liquidation paid the builder directly. Medians carry 95% percentile bootstrap intervals, 2,000 resamples, seed 42.
+
+| Descriptive | Liquidation blocks | Other blocks |
+|---|---|---|
+| Blocks | 8 | 7219 |
+| Direct transfers, median (ETH) | 0.0065 [0.0002, 0.0084] | 0.0002 [0.0001, 0.0002] |
+| Direct transfers, p25 / p75 (ETH) | 0.0002 / 0.0071 | -0.0000 / 0.0014 |
+| Direct transfers, p90 (ETH) | 0.0084 | 0.0052 |
+| Direct transfers, mean (ETH) | 0.0049 | 0.0008 |
+| Share of blocks with a negative figure (unidentified outflow) | 0.125 | 0.268 |
+| Median difference, liquidation minus other (ETH) | 0.0063 [0.0000, 0.0083] | |
+
+| Liquidation block | Builder | Direct transfers (ETH) | Priority fees (ETH) | Proposer payment (ETH) | Liquidations |
+|---|---|---|---|---|---|
+| 26220060 | Titan (titanbuilder.xyz) | 0.0065 | 0.0456 | 0.0247 | 1 |
+| 26220794 | Titan (titanbuilder.xyz) | 0.0065 | 0.0143 | 0.0078 | 1 |
+| 26221556 | BuilderNet | 0.0071 | 0.0222 | 0.0193 | 1 |
+| 26221597 | Titan (titanbuilder.xyz) | 0.0084 | 0.0152 | 0.0078 | 1 |
+| 26221599 | BuilderNet | 0.0121 | 0.0155 | 0.0094 | 1 |
+| 26221640 | BuilderNet | -0.0017 | 0.0128 | 0.0068 | 1 |
+| 26221679 | Titan (titanbuilder.xyz) | 0.0002 | 0.0097 | 0.0061 | 1 |
+| 26224646 | Titan (titanbuilder.xyz) | 0.0002 | 0.0082 | 0.0036 | 1 |
+
+Builders with most blocks in the window: Titan (titanbuilder.xyz) (3482 blocks, 5 with a liquidation, median 0.0007 ETH); ? Quasar (quasar.win) ? (1282 blocks, 0 with a liquidation, median -0.0001 ETH); BuilderNet (935 blocks, 3 with a liquidation, median 0.0002 ETH); Eureka (eurekabuilder.xyz) (589 blocks, 0 with a liquidation, median -0.0000 ETH); bombora.build ? (142 blocks, 0 with a liquidation, median -0.0024 ETH).
+
+The proposer payment is identified heuristically as the block's last value-carrying transaction sent from the coinbase; a block where the builder pays differently, or spends from the coinbase for other reasons, shows up as a negative or understated figure. With a handful of liquidation blocks per day this table is descriptive and carries no verdict.
 <!-- RESULTS:END -->
 
 ### What the numbers say
@@ -128,7 +153,7 @@ Window: blocks 22,431,084 to 26,211,500 (2025-05-07 to 2026-10-17). 16,510 trans
 
 ## What a full node cannot show, said up front
 
-- **Direct coinbase transfers.** Searchers commonly pay the builder with a transfer inside the transaction rather than a priority fee. Seeing that needs traces. The `priority_fee_wei` column is therefore a lower bound, and the share of liquidations with a priority fee of exactly zero is reported as the signature of that payment path, not as "paid nothing".
+- **Direct coinbase transfers.** Searchers commonly pay the builder with a transfer inside the transaction rather than a priority fee. Seeing that needs traces. The `priority_fee_wei` column is therefore a lower bound, and the share of liquidations with a priority fee of exactly zero is reported as the signature of that payment path, not as "paid nothing". The live follower measures the direct path per block from coinbase balance changes; see "builder-payment bounds from the live follower" above.
 - **USD values.** Amounts are in raw token units. Pricing them needs per-block oracle answers, which the `AnswerUpdated` logs actually carry; that is the next version.
 - **Which feed triggered which liquidation.** The oracle columns say "any Chainlink feed updated in this block or the 50 before"; attribution to the liquidated position's own collateral and debt feeds is deferred.
 - **History floor.** Geth with history expiry serves blocks from roughly 17 months back. The window is whatever the node has, recorded in the summary.

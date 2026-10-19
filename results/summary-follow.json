@@ -1,0 +1,182 @@
+{
+  "source": "liq-follow-mainnet.jsonl",
+  "n_rows": 9643,
+  "n_pre_amendment_excluded": 2416,
+  "pre_amendment_liquidation_blocks": [
+    26219106,
+    26219648
+  ],
+  "n_blocks": 7227,
+  "first_block": 26219854,
+  "last_block": 26227080,
+  "first_timestamp": 1792331375,
+  "last_timestamp": 1792418423,
+  "span_hours": 24.18,
+  "n_liquidation_blocks": 8,
+  "n_liquidation_txs": 8,
+  "liquidation_blocks": [
+    {
+      "block": 26220060,
+      "timestamp": 1792333895,
+      "builder": "Titan (titanbuilder.xyz)",
+      "direct_transfers_eth": 0.006510214821822822,
+      "priority_fees_eth": 0.04558148144299844,
+      "proposer_payment_eth": 0.024723097736394077,
+      "n_liquidations": 1,
+      "liquidation_txs": [
+        "0x5595ded83a67baf974c1866901a440d4f840b73805d149fc1222da7995921b02"
+      ]
+    },
+    {
+      "block": 26220794,
+      "timestamp": 1792342727,
+      "builder": "Titan (titanbuilder.xyz)",
+      "direct_transfers_eth": 0.006475704687687119,
+      "priority_fees_eth": 0.01431434165363173,
+      "proposer_payment_eth": 0.00783188100949985,
+      "n_liquidations": 1,
+      "liquidation_txs": [
+        "0xde57f4ff5e4342f0f392bfb01e7f7fa450ab3b80cdd5aeced75795ff11a8fdd5"
+      ]
+    },
+    {
+      "block": 26221556,
+      "timestamp": 1792351895,
+      "builder": "BuilderNet",
+      "direct_transfers_eth": 0.007136734102122175,
+      "priority_fees_eth": 0.022172412083290512,
+      "proposer_payment_eth": 0.019324486993034184,
+      "n_liquidations": 1,
+      "liquidation_txs": [
+        "0x54a94a801294184188bc9bf650b92765a26de2a3e0871924383a77a39e08a03f"
+      ]
+    },
+    {
+      "block": 26221597,
+      "timestamp": 1792352387,
+      "builder": "Titan (titanbuilder.xyz)",
+      "direct_transfers_eth": 0.00843535203621885,
+      "priority_fees_eth": 0.015211883787674617,
+      "proposer_payment_eth": 0.007754981945439626,
+      "n_liquidations": 1,
+      "liquidation_txs": [
+        "0x12d12a584c6bb5bec8bfdb42e8f67f5ecccdbdd220a05108327edf02dd3b5505"
+      ]
+    },
+    {
+      "block": 26221599,
+      "timestamp": 1792352411,
+      "builder": "BuilderNet",
+      "direct_transfers_eth": 0.012079961910619308,
+      "priority_fees_eth": 0.01553739872626979,
+      "proposer_payment_eth": 0.009366432652924445,
+      "n_liquidations": 1,
+      "liquidation_txs": [
+        "0x332d3c35f18ece873990965dfa063c8bc5ddca24f5317c4b08db6396bd72a7ba"
+      ]
+    },
+    {
+      "block": 26221640,
+      "timestamp": 1792352903,
+      "builder": "BuilderNet",
+      "direct_transfers_eth": -0.001671169661445713,
+      "priority_fees_eth": 0.012844385781270154,
+      "proposer_payment_eth": 0.006760376772407312,
+      "n_liquidations": 1,
+      "liquidation_txs": [
+        "0x935dd15f6564bb2ffa999a0db7683e918b90d48c845a5e73bd0759d038694616"
+      ]
+    },
+    {
+      "block": 26221679,
+      "timestamp": 1792353371,
+      "builder": "Titan (titanbuilder.xyz)",
+      "direct_transfers_eth": 0.000196034924819577,
+      "priority_fees_eth": 0.009651999111912384,
+      "proposer_payment_eth": 0.0060679616714004,
+      "n_liquidations": 1,
+      "liquidation_txs": [
+        "0x8b9cbb8a2970266e067fa8d250113ff0610370c99d13f7f88259d472e12e56e3"
+      ]
+    },
+    {
+      "block": 26224646,
+      "timestamp": 1792389083,
+      "builder": "Titan (titanbuilder.xyz)",
+      "direct_transfers_eth": 0.000222262748401119,
+      "priority_fees_eth": 0.008174349792203639,
+      "proposer_payment_eth": 0.003577905448411868,
+      "n_liquidations": 1,
+      "liquidation_txs": [
+        "0xe244ca16dd924f0aefdaab2f668bc2bc9a5350232fc4b07fb3134e57c7438692"
+      ]
+    }
+  ],
+  "direct_transfers_liquidation_blocks": {
+    "n": 8,
+    "mean_eth": 0.004923136946280658,
+    "p10_eth": 0.000196034924819577,
+    "p25_eth": 0.000222262748401119,
+    "median_eth": 0.006510214821822822,
+    "p75_eth": 0.007136734102122175,
+    "p90_eth": 0.00843535203621885,
+    "share_negative": 0.125,
+    "median_ci": {
+      "point": 0.006510214821822822,
+      "lo": 0.000196034924819577,
+      "hi": 0.00843535203621885
+    }
+  },
+  "direct_transfers_other_blocks": {
+    "n": 7219,
+    "mean_eth": 0.0008413324278420133,
+    "p10_eth": -0.000520816808325916,
+    "p25_eth": -8.951644085656e-6,
+    "median_eth": 0.000164151423051315,
+    "p75_eth": 0.001351886674669083,
+    "p90_eth": 0.005216004971348948,
+    "share_negative": 0.26790414184790134,
+    "median_ci": {
+      "point": 0.000164151423051315,
+      "lo": 0.000145626215900624,
+      "hi": 0.000185887712407133
+    }
+  },
+  "median_difference_eth": {
+    "point": 0.006346063398771507,
+    "lo": 0.00003661967216261999,
+    "hi": 0.008279869833014597
+  },
+  "by_builder_top5": [
+    [
+      "Titan (titanbuilder.xyz)",
+      3482,
+      5,
+      0.000741765610713475
+    ],
+    [
+      "✨ Quasar (quasar.win) ✨",
+      1282,
+      0,
+      -0.000058467652347759
+    ],
+    [
+      "BuilderNet",
+      935,
+      3,
+      0.00021662203549312
+    ],
+    [
+      "Eureka (eurekabuilder.xyz)",
+      589,
+      0,
+      -0.000033009327589446
+    ],
+    [
+      "bombora.build 🌊",
+      142,
+      0,
+      -0.002361057475183781
+    ]
+  ]
+}

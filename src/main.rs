@@ -253,8 +253,8 @@ fn report_follow(path: &PathBuf) -> anyhow::Result<String> {
     let oth = &v["direct_transfers_other_blocks"];
     let mut t = String::new();
     t.push_str(&format!(
-        "\n### v2: builder-payment bounds from the live follower (pre-registration addendum A.3)\n\nSource: `{}`, blocks {} to {} ({:.1} hours, {} blocks, {} containing a liquidation; {} earlier rows written before the proposer-payment amendment are excluded{}). `direct transfers` = coinbase balance delta + the builder's proposer payment - priority fees - withdrawals, per block; in a liquidation block it is an upper bound on what that liquidation paid the builder directly. Medians carry 95% percentile bootstrap intervals, 2,000 resamples, seed 42.\n\n",
-        v["source"].as_str().unwrap_or("?"), v["first_block"], v["last_block"], f(&v["span_hours"]), v["n_blocks"], v["n_liquidation_blocks"], v["n_pre_amendment_excluded"],
+        "\n### v2: builder-payment bounds from the live follower (pre-registration addendum A.3)\n\nSource: `{}` (the follower's per-block records are kept outside the repository), blocks {} to {} ({:.1} hours, {} blocks, {} containing a liquidation; {} earlier rows written before the proposer-payment amendment are excluded{}). `direct transfers` = coinbase balance delta + the builder's proposer payment - priority fees - withdrawals, per block; in a liquidation block it is an upper bound on what that liquidation paid the builder directly. Medians carry 95% percentile bootstrap intervals, 2,000 resamples, seed 42.\n\n",
+        path.display(), v["first_block"], v["last_block"], f(&v["span_hours"]), v["n_blocks"], v["n_liquidation_blocks"], v["n_pre_amendment_excluded"],
         match v["pre_amendment_liquidation_blocks"].as_array() { Some(a) if !a.is_empty() => format!(", among them liquidation blocks {}", a.iter().map(|b| b.to_string()).collect::<Vec<_>>().join(", ")), _ => String::new() }
     ));
     t.push_str("| Descriptive | Liquidation blocks | Other blocks |\n|---|---|---|\n");

@@ -289,7 +289,7 @@ pub fn follow_summarize(records: PathBuf, out: PathBuf) -> anyhow::Result<()> {
     let first = &rows[0];
     let last = &rows[rows.len() - 1];
     let s = FollowSummary {
-        source: records.display().to_string(),
+        source: records.file_name().map(|f| f.to_string_lossy().into_owned()).unwrap_or_else(|| records.display().to_string()),
         n_rows,
         n_pre_amendment_excluded: excluded,
         pre_amendment_liquidation_blocks: pre_liq,
