@@ -207,7 +207,7 @@ fn report_v2(summary_v2: &PathBuf, label: &str) -> anyhow::Result<String> {
         t.push_str(&format!("| Median visible bid share by gross-profit decile (D1 smallest) | {} |\n", parts.join("; ")));
     }
     if let Some(b) = v["visible_bid_share_by_builder_top5"].as_array() {
-        let parts: Vec<String> = b.iter().map(|r| format!("{} (n={}) {:.3}", r[0].as_str().unwrap_or("?"), r[1], r[2].as_f64().unwrap_or(f64::NAN))).collect();
+        let parts: Vec<String> = b.iter().map(|r| format!("{} (n={}) {:.3}", safe_tag(r[0].as_str().unwrap_or("?")), r[1], r[2].as_f64().unwrap_or(f64::NAN))).collect();
         t.push_str(&format!("| Median visible bid share by builder, top 5 | {} |\n", parts.join("; ")));
     }
     if let Some(m) = v["unpriced_reasons"].as_object() {
@@ -227,6 +227,20 @@ fn report_v2(summary_v2: &PathBuf, label: &str) -> anyhow::Result<String> {
     }
     t.push_str("\nVisible bid share counts only the priority fee; direct coinbase transfers are not in it, so every bid-share number here is a lower bound.\n");
     Ok(t)
+}
+
+/// Builder tags come from block extra-data, which is arbitrary bytes chosen by the builder. Before
+/// they go into README markdown, keep a conservative character set (so `|`, `<`, `[`, backticks and
+/// comment openers cannot break the table or inject HTML) and cap the length.
+fn safe_tag(raw: &str) -> String {
+    let mut out: String = raw
+        .chars()
+        .map(|c| if c.is_alphanumeric() || matches!(c, ' ' | '-' | '_' | '.' | '/' | ':' | '(' | ')') { c } else { '?' })
+        .collect();
+    if out.chars().count() > 48 {
+        out = out.chars().take(48).collect::<String>() + "...";
+    }
+    out.trim().to_string()
 }
 
 fn report_follow(path: &PathBuf) -> anyhow::Result<String> {
@@ -254,12 +268,12 @@ fn report_follow(path: &PathBuf) -> anyhow::Result<String> {
     if let Some(a) = v["liquidation_blocks"].as_array() {
         t.push_str("| Liquidation block | Builder | Direct transfers (ETH) | Priority fees (ETH) | Proposer payment (ETH) | Liquidations |\n|---|---|---|---|---|---|\n");
         for b in a {
-            t.push_str(&format!("| {} | {} | {:.4} | {:.4} | {:.4} | {} |\n", b["block"], b["builder"].as_str().unwrap_or("?"), f(&b["direct_transfers_eth"]), f(&b["priority_fees_eth"]), f(&b["proposer_payment_eth"]), b["n_liquidations"]));
+            t.push_str(&format!("| {} | {} | {:.4} | {:.4} | {:.4} | {} |\n", b["block"], safe_tag(b["builder"].as_str().unwrap_or("?")), f(&b["direct_transfers_eth"]), f(&b["priority_fees_eth"]), f(&b["proposer_payment_eth"]), b["n_liquidations"]));
         }
         t.push('\n');
     }
     if let Some(a) = v["by_builder_top5"].as_array() {
-        let parts: Vec<String> = a.iter().map(|r| format!("{} ({} blocks, {} with a liquidation, median {:.4} ETH)", r[0].as_str().unwrap_or("?"), r[1], r[2], f(&r[3]))).collect();
+        let parts: Vec<String> = a.iter().map(|r| format!("{} ({} blocks, {} with a liquidation, median {:.4} ETH)", safe_tag(r[0].as_str().unwrap_or("?")), r[1], r[2], f(&r[3]))).collect();
         t.push_str(&format!("Builders with most blocks in the window: {}.\n\n", parts.join("; ")));
     }
     t.push_str("The proposer payment is identified heuristically as the block's last value-carrying transaction sent from the coinbase; a block where the builder pays differently, or spends from the coinbase for other reasons, shows up as a negative or understated figure. With a handful of liquidation blocks per day this table is descriptive and carries no verdict.\n");
@@ -299,7 +313,7 @@ fn report(summary: &PathBuf, summary_v2: Option<&PathBuf>, summary_v2b: Option<&
     let mut builders: Vec<String> = Vec::new();
     if let Some(a) = get("builders_top5")?.as_array() {
         for b in a {
-            builders.push(format!("{} ({})", b[0].as_str().unwrap_or("?"), b[1]));
+            builders.push(format!("{} ({})", safe_tag(b[0].as_str().unwrap_or("?")), b[1]));
         }
     }
     let mut t = String::new();
@@ -858,6 +872,13 @@ async fn main() -> anyhow::Result<()> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn safe_tag_neutralises_markdown_and_html() {
+        assert_eq!(super::safe_tag("Titan (titanbuilder.xyz)"), "Titan (titanbuilder.xyz)");
+        assert_eq!(super::safe_tag("a|b<!--c-->`d`[e](f)"), "a?b??--c--??d??e?(f)");
+        assert!(super::safe_tag(&"x".repeat(100)).ends_with("..."));
+    }
+
     use super::*;
 
     #[test]
