@@ -1,0 +1,24 @@
+{
+  "provenance": {
+    "command": "cargo run --locked --release -- dustcheck --seed 7 --n 1000 --out results/52-dustcheck.json",
+    "data_sources": [
+      {
+        "license": "official documentation, quoted for rule definitions only; no data used",
+        "url": "https://aave.com/docs/aave-v4/positions/liquidations"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-10-27T09:04:18Z",
+    "wall_s": 0.000067908
+  },
+  "summary": {
+    "divergent_full_repay_count": 117,
+    "dust_repay_divergence_count": 117,
+    "dust_threshold_usd": 1000.0,
+    "fixtures_with_debt_below_threshold_count": 59,
+    "n_fixtures": 1000
+  }
+}

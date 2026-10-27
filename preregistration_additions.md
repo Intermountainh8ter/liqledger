@@ -32,3 +32,18 @@ Falsifier: a count below 150 or above 300 under seed 7 and this mix. Secondary (
 the split of disagreeing fixtures into visible and not-visible refunds.
 Limit: the mix is an assumption, not data; refunds are not attributable on-chain per the cited source, so this
 describes arithmetic only.
+
+## 2026-10-27T09:04:09Z dustcheck proposal:7d5a07a2987d8525818f7b953ac97f6e9f10691111e6eacebff8b6f90977e9be
+
+Hypothesis: on 1000 seeded synthetic fixtures (seed 7) with debt drawn from a fixed assumed range, at least 5% of
+fixtures have a repaid amount that differs between the target-health-factor rule alone and the same rule plus the
+remaining-debt dust rule, so a local re-execution that omits the dust rule diverges from a landed liquidation.
+
+Fixture model (fixed before running): debt D ~ U[500, 10000] USD in the target reserve. The target-health-factor rule
+repays a fraction f ~ U[0.05, 0.6] of D (R = f * D). The dust rule, as documented for Aave V4: if remaining debt
+D - R is below 1000 USD, the full debt D is repaid. A fixture diverges when the two repaid amounts differ.
+
+Metric: /summary/dust_repay_divergence_count. Expected: at least 50 of 1000 (range 50 to 1000).
+Falsifier: a count below 50 of 1000 under seed 7 and this mix.
+Limit: the ranges are assumptions, not data; the page cited does not mention collateral, so this models debt only.
+It describes the arithmetic of the rule, not how often real liquidations hit it.

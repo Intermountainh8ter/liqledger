@@ -190,3 +190,7 @@ Source: `results/50-defcheck.json`. This is arithmetic on a stated channel mix (
 ### refundcheck: does netting refunds change a share? (synthetic fixtures, iteration 51)
 
 Source: `results/51-refundcheck.json`. This is arithmetic on a stated refund mix (see `preregistration_additions.md`), not chain data. Of 1000 fixtures, 323 carry a refund, and the gross-of-refund and net-of-refund shares differ by more than 0.05 on 201. Of those, 37 have a refund assumed visible in the same block and 164 do not. The pre-registered range was 150 to 300 fixtures, so the hypothesis held. The mix is an assumption, so the count shows netting can matter, not how often it does for real builders.
+
+### dustcheck: does a remaining-debt dust rule change the repaid amount? (synthetic fixtures, iteration 52)
+
+Source: `results/52-dustcheck.json`. This is arithmetic on a stated debt range (see `preregistration_additions.md`), not chain data. Of 1000 fixtures, 117 have a repaid amount that differs once a 1000 USD remaining-debt dust rule is added to a plain target-health-factor repayment; all 117 become a full repayment. 59 fixtures start with debt below the threshold. The pre-registered expectation was at least 50 fixtures, so the hypothesis held. The ranges are assumptions, so the count shows a local re-execution that omits the rule can diverge, not how often real liquidations hit it.
