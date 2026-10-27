@@ -62,3 +62,21 @@ Metric: /summary/adjacency_misclassified_block_count. Expected: between 400 and 
 Falsifier: a count below 400 of 1000 under seed 7, meaning adjacency alone separates the two kinds on the fixtures.
 Limit: the 0.5 mix and the all-adjacent design are assumptions, so the count restates the mix; it is not a measured
 rate of shared origin on chain.
+
+## 2026-10-27T09:19:15Z fallbackcheck proposal:437bea6e0214f92d5009a5c2ddf597032215a36cd6593e7d6f322843d233993a
+
+Hypothesis: in a seeded synthetic model of 1000 liquidations (seed 7) where half of oracle updates take the fallback
+path, a public-only adjacency rule misattributes strictly more liquidations at a 60 s fallback delay than at a 10 s
+delay, because a longer delay widens the window in which unrelated updates can land adjacent.
+
+Fixture model (fixed before running): each liquidation follows one true update; the path is fallback with p 0.5, else
+private. Only fallback-path liquidations are exposed to the delay D (10 s or 60 s). During D, unrelated updates arrive
+as a Poisson count with mean D / 60, each private or fallback with p 0.5. The public-only rule picks one candidate
+uniformly among the true update and the unrelated ones and attributes the liquidation to that candidate's path. A
+liquidation is misattributed when the picked candidate's path differs from the true path (fallback). Both delay
+settings use the same seed and separate draws per setting.
+
+Metric: /summary/fallback_path_misattributed_count (60 s setting); the 10 s count is reported alongside as
+/summary/fallback_path_misattributed_count_10s. Expected: at least 1 and above the 10 s count (range 1 to 1000).
+Falsifier: the 60 s count is less than or equal to the 10 s count at seed 7, or the count is zero.
+Limit: the mix, arrival rate and uniform pick are assumptions, not data; no chain data is used.

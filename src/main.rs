@@ -14,6 +14,7 @@
 
 mod defcheck;
 mod attribcheck;
+mod fallbackcheck;
 mod dustcheck;
 mod follow;
 mod price;
@@ -190,6 +191,15 @@ enum Cmd {
     },
     /// Count synthetic blocks a public-only same-block adjacency rule misattributes.
     Attribcheck {
+        #[arg(long, default_value_t = 7)]
+        seed: u64,
+        #[arg(long, default_value_t = 1000)]
+        n: usize,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Count synthetic liquidations attributed to the wrong update path at 10 s and 60 s fallback delays.
+    Fallbackcheck {
         #[arg(long, default_value_t = 7)]
         seed: u64,
         #[arg(long, default_value_t = 1000)]
@@ -903,6 +913,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Refundcheck { seed, n, out } => refundcheck::refundcheck(seed, n, out),
         Cmd::Dustcheck { seed, n, out } => dustcheck::dustcheck(seed, n, out),
         Cmd::Attribcheck { seed, n, out } => attribcheck::attribcheck(seed, n, out),
+        Cmd::Fallbackcheck { seed, n, out } => fallbackcheck::fallbackcheck(seed, n, out),
         Cmd::Topics => {
             for (name, h) in topics() {
                 println!("{h:#x}  {name}");

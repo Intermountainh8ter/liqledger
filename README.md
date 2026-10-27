@@ -198,3 +198,7 @@ Source: `results/52-dustcheck.json`. This is arithmetic on a stated debt range (
 ### attribcheck: how many blocks does a same-block adjacency rule misattribute? (synthetic fixtures, iteration 55)
 
 Source: `results/55-attribcheck.json`. This is arithmetic on a stated mix (see `preregistration_additions.md`), not chain data. Of 1000 synthetic blocks, each holding an oracle update and a liquidation side by side, 470 are coincidental and 530 share a private origin. A public-only rule that labels every adjacent pair as shared misclassifies the 470 coincidental ones. The pre-registered expectation was at least 400 blocks, so the hypothesis held. The mix and the all-adjacent design are assumptions, so the count restates the mix and is not a measured rate of shared origin on chain.
+
+### fallbackcheck: does a longer fallback delay widen adjacency misattribution? (synthetic fixtures, iteration 56)
+
+Source: `results/56-fallbackcheck.json`. This is arithmetic on a stated mix (see `preregistration_additions.md`), not chain data. Of 1000 synthetic liquidations, a public-only adjacency rule attributes 89 to the wrong update path at the 60 s fallback delay and 15 at the 10 s delay. The pre-registered expectation was a 60 s count of at least 1 and above the 10 s count, so the hypothesis held. The path mix, the unrelated-update arrival rate and the uniform pick are assumptions, so the counts restate the model and are not measured rates on chain.

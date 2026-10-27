@@ -1,0 +1,22 @@
+{
+  "provenance": {
+    "command": "cargo run --locked --release -- fallbackcheck --seed 7 --n 1000 --out results/56-fallbackcheck.json",
+    "data_sources": [
+      {
+        "license": "public governance forum, quoted for the problem statement only; no data used",
+        "url": "https://governance.aave.com/t/arfc-aave-chainlink-svr-multi-network-expansion-base-arbitrum/24241"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-10-27T09:19:24Z",
+    "wall_s": 0.000113207
+  },
+  "summary": {
+    "fallback_path_misattributed_count": 89,
+    "fallback_path_misattributed_count_10s": 15,
+    "n_liquidations": 1000
+  }
+}
