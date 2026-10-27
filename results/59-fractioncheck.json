@@ -1,0 +1,29 @@
+{
+  "provenance": {
+    "command": "cargo run --locked --release -- fractioncheck --seed 7 --n 1000 --out results/59-fractioncheck.json",
+    "data_sources": [
+      {
+        "license": "public forum post, quoted for rule definition only; no data used",
+        "url": "https://governance.aave.com/t/arfc-deploy-aave-v4-on-avalanche/25165"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-10-27T09:35:31Z",
+    "wall_s": 0.000057252
+  },
+  "summary": {
+    "fixed_bonus": 0.05,
+    "fixed_fraction_below_target_count": 659,
+    "n_fixtures": 1000,
+    "repay_fraction": 0.5,
+    "targets": [
+      1.035,
+      1.044,
+      1.24
+    ],
+    "tolerance": 0.01
+  }
+}

@@ -97,3 +97,18 @@ infinity if the debt is fully repaid. A fixture is a miss when |HF' - T| > 0.01 
 Metric: /summary/fixed_bonus_target_miss_count. Expected: at least 300 of 1000 (range 300 to 1000).
 Falsifier: a count below 300 of 1000 under seed 7.
 Limit: the ranges, linear bonus curve and target are assumptions, not the Aave V4 parameters; no chain data is used.
+
+## 2026-10-27T09:35:18Z fractioncheck proposal:532c763c1a719db8b4fea961d7a60569b930945d121f9a05520805eba7dfdd60
+
+Hypothesis: on 1000 seeded synthetic positions (seed 7) with a per-Spoke target health factor drawn uniformly from
+{1.035, 1.044, 1.24}, a fixed 50 percent debt repay with a fixed 5 percent bonus leaves the post-liquidation health
+factor below target by more than 0.01 in at least 300 of 1000 fixtures.
+
+Fixture model (fixed before running): debt D = 1; pre-liquidation health factor HF uniform on [0.90, 0.99]; liquidation
+threshold LT uniform on [0.75, 0.90]; collateral C = HF * D / LT. Repay x = 0.5 * D with bonus 0.05 (not HF-dependent,
+so the shortfall is not a bonuscheck effect; the post-repay debt is 0.5 so dust is not involved). Post-liquidation
+HF' = (C - x*1.05) * LT / (D - x). A fixture counts when HF' < target - 0.01.
+
+Metric: /summary/fixed_fraction_below_target_count. Expected: at least 300 of 1000 (range 300 to 1000).
+Falsifier: a count below 300 of 1000 under seed 7 and n 1000.
+Limit: the ranges, target set and repay fraction are assumptions, not Aave V4 parameters; no chain data is used.
