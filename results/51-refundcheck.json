@@ -1,0 +1,25 @@
+{
+  "provenance": {
+    "command": "cargo run --locked --release -- refundcheck --seed 7 --n 1000 --out results/51-refundcheck.json",
+    "data_sources": [
+      {
+        "license": "public blog post, quoted for definitions only; no data used",
+        "url": "https://greenfieldcapital.com/2026/08/06/the-state-of-ethereum-block-building-since-2024-part-i-the-demand-side-orderflow-and-the-priority-fee-landscape-2/"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-10-27T08:59:53Z",
+    "wall_s": 0.000082629
+  },
+  "summary": {
+    "disagreement_not_visible_refund_count": 164,
+    "disagreement_visible_refund_count": 37,
+    "n_fixtures": 1000,
+    "refund_gross_net_disagreement_count": 201,
+    "refunded_fixture_count": 323,
+    "threshold": 0.05
+  }
+}

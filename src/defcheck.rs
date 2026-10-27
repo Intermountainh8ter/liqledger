@@ -57,7 +57,7 @@ pub fn defcheck(seed: u64, n: usize, out: PathBuf) -> anyhow::Result<()> {
     Ok(())
 }
 
-fn chrono_now() -> String {
+pub fn chrono_now() -> String {
     let s = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs() as i64;
     let (days, rem) = (s.div_euclid(86400), s.rem_euclid(86400));
     // civil-from-days (Howard Hinnant)

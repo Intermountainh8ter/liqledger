@@ -186,3 +186,7 @@ MIT.
 ### defcheck: do share definitions agree? (synthetic fixtures, iteration 50)
 
 Source: `results/50-defcheck.json`. This is arithmetic on a stated channel mix (see `preregistration_additions.md`), not chain data. Of 1000 fixtures, the gas-only and all-channel share definitions differ by more than 0.05 on 486; gas-only versus share-of-bonus on 653; all-channel versus share-of-bonus on 331. The pre-registered threshold was at least 300 fixtures. The mix is an assumption, so the count shows the definitions are not interchangeable, not by how much on real builders.
+
+### refundcheck: does netting refunds change a share? (synthetic fixtures, iteration 51)
+
+Source: `results/51-refundcheck.json`. This is arithmetic on a stated refund mix (see `preregistration_additions.md`), not chain data. Of 1000 fixtures, 323 carry a refund, and the gross-of-refund and net-of-refund shares differ by more than 0.05 on 201. Of those, 37 have a refund assumed visible in the same block and 164 do not. The pre-registered range was 150 to 300 fixtures, so the hypothesis held. The mix is an assumption, so the count shows netting can matter, not how often it does for real builders.

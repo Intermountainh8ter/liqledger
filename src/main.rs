@@ -15,6 +15,7 @@
 mod defcheck;
 mod follow;
 mod price;
+mod refundcheck;
 
 use alloy::eips::BlockId;
 use alloy::primitives::{Address, B256};
@@ -160,6 +161,15 @@ enum Cmd {
     /// Print the event signatures this tool filters on (for the pre-registration).
     /// Count synthetic payment fixtures where gas-only and all-channel share definitions disagree.
     Defcheck {
+        #[arg(long, default_value_t = 7)]
+        seed: u64,
+        #[arg(long, default_value_t = 1000)]
+        n: usize,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Count synthetic fixtures where gross-of-refund and net-of-refund shares disagree.
+    Refundcheck {
         #[arg(long, default_value_t = 7)]
         seed: u64,
         #[arg(long, default_value_t = 1000)]
@@ -870,6 +880,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::SummarizeV2 { priced, out } => price::summarize_v2(priced, out),
         Cmd::Follow { rpc, out, blocks } => follow::follow(rpc, out, blocks).await,
         Cmd::Defcheck { seed, n, out } => defcheck::defcheck(seed, n, out),
+        Cmd::Refundcheck { seed, n, out } => refundcheck::refundcheck(seed, n, out),
         Cmd::Topics => {
             for (name, h) in topics() {
                 println!("{h:#x}  {name}");
