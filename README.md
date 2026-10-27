@@ -194,3 +194,7 @@ Source: `results/51-refundcheck.json`. This is arithmetic on a stated refund mix
 ### dustcheck: does a remaining-debt dust rule change the repaid amount? (synthetic fixtures, iteration 52)
 
 Source: `results/52-dustcheck.json`. This is arithmetic on a stated debt range (see `preregistration_additions.md`), not chain data. Of 1000 fixtures, 117 have a repaid amount that differs once a 1000 USD remaining-debt dust rule is added to a plain target-health-factor repayment; all 117 become a full repayment. 59 fixtures start with debt below the threshold. The pre-registered expectation was at least 50 fixtures, so the hypothesis held. The ranges are assumptions, so the count shows a local re-execution that omits the rule can diverge, not how often real liquidations hit it.
+
+### attribcheck: how many blocks does a same-block adjacency rule misattribute? (synthetic fixtures, iteration 55)
+
+Source: `results/55-attribcheck.json`. This is arithmetic on a stated mix (see `preregistration_additions.md`), not chain data. Of 1000 synthetic blocks, each holding an oracle update and a liquidation side by side, 470 are coincidental and 530 share a private origin. A public-only rule that labels every adjacent pair as shared misclassifies the 470 coincidental ones. The pre-registered expectation was at least 400 blocks, so the hypothesis held. The mix and the all-adjacent design are assumptions, so the count restates the mix and is not a measured rate of shared origin on chain.

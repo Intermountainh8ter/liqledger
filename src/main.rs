@@ -13,6 +13,7 @@
 //! See docs/PREREGISTRATION.md.
 
 mod defcheck;
+mod attribcheck;
 mod dustcheck;
 mod follow;
 mod price;
@@ -180,6 +181,15 @@ enum Cmd {
     },
     /// Count synthetic fixtures where a remaining-debt dust rule changes the repaid amount.
     Dustcheck {
+        #[arg(long, default_value_t = 7)]
+        seed: u64,
+        #[arg(long, default_value_t = 1000)]
+        n: usize,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Count synthetic blocks a public-only same-block adjacency rule misattributes.
+    Attribcheck {
         #[arg(long, default_value_t = 7)]
         seed: u64,
         #[arg(long, default_value_t = 1000)]
@@ -892,6 +902,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Defcheck { seed, n, out } => defcheck::defcheck(seed, n, out),
         Cmd::Refundcheck { seed, n, out } => refundcheck::refundcheck(seed, n, out),
         Cmd::Dustcheck { seed, n, out } => dustcheck::dustcheck(seed, n, out),
+        Cmd::Attribcheck { seed, n, out } => attribcheck::attribcheck(seed, n, out),
         Cmd::Topics => {
             for (name, h) in topics() {
                 println!("{h:#x}  {name}");

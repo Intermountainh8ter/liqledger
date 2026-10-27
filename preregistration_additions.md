@@ -47,3 +47,18 @@ Metric: /summary/dust_repay_divergence_count. Expected: at least 50 of 1000 (ran
 Falsifier: a count below 50 of 1000 under seed 7 and this mix.
 Limit: the ranges are assumptions, not data; the page cited does not mention collateral, so this models debt only.
 It describes the arithmetic of the rule, not how often real liquidations hit it.
+
+## 2026-10-27T09:14:40Z attribcheck proposal:d7859a9500180f9a068880b14847923effd861ff6d36ea47aa25f5e963d56242
+
+Hypothesis: on 1000 seeded synthetic blocks (seed 7), each holding an adjacent oracle update and liquidation, half of
+which share a private origin and half coincidental, a public-only same-block adjacency rule labels every adjacent pair
+as origin-shared, so at least 400 of 1000 blocks are misclassified.
+
+Fixture model (fixed before running): every block has an oracle update and a liquidation in the same block. Shared
+origin with p 0.5. Origin is not observable from public data, so the rule sees only adjacency. A block is
+misclassified when the rule says shared and the fixture is coincidental.
+
+Metric: /summary/adjacency_misclassified_block_count. Expected: between 400 and 600 of 1000.
+Falsifier: a count below 400 of 1000 under seed 7, meaning adjacency alone separates the two kinds on the fixtures.
+Limit: the 0.5 mix and the all-adjacent design are assumptions, so the count restates the mix; it is not a measured
+rate of shared origin on chain.
