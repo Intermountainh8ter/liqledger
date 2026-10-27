@@ -80,3 +80,20 @@ Metric: /summary/fallback_path_misattributed_count (60 s setting); the 10 s coun
 /summary/fallback_path_misattributed_count_10s. Expected: at least 1 and above the 10 s count (range 1 to 1000).
 Falsifier: the 60 s count is less than or equal to the 10 s count at seed 7, or the count is zero.
 Limit: the mix, arrival rate and uniform pick are assumptions, not data; no chain data is used.
+
+## 2026-10-27T09:28:26Z bonuscheck proposal:fe45c91415d532c56df44213e15367f70a1b7c42e0d7536f2aa66dc827af40c8
+
+Hypothesis: on 1000 seeded synthetic positions (seed 7) with a health-factor-dependent liquidation bonus, a repay
+amount sized with a fixed bonus misses the target health factor by more than the 0.01 tolerance in at least 300 of
+1000 fixtures.
+
+Fixture model (fixed before running): debt D = 1; pre-liquidation health factor HF uniform on [0.90, 0.99]; liquidation
+threshold LT uniform on [0.75, 0.90]; collateral C = HF * D / LT. Target health factor T = 1.05. True bonus
+b(HF) = 0.05 + 0.05 * (1 - HF) / 0.10, so lower HF gives a higher bonus (5 percent at HF 1.0 up to 10 percent at HF 0.9).
+The sizing rule assumes a fixed bonus b0 = 0.05 and repays x = (T*D - C*LT) / (T - (1 + b0)*LT), capped at D. The
+post-liquidation health factor is computed with the true bonus: HF' = (C - x*(1 + b)) * LT / (D - x), and is set to
+infinity if the debt is fully repaid. A fixture is a miss when |HF' - T| > 0.01 (a fully repaid position counts as a miss).
+
+Metric: /summary/fixed_bonus_target_miss_count. Expected: at least 300 of 1000 (range 300 to 1000).
+Falsifier: a count below 300 of 1000 under seed 7.
+Limit: the ranges, linear bonus curve and target are assumptions, not the Aave V4 parameters; no chain data is used.

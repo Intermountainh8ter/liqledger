@@ -12,6 +12,7 @@
 //! `priority_fee_wei` column is a lower bound on what the winner paid.
 //! See docs/PREREGISTRATION.md.
 
+mod bonuscheck;
 mod defcheck;
 mod attribcheck;
 mod fallbackcheck;
@@ -164,6 +165,15 @@ enum Cmd {
     /// Print the event signatures this tool filters on (for the pre-registration).
     /// Count synthetic payment fixtures where gas-only and all-channel share definitions disagree.
     Defcheck {
+        #[arg(long, default_value_t = 7)]
+        seed: u64,
+        #[arg(long, default_value_t = 1000)]
+        n: usize,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Count synthetic positions where fixed-bonus repay sizing misses the target health factor.
+    Bonuscheck {
         #[arg(long, default_value_t = 7)]
         seed: u64,
         #[arg(long, default_value_t = 1000)]
@@ -909,6 +919,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Price { rpc, records, out, feeds_out } => price::price(rpc, records, out, feeds_out).await,
         Cmd::SummarizeV2 { priced, out } => price::summarize_v2(priced, out),
         Cmd::Follow { rpc, out, blocks } => follow::follow(rpc, out, blocks).await,
+        Cmd::Bonuscheck { seed, n, out } => bonuscheck::bonuscheck(seed, n, out),
         Cmd::Defcheck { seed, n, out } => defcheck::defcheck(seed, n, out),
         Cmd::Refundcheck { seed, n, out } => refundcheck::refundcheck(seed, n, out),
         Cmd::Dustcheck { seed, n, out } => dustcheck::dustcheck(seed, n, out),

@@ -202,3 +202,7 @@ Source: `results/55-attribcheck.json`. This is arithmetic on a stated mix (see `
 ### fallbackcheck: does a longer fallback delay widen adjacency misattribution? (synthetic fixtures, iteration 56)
 
 Source: `results/56-fallbackcheck.json`. This is arithmetic on a stated mix (see `preregistration_additions.md`), not chain data. Of 1000 synthetic liquidations, a public-only adjacency rule attributes 89 to the wrong update path at the 60 s fallback delay and 15 at the 10 s delay. The pre-registered expectation was a 60 s count of at least 1 and above the 10 s count, so the hypothesis held. The path mix, the unrelated-update arrival rate and the uniform pick are assumptions, so the counts restate the model and are not measured rates on chain.
+
+### bonuscheck: fixed-bonus repay sizing on synthetic positions
+
+Source: `results/58-bonuscheck.json`. On 1000 synthetic positions (seed 7) with a health-factor-dependent bonus, sizing the repay with a fixed bonus missed the target health factor by more than the tolerance in 786 fixtures (`/summary/fixed_bonus_target_miss_count`). Ranges, bonus curve and target are assumptions fixed in `preregistration_additions.md`, not Aave V4 parameters; no chain data is used.
