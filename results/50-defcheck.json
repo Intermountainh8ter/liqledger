@@ -1,0 +1,24 @@
+{
+  "provenance": {
+    "command": "cargo run --locked --release -- defcheck --seed 7 --n 1000 --out results/50-defcheck.json",
+    "data_sources": [
+      {
+        "license": "public forum post, quoted for definitions only; no data used",
+        "url": "https://governance.aave.com/t/arfc-svr-expansion-next-phase-of-multi-network-expansion/25332/2"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-10-27T08:55:26Z",
+    "wall_s": 0.000069985
+  },
+  "summary": {
+    "all_channel_vs_bonus_disagreement_count": 331,
+    "definition_disagreement_fixture_count": 486,
+    "gas_vs_bonus_disagreement_count": 653,
+    "n_fixtures": 1000,
+    "threshold": 0.05
+  }
+}

@@ -182,3 +182,7 @@ It observes past blocks. It submits nothing, holds no keys, and contains no trad
 ## License
 
 MIT.
+
+### defcheck: do share definitions agree? (synthetic fixtures, iteration 50)
+
+Source: `results/50-defcheck.json`. This is arithmetic on a stated channel mix (see `preregistration_additions.md`), not chain data. Of 1000 fixtures, the gas-only and all-channel share definitions differ by more than 0.05 on 486; gas-only versus share-of-bonus on 653; all-channel versus share-of-bonus on 331. The pre-registered threshold was at least 300 fixtures. The mix is an assumption, so the count shows the definitions are not interchangeable, not by how much on real builders.

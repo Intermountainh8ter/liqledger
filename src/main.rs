@@ -12,6 +12,7 @@
 //! `priority_fee_wei` column is a lower bound on what the winner paid.
 //! See docs/PREREGISTRATION.md.
 
+mod defcheck;
 mod follow;
 mod price;
 
@@ -157,6 +158,15 @@ enum Cmd {
         out: PathBuf,
     },
     /// Print the event signatures this tool filters on (for the pre-registration).
+    /// Count synthetic payment fixtures where gas-only and all-channel share definitions disagree.
+    Defcheck {
+        #[arg(long, default_value_t = 7)]
+        seed: u64,
+        #[arg(long, default_value_t = 1000)]
+        n: usize,
+        #[arg(long)]
+        out: PathBuf,
+    },
     Topics,
     /// Render `summary.json` (and, if given, `summary-v2.json`) into the README between
     /// `<!-- RESULTS:START -->` and `<!-- RESULTS:END -->`.
@@ -859,6 +869,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Price { rpc, records, out, feeds_out } => price::price(rpc, records, out, feeds_out).await,
         Cmd::SummarizeV2 { priced, out } => price::summarize_v2(priced, out),
         Cmd::Follow { rpc, out, blocks } => follow::follow(rpc, out, blocks).await,
+        Cmd::Defcheck { seed, n, out } => defcheck::defcheck(seed, n, out),
         Cmd::Topics => {
             for (name, h) in topics() {
                 println!("{h:#x}  {name}");
