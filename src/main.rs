@@ -15,6 +15,7 @@
 mod bonuscheck;
 mod fractioncheck;
 mod closefactor;
+mod denomshare;
 mod defcheck;
 mod attribcheck;
 mod fallbackcheck;
@@ -206,6 +207,15 @@ enum Cmd {
         #[arg(long, default_value_t = 7)]
         seed: u64,
         #[arg(long, default_value_t = 1000)]
+        n: usize,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Count builder pairs whose rank flips between share denominators in a synthetic auction.
+    Denomshare {
+        #[arg(long, default_value_t = 7)]
+        seed: u64,
+        #[arg(long, default_value_t = 10000)]
         n: usize,
         #[arg(long)]
         out: PathBuf,
@@ -942,6 +952,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Bonuscheck { seed, n, out } => bonuscheck::bonuscheck(seed, n, out),
         Cmd::Fractioncheck { seed, n, out } => fractioncheck::fractioncheck(seed, n, out),
         Cmd::Closefactor { seed, n, out } => closefactor::closefactor(seed, n, out),
+        Cmd::Denomshare { seed, n, out } => denomshare::denomshare(seed, n, out),
         Cmd::Defcheck { seed, n, out } => defcheck::defcheck(seed, n, out),
         Cmd::Refundcheck { seed, n, out } => refundcheck::refundcheck(seed, n, out),
         Cmd::Dustcheck { seed, n, out } => dustcheck::dustcheck(seed, n, out),

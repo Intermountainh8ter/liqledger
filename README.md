@@ -210,3 +210,7 @@ Source: `results/58-bonuscheck.json`. On 1000 synthetic positions (seed 7) with 
 ### closefactor: do three close-factor models repay the same fraction? (synthetic fixtures, iteration 66)
 
 Source: `results/66-closefactor.json`. On 1000 synthetic positions (seed 7), a fixed-fraction, a piecewise and a target-health-factor close-factor model repaid fractions differing by more than the threshold in 988 fixtures (`/disagreement/count_models_differ`). Ranges, the piecewise cut and the target are assumptions fixed in `preregistration_additions.md`, not Aave V4 parameters; no chain data is used.
+
+### denomshare: does a builder ranking survive a change of denominator? (synthetic auction, iteration 71)
+
+Source: `results/71-denomshare.json`. In a synthetic auction (seed 7, 10000 liquidations, 5 builders) with per-builder gas cost and visible-fee fraction, 5 of 10 builder pairs swapped rank between the gross-bonus and visible-bid denominators (`/rank_flip_count`). Ranges are assumptions fixed in `preregistration_additions.md`; no chain data is used.

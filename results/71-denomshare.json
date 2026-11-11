@@ -1,0 +1,50 @@
+{
+  "builder_ratios": [
+    {
+      "bid_over_gross": 0.425372635167734,
+      "bid_over_post_exec": 0.7455399974494321,
+      "bid_over_visible": 2.6721668932026255
+    },
+    {
+      "bid_over_gross": 0.514463926497381,
+      "bid_over_post_exec": 0.7476887770976112,
+      "bid_over_visible": 2.682456808677234
+    },
+    {
+      "bid_over_gross": 0.6013842429818674,
+      "bid_over_post_exec": 0.7507056579962912,
+      "bid_over_visible": 1.9259649328433253
+    },
+    {
+      "bid_over_gross": 0.32932224485666983,
+      "bid_over_post_exec": 0.7519487633428458,
+      "bid_over_visible": 1.166561463094861
+    },
+    {
+      "bid_over_gross": 0.5954397066509706,
+      "bid_over_post_exec": 0.7541687215474996,
+      "bid_over_visible": 2.5162681744386695
+    }
+  ],
+  "flips_gross_vs_post": 4,
+  "flips_post_vs_visible": 7,
+  "n_builders": 5,
+  "n_liquidations": 10000,
+  "n_pairs": 10,
+  "provenance": {
+    "command": "cargo run --locked --release -- denomshare --seed 7 --n 10000 --out results/71-denomshare.json",
+    "data_sources": [
+      {
+        "license": "public forum post, quoted for denominator definitions only; no data used",
+        "url": "https://governance.aave.com/t/aave-v3-v4-liquidation-bot/25565"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-11T10:50:26Z",
+    "wall_s": 0.00035398
+  },
+  "rank_flip_count": 5
+}

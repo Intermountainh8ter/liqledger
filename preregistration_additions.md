@@ -126,3 +126,19 @@ over debt C/D < 1/(1 + b) (the bad-debt threshold). Collateral C = HF * D / LT.
 Metric: /disagreement/count_models_differ. Expected: at least 900 of 1000 (range 900 to 1000).
 Falsifier: a count below 900 of 1000 under seed 7 and n 1000.
 Limit: ranges, the piecewise cut and the target are assumptions, not Aave V4 parameters; no chain data is used.
+
+## 2026-11-11T10:50:15Z denomshare proposal:1f2b69abf46cb9f4b9804ee70865cf679f4f2ad09470b415c7088c3cb7ba7bc3
+
+Hypothesis: in a synthetic auction (seed 7, n 10000 liquidations, 5 builders) where builders differ in executed gas cost
+and in the fraction of the bid paid as a visible priority fee, at least one of the 10 builder pairs swaps rank between
+the gross-bonus denominator and the visible-bid denominator.
+
+Model (fixed before running): each liquidation has gross bonus G uniform on [1, 100] and is won by one of 5 builders
+uniformly. Builder b has gas fraction g_b uniform on [0.05, 0.60] and visible fraction f_b uniform on [0.2, 1.0], both drawn
+once from the seed. Post-execution value P = G*(1-g_b); the bid is beta*P with beta uniform on [0.5, 1.0]; the visible
+priority fee is f_b * bid. Per builder, the bid total is divided by three denominators (sum of G, sum of P, sum of visible
+fee). Rankings by each ratio are compared pairwise; a flip is a pair ordered differently under gross vs visible.
+
+Metric: /rank_flip_count. Expected: at least 1 of 10 (range 1 to 10).
+Falsifier: rank_flip_count equals 0 under seed 7 and n 10000.
+Limit: all parameter ranges are assumptions; no chain data is used.
