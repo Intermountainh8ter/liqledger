@@ -214,3 +214,7 @@ Source: `results/66-closefactor.json`. On 1000 synthetic positions (seed 7), a f
 ### denomshare: does a builder ranking survive a change of denominator? (synthetic auction, iteration 71)
 
 Source: `results/71-denomshare.json`. In a synthetic auction (seed 7, 10000 liquidations, 5 builders) with per-builder gas cost and visible-fee fraction, 5 of 10 builder pairs swapped rank between the gross-bonus and visible-bid denominators (`/rank_flip_count`). Ranges are assumptions fixed in `preregistration_additions.md`; no chain data is used.
+
+### samebloc: does the oracle-ordering rule change a same-block count? (synthetic ledger, iteration 76)
+
+Source: `results/76-samebloc.json`. On a synthetic ledger (seed 7, 10000 blocks), counting any oracle update in the block matched 5885 blocks, counting only earlier updates matched 3289, and requiring the latest update to be earlier matched 2667 (`/count_any`, `/count_earlier`, `/count_latest_earlier`). The spread between the first two rules is 2596 blocks (`/spread_any_vs_earlier`). The slot count and update mix are assumptions fixed in `preregistration_additions.md`; no chain data is used.

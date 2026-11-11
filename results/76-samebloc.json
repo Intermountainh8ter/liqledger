@@ -1,0 +1,24 @@
+{
+  "count_any": 5885,
+  "count_earlier": 3289,
+  "count_latest_earlier": 2667,
+  "n_blocks": 10000,
+  "provenance": {
+    "command": "cargo run --locked --release -- samebloc --seed 7 --n 10000 --out results/76-samebloc.json",
+    "data_sources": [
+      {
+        "license": "arXiv abstract page, cited for the ordering-rule definition only; no data used, all data synthetic and seeded",
+        "url": "https://arxiv.org/abs/2606.03434"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-11T11:17:05Z",
+    "wall_s": 0.00037643
+  },
+  "slots_per_block": 150,
+  "spread_any_vs_earlier": 2596,
+  "spread_any_vs_latest": 3218
+}

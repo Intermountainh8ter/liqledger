@@ -142,3 +142,18 @@ fee). Rankings by each ratio are compared pairwise; a flip is a pair ordered dif
 Metric: /rank_flip_count. Expected: at least 1 of 10 (range 1 to 10).
 Falsifier: rank_flip_count equals 0 under seed 7 and n 10000.
 Limit: all parameter ranges are assumptions; no chain data is used.
+
+## 2026-11-11T11:16:55Z samebloc proposal:840048e52971f5cb40621d05abd0a50fba6b75cd4b2c5f7ff145bbb0a342b496
+
+Hypothesis: on a seeded synthetic ledger (seed 7, n 10000 blocks) with oracle updates and one liquidation per block at
+uniformly random tx indices, counting only oracle updates earlier in tx order yields a strictly smaller same-block
+count than counting any update in the block, so the spread between the two rules is positive.
+
+Model (fixed before running): each block has 150 tx slots and one liquidation at a uniform slot. The number of oracle
+updates in the block is 0, 1 or 2 with probability 0.4, 0.4, 0.2, each at a uniform slot distinct from the liquidation
+slot. Rule A: any update in the block. Rule B: at least one update at a lower tx index than the liquidation. Rule C: the
+latest update in the block is at a lower tx index than the liquidation.
+
+Metric: /spread_any_vs_earlier (count under A minus count under B). Expected: greater than 0 (range 1 to 100000).
+Falsifier: spread_any_vs_earlier equals 0 or is negative under seed 7 and n 10000.
+Limit: slot count and update-count mix are assumptions; no chain data is used.
