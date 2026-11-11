@@ -188,3 +188,20 @@ Metric: /ordering/rank_changed_bid_count. Expected: greater than 0 (range 1 to 1
 first-lander-changed block count and rank-changed blocks above half of n.
 Falsifier: rank_changed_bid_count equals 0 under seed 7 and n 10000.
 Limit: slot count, bid count and distributions are assumptions; no chain data is used.
+
+## 2026-11-11T11:51:00Z replaygap proposal:4b81bd32b963fed52e020a5ad22ba872c1b644e148b46f2ee593c3c4e633769c
+
+Hypothesis: in a seeded toy re-execution of synthetic liquidations (seed 7, n 10000), perturbing only same-block
+ordering yields a nonzero mismatch count, and ordering-only mismatches are fewer than state-only mismatches.
+
+Model (fixed before running): each liquidation has a pre-block health factor uniform on [0.95, 1.0) and succeeds when
+it is below 1. State perturbation multiplies the health factor by one plus a shock uniform on [-0.03, 0.03]. Each
+landed transaction has a gas need uniform on [150000, 450000] and a limit of need times a slack uniform on [1.0, 1.3];
+gas perturbation scales the limit by a factor uniform on [0.8, 1.2] and fails when the limit is below the need. Each
+liquidation has a rival same-block liquidation with probability 0.1; ordering perturbation puts the rival first, and
+the original fails when the rival's repaid share, uniform on [0, 1), exceeds 0.5. A mismatch is a changed outcome with
+one input perturbed and the others held at landed values.
+
+Metric: /mismatch/by_input/ordering_only_count. Expected: greater than 0 and below state_only_count.
+Falsifier: ordering_only_count equals 0, or is at least state_only_count, on seed 7.
+Limit: every range is an assumption; no chain data is used.

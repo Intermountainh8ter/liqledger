@@ -222,3 +222,7 @@ Source: `results/76-samebloc.json`. On a synthetic ledger (seed 7, 10000 blocks)
 ### flashlock: does locked-slot ordering differ from whole-block fee order? (synthetic blocks, iteration 83)
 
 Source: `results/83-flashlock.json`. On synthetic blocks (seed 7, 10000 blocks), ordering competing bids by sequential locked slots instead of whole-block fee order changed the rank of 23819 bids (`/ordering/rank_changed_bid_count`) in 7822 blocks (`/ordering/rank_changed_block_count`), and changed which bid lands first in 6282 blocks (`/ordering/first_lander_changed_block_count`). The slot count, bid count and distributions are assumptions fixed in `preregistration_additions.md`; no chain data is used.
+
+### Replay gap (synthetic toy, seed 7)
+
+Source: `results/84-replaygap.json`. A toy re-execution of 10000 synthetic liquidations, perturbing one input at a time. Mismatches with only state perturbed: 1530; only gas: 1919; only same-block ordering: 480. Ranges are assumptions fixed in `preregistration_additions.md`; no chain data is used.

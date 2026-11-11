@@ -1,0 +1,25 @@
+{
+  "mismatch": {
+    "by_input": {
+      "gas_only_count": 1919,
+      "ordering_only_count": 480,
+      "state_only_count": 1530
+    }
+  },
+  "n_liquidations": 10000,
+  "provenance": {
+    "command": "cargo run --locked --release -- replaygap --seed 7 --n 10000 --out results/84-replaygap.json",
+    "data_sources": [
+      {
+        "license": "official docs, cited for definitions only; all data synthetic and seeded",
+        "url": "https://docs.base.org/base-chain/network-information/transaction-ordering.md"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-11T11:51:32Z",
+    "wall_s": 0.000228084
+  }
+}
