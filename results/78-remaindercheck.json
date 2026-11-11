@@ -1,0 +1,45 @@
+{
+  "n_bids": 10000,
+  "n_builders": 5,
+  "n_pairs": 10,
+  "provenance": {
+    "command": "cargo run --locked --release -- remaindercheck --seed 7 --n 10000 --out results/78-remaindercheck.json",
+    "data_sources": [
+      {
+        "license": "public forum post, quoted for the missing-denominator observation only; no data used, all data synthetic and seeded",
+        "url": "https://governance.aave.com/t/v4-spoke-liquidation-parameters-impact-on-revenue/23993"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-11T11:25:34Z",
+    "wall_s": 0.000287134
+  },
+  "remainder": {
+    "builder_rates": [
+      {
+        "over_named_sum": 0.7651648683001658,
+        "over_total_bid": 0.6519179281926685
+      },
+      {
+        "over_named_sum": 0.5640049385976379,
+        "over_total_bid": 0.4809857649947343
+      },
+      {
+        "over_named_sum": 0.4109263944447712,
+        "over_total_bid": 0.3165935591620748
+      },
+      {
+        "over_named_sum": 1.4557435054857917,
+        "over_total_bid": 0.8447878445283401
+      },
+      {
+        "over_named_sum": 0.39741029131337086,
+        "over_total_bid": 0.3334092197123454
+      }
+    ],
+    "rank_flip_count": 1
+  }
+}

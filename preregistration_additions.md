@@ -157,3 +157,18 @@ latest update in the block is at a lower tx index than the liquidation.
 Metric: /spread_any_vs_earlier (count under A minus count under B). Expected: greater than 0 (range 1 to 100000).
 Falsifier: spread_any_vs_earlier equals 0 or is negative under seed 7 and n 10000.
 Limit: slot count and update-count mix are assumptions; no chain data is used.
+
+## 2026-11-11T11:25:24Z remaindercheck proposal:44ea371665e1f6522e7d7f84bb0786a1dfe18b4b49a7f0526b23593a95fe86bc
+
+Hypothesis: on a seeded synthetic ledger (seed 7, n 10000 bids, 5 builders) where each bid has a nonzero unaccounted
+remainder, ranking builders by recapture rate under the named-payee-sum denominator differs from the ranking under the
+total-bid denominator in at least one of the 10 builder pairs.
+
+Model (fixed before running): each bid is won by one of 5 builders uniformly, with bid size uniform on [1, 100]. Builder b
+has a recaptured fraction c_b uniform on [0.1, 0.9] and an unaccounted fraction u_b uniform on [0.05, 0.5], both drawn
+once from the seed. Recaptured amount is c_b times the bid; the named-payee sum is (1 - u_b) times the bid. Recapture rate
+is recaptured amount over the denominator, summed per builder. A flip is a pair ordered differently under the two denominators.
+
+Metric: /remainder/rank_flip_count. Expected: at least 1 of 10 (range 1 to 10).
+Falsifier: rank_flip_count equals 0 under seed 7 and n 10000.
+Limit: all ranges are assumptions; no chain data is used.
