@@ -1,0 +1,27 @@
+{
+  "provenance": {
+    "command": "cargo run --locked --release -- bonuscap --seed 7 --n 1000 --out results/91-bonuscap.json",
+    "data_sources": [
+      {
+        "license": "public blog post, quoted for rule definition only; no data used",
+        "url": "https://aave.com/blog/aave-v4-liquidations"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-11T12:22:38Z",
+    "wall_s": 0.000148413
+  },
+  "summary": {
+    "above_target_count": 1,
+    "below_target_count": 534,
+    "bonus_cap": 0.07,
+    "cutoff_health_factor": 0.96,
+    "n_fixtures": 1000,
+    "rows_below_cutoff": 677,
+    "target_health_factor": 1.05,
+    "tolerance": 0.01
+  }
+}

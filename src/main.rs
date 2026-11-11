@@ -12,6 +12,7 @@
 //! `priority_fee_wei` column is a lower bound on what the winner paid.
 //! See docs/PREREGISTRATION.md.
 
+mod bonuscap;
 mod bonuscheck;
 mod fractioncheck;
 mod closefactor;
@@ -268,6 +269,15 @@ enum Cmd {
         #[arg(long, default_value_t = 7)]
         seed: u64,
         #[arg(long, default_value_t = 10000)]
+        n: usize,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Size toy repays with an unsaturated bonus ramp when the true bonus saturates at a ceiling.
+    Bonuscap {
+        #[arg(long, default_value_t = 7)]
+        seed: u64,
+        #[arg(long, default_value_t = 1000)]
         n: usize,
         #[arg(long)]
         out: PathBuf,
@@ -1028,6 +1038,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Replaygap { seed, n, out } => replaygap::replaygap(seed, n, out),
         Cmd::Replayverify { seed, n, out } => replayverify::replayverify(seed, n, out),
         Cmd::Replaycoverage { seed, n, out } => replaycoverage::replaycoverage(seed, n, out),
+        Cmd::Bonuscap { seed, n, out } => bonuscap::bonuscap(seed, n, out),
         Cmd::Targethf { seed, n, out } => targethf::targethf(seed, n, out),
         Cmd::Samebloc { seed, n, out } => samebloc::samebloc(seed, n, out),
         Cmd::Defcheck { seed, n, out } => defcheck::defcheck(seed, n, out),

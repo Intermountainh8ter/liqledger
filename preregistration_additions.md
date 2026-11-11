@@ -251,3 +251,19 @@ computed in integer arithmetic. Off target means post-liquidation health factor 
 Metric: /off_target_count (mismatched reading). Expected: at least 500 (range 500 to 1000).
 Falsifier: off_target_count below 500 on seed 7 with n 1000, or the matched reading leaves any row below its target.
 Limit: every range is an assumption; no chain data is used.
+
+## 2026-11-11T12:22:30Z bonuscap proposal:741a0dcc848f122fd813f0daf294440fbf2a0857d5a58070584c4f7e2dd95a09
+
+Hypothesis: when the true bonus saturates at a ceiling, repay sizing that assumes the unsaturated ramp misses the
+target health factor by more than the tolerance only on rows below the saturation cutoff, and misses none above it.
+
+Model (fixed before running): the assumed bonus is the bonuscheck ramp, 0.05 + 0.05 * (1 - hf) / 0.10. The true bonus is
+that ramp capped at 0.07, which saturates at health factor 0.96 (the cutoff). Starting health factor is uniform on
+[0.90, 0.99) and liquidation threshold uniform on [0.75, 0.90). Target health factor 1.05, tolerance 0.01. A row is a
+miss when the post-liquidation health factor under the true bonus differs from the target by more than the tolerance.
+Rows are split by whether starting health factor is below the cutoff.
+
+Metric: /summary/below_target_count (below-cutoff misses). Expected: at least 1 (range 1 to 1000) and the above-cutoff
+miss count equals 0.
+Falsifier: a zero below-cutoff miss count, or any miss above the cutoff.
+Limit: the ceiling and ranges are assumptions; no chain data is used.
