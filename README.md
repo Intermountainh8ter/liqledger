@@ -232,3 +232,7 @@ Source: `results/84-replaygap.json`. A toy re-execution of 10000 synthetic liqui
 Source: `results/88-replayverify.json`. 10000 synthetic replays graded two ways. The exact integer verifier failed 2986; the tolerance grader failed 1447; replays the exact verifier failed and the tolerance grader passed: 1539. The tolerance and ranges are assumptions fixed in `preregistration_additions.md`; no chain data is used.
 
 Source: `results/89-replaycoverage.json`. 10000 committed synthetic replay ids against a seeded verdict log. Committed replays with no verdict: 506; verdicts failing recomputation: 0. The omission rate is an assumption fixed in `preregistration_additions.md`; no chain data is used.
+
+### targethf: repay sizing to health factor 1.0 versus a per-row target (synthetic toy, seed 7)
+
+Source: `results/90-targethf.json`. On 1000 synthetic positions, sizing each repayment to restore health factor to 1.0 left 1000 rows below their per-row target (`/off_target_count`); sizing to the per-row target left 0 rows below it (`/matched_off_target_count`). The ranges are assumptions fixed in `preregistration_additions.md`; no chain data is used.

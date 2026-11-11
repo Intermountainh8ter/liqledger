@@ -236,3 +236,18 @@ Metric: /uncovered_count. Expected: greater than 0 (range 1 to 10000) while the 
 stays 0.
 Falsifier: uncovered_count equals 0 on seed 7, or the recompute check also flags the omissions.
 Limit: the omission rate is an assumption; no chain data is used.
+
+## 2026-11-11T12:18:19Z targethf proposal:4997dff3f58a95c325f7c2c4c91b01d8a8cf40c4c3c2f57d21590cc0830371d2
+
+Hypothesis: on seeded toy positions (seed 7, n 1000), sizing each repayment to restore health factor to 1.0 leaves at
+least 500 rows below a per-row target health factor above 1.0 after integer rounding, while sizing to the per-row target
+leaves zero rows below it.
+
+Model (fixed before running): each position has collateral uniform on [1000000, 1000000000000) integer units, a
+liquidation threshold of 0.80 and a seizure bonus of 5 percent. Its starting health factor is uniform on [0.90, 1.00).
+The per-row target is uniform on [1.01, 1.05]. Repay amounts are the smallest integers reaching the sizing target,
+computed in integer arithmetic. Off target means post-liquidation health factor strictly below the per-row target.
+
+Metric: /off_target_count (mismatched reading). Expected: at least 500 (range 500 to 1000).
+Falsifier: off_target_count below 500 on seed 7 with n 1000, or the matched reading leaves any row below its target.
+Limit: every range is an assumption; no chain data is used.

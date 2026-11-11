@@ -1,0 +1,21 @@
+{
+  "matched_off_target_count": 0,
+  "matched_overshoot_count": 0,
+  "n_positions": 1000,
+  "off_target_count": 1000,
+  "provenance": {
+    "command": "cargo run --locked --release -- targethf --seed 7 --n 1000 --out results/90-targethf.json",
+    "data_sources": [
+      {
+        "license": "public vendor docs, quoted for rule definition only; no data used",
+        "url": "https://aave.com/docs/aave-v4/positions/liquidations"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-11T12:18:43Z",
+    "wall_s": 0.002118921
+  }
+}
