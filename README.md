@@ -218,3 +218,7 @@ Source: `results/71-denomshare.json`. In a synthetic auction (seed 7, 10000 liqu
 ### samebloc: does the oracle-ordering rule change a same-block count? (synthetic ledger, iteration 76)
 
 Source: `results/76-samebloc.json`. On a synthetic ledger (seed 7, 10000 blocks), counting any oracle update in the block matched 5885 blocks, counting only earlier updates matched 3289, and requiring the latest update to be earlier matched 2667 (`/count_any`, `/count_earlier`, `/count_latest_earlier`). The spread between the first two rules is 2596 blocks (`/spread_any_vs_earlier`). The slot count and update mix are assumptions fixed in `preregistration_additions.md`; no chain data is used.
+
+### flashlock: does locked-slot ordering differ from whole-block fee order? (synthetic blocks, iteration 83)
+
+Source: `results/83-flashlock.json`. On synthetic blocks (seed 7, 10000 blocks), ordering competing bids by sequential locked slots instead of whole-block fee order changed the rank of 23819 bids (`/ordering/rank_changed_bid_count`) in 7822 blocks (`/ordering/rank_changed_block_count`), and changed which bid lands first in 6282 blocks (`/ordering/first_lander_changed_block_count`). The slot count, bid count and distributions are assumptions fixed in `preregistration_additions.md`; no chain data is used.

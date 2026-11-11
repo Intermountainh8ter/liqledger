@@ -172,3 +172,19 @@ is recaptured amount over the denominator, summed per builder. A flip is a pair 
 Metric: /remainder/rank_flip_count. Expected: at least 1 of 10 (range 1 to 10).
 Falsifier: rank_flip_count equals 0 under seed 7 and n 10000.
 Limit: all ranges are assumptions; no chain data is used.
+
+## 2026-11-11T11:43:58Z flashlock proposal:9ba728069773e2ff1824ac40d4f35edd5c836d1e69b80ee6b84c87ce5e9ae1ad
+
+Hypothesis: on a seeded synthetic set of blocks (seed 7, n 10000 blocks) with competing liquidation bids carrying arrival
+times and fees, ordering by sequential locked slots changes the rank of at least one bid in more than half of the blocks,
+and changes which bid lands first in a non-zero count of blocks, relative to whole-block fee order.
+
+Model (fixed before running): each block has 2 to 5 competing bids (uniform), each with an arrival time uniform on [0, 1)
+of the block window and a fee uniform on [1, 100]. Whole-block order ranks bids by fee, highest first. Locked-slot order
+splits the window into 10 equal slots; a bid lands in the first slot ending after its arrival, slots are ordered by time
+and cannot be reordered once closed, and bids inside a slot are ordered by fee. A bid is rank-changed if its position differs.
+
+Metric: /ordering/rank_changed_bid_count. Expected: greater than 0 (range 1 to 100000), together with a non-zero
+first-lander-changed block count and rank-changed blocks above half of n.
+Falsifier: rank_changed_bid_count equals 0 under seed 7 and n 10000.
+Limit: slot count, bid count and distributions are assumptions; no chain data is used.

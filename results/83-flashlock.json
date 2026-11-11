@@ -1,0 +1,25 @@
+{
+  "n_blocks": 10000,
+  "ordering": {
+    "first_lander_changed_block_count": 6282,
+    "rank_changed_bid_count": 23819,
+    "rank_changed_block_count": 7822,
+    "total_bid_count": 34981
+  },
+  "provenance": {
+    "command": "cargo run --locked --release -- flashlock --seed 7 --n 10000 --out results/83-flashlock.json",
+    "data_sources": [
+      {
+        "license": "official docs, cited for the ordering-lock definition only; all data synthetic and seeded",
+        "url": "https://docs.base.org/base-chain/network-information/transaction-ordering.md"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-11T11:44:09Z",
+    "wall_s": 0.00305976
+  },
+  "slots_per_block": 10
+}
