@@ -1,0 +1,21 @@
+{
+  "n_committed": 10000,
+  "provenance": {
+    "command": "cargo run --locked -q --release -- replaycoverage --seed 7 --n 10000 --out results/89-replaycoverage.json",
+    "data_sources": [
+      {
+        "license": "arXiv abstract cited for the definition only; all data synthetic and seeded",
+        "url": "https://arxiv.org/abs/2609.01992"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-11T12:14:24Z",
+    "wall_s": 0.000287075
+  },
+  "recompute_fail_count": 0,
+  "retained_verdict_count": 9494,
+  "uncovered_count": 506
+}

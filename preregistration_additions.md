@@ -220,3 +220,19 @@ replay the exact verifier fails and the tolerance grader passes.
 Metric: /verdict_flip_count. Expected: at least 100 (range 100 to 10000).
 Falsifier: verdict_flip_count below 100 on seed 7 with n 10000.
 Limit: every range and the tolerance are assumptions; no chain data is used.
+
+## 2026-11-11T12:14:15Z replaycoverage proposal:6bd5f14e0520ca0dced55b96eadda06555f67a4dd03dda8c687116a469b9670e
+
+Hypothesis: a verdict log with seeded omissions and no orphan entries passes a per-verdict recomputation check yet
+leaves a nonzero number of committed replays uncovered (seed 7, n 10000), so a coverage count finds omissions the
+recompute check cannot.
+
+Model (fixed before running): a committed list holds n replay ids. Each id is omitted from the verdict log with
+probability 0.05. Each retained verdict records an integer output and a recomputed integer output that are equal. The
+recompute check counts retained verdicts whose two outputs differ. The coverage check counts committed ids with no
+verdict.
+
+Metric: /uncovered_count. Expected: greater than 0 (range 1 to 10000) while the count of verdicts failing recomputation
+stays 0.
+Falsifier: uncovered_count equals 0 on seed 7, or the recompute check also flags the omissions.
+Limit: the omission rate is an assumption; no chain data is used.

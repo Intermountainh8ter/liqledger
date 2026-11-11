@@ -230,3 +230,5 @@ Source: `results/84-replaygap.json`. A toy re-execution of 10000 synthetic liqui
 ### Replay verdict flips (synthetic toy, seed 7)
 
 Source: `results/88-replayverify.json`. 10000 synthetic replays graded two ways. The exact integer verifier failed 2986; the tolerance grader failed 1447; replays the exact verifier failed and the tolerance grader passed: 1539. The tolerance and ranges are assumptions fixed in `preregistration_additions.md`; no chain data is used.
+
+Source: `results/89-replaycoverage.json`. 10000 committed synthetic replay ids against a seeded verdict log. Committed replays with no verdict: 506; verdicts failing recomputation: 0. The omission rate is an assumption fixed in `preregistration_additions.md`; no chain data is used.
