@@ -20,6 +20,7 @@ mod remaindercheck;
 mod samebloc;
 mod flashlock;
 mod replaygap;
+mod replayverify;
 mod defcheck;
 mod attribcheck;
 mod fallbackcheck;
@@ -244,6 +245,15 @@ enum Cmd {
     },
     /// Perturb one input at a time of a toy liquidation re-execution and count outcome mismatches (seeded, synthetic).
     Replaygap {
+        #[arg(long, default_value_t = 7)]
+        seed: u64,
+        #[arg(long, default_value_t = 10000)]
+        n: usize,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Compare an exact integer verifier with a tolerance grader on seeded synthetic replays and count verdict flips.
+    Replayverify {
         #[arg(long, default_value_t = 7)]
         seed: u64,
         #[arg(long, default_value_t = 10000)]
@@ -996,6 +1006,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Remaindercheck { seed, n, out } => remaindercheck::remaindercheck(seed, n, out),
         Cmd::Flashlock { seed, n, out } => flashlock::flashlock(seed, n, out),
         Cmd::Replaygap { seed, n, out } => replaygap::replaygap(seed, n, out),
+        Cmd::Replayverify { seed, n, out } => replayverify::replayverify(seed, n, out),
         Cmd::Samebloc { seed, n, out } => samebloc::samebloc(seed, n, out),
         Cmd::Defcheck { seed, n, out } => defcheck::defcheck(seed, n, out),
         Cmd::Refundcheck { seed, n, out } => refundcheck::refundcheck(seed, n, out),

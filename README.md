@@ -226,3 +226,7 @@ Source: `results/83-flashlock.json`. On synthetic blocks (seed 7, 10000 blocks),
 ### Replay gap (synthetic toy, seed 7)
 
 Source: `results/84-replaygap.json`. A toy re-execution of 10000 synthetic liquidations, perturbing one input at a time. Mismatches with only state perturbed: 1530; only gas: 1919; only same-block ordering: 480. Ranges are assumptions fixed in `preregistration_additions.md`; no chain data is used.
+
+### Replay verdict flips (synthetic toy, seed 7)
+
+Source: `results/88-replayverify.json`. 10000 synthetic replays graded two ways. The exact integer verifier failed 2986; the tolerance grader failed 1447; replays the exact verifier failed and the tolerance grader passed: 1539. The tolerance and ranges are assumptions fixed in `preregistration_additions.md`; no chain data is used.

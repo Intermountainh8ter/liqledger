@@ -205,3 +205,18 @@ one input perturbed and the others held at landed values.
 Metric: /mismatch/by_input/ordering_only_count. Expected: greater than 0 and below state_only_count.
 Falsifier: ordering_only_count equals 0, or is at least state_only_count, on seed 7.
 Limit: every range is an assumption; no chain data is used.
+
+## 2026-11-11T12:10:00Z replayverify proposal:b690c39b25c11b315c5d408ea6ac681ec5977678eeab98e7238c6e68865c2c13
+
+Hypothesis: on seeded synthetic replays with a one-input perturbation (seed 7, n 10000), a tolerance-based grader passes
+at least 100 replays that an exact integer verifier fails, so the verdict flip count is at least 100 of 10000.
+
+Model (fixed before running): each landed liquidation repays an integer amount uniform on [1000000, 1000000000000).
+With probability 0.3 the replay is perturbed: its integer output differs from the landed one by the amount times
+10 to the power u, rounded to an integer, where u is uniform on [-9, -3]. The exact verifier fails any replay whose
+integer output differs. The tolerance grader passes a replay whose relative difference is at most 0.000001. A flip is a
+replay the exact verifier fails and the tolerance grader passes.
+
+Metric: /verdict_flip_count. Expected: at least 100 (range 100 to 10000).
+Falsifier: verdict_flip_count below 100 on seed 7 with n 10000.
+Limit: every range and the tolerance are assumptions; no chain data is used.

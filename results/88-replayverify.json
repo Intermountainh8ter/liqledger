@@ -1,0 +1,21 @@
+{
+  "exact_fail_count": 2986,
+  "n_replays": 10000,
+  "provenance": {
+    "command": "cargo run --locked -q --release -- replayverify --seed 7 --n 10000 --out results/88-replayverify.json",
+    "data_sources": [
+      {
+        "license": "official docs, cited for definitions only; all data synthetic and seeded",
+        "url": "https://docs.base.org/base-chain/network-information/transaction-ordering.md"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-11T12:10:14Z",
+    "wall_s": 0.000322838
+  },
+  "tolerance_fail_count": 1447,
+  "verdict_flip_count": 1539
+}
