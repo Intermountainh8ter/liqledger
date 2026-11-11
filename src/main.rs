@@ -13,6 +13,7 @@
 //! See docs/PREREGISTRATION.md.
 
 mod bonuscap;
+mod bonusscale;
 mod bonuscheck;
 mod fractioncheck;
 mod closefactor;
@@ -269,6 +270,15 @@ enum Cmd {
         #[arg(long, default_value_t = 7)]
         seed: u64,
         #[arg(long, default_value_t = 10000)]
+        n: usize,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Count toy bonuses mispriced when one shared scale factor replaces the per-profile scale factor.
+    Bonusscale {
+        #[arg(long, default_value_t = 7)]
+        seed: u64,
+        #[arg(long, default_value_t = 1000)]
         n: usize,
         #[arg(long)]
         out: PathBuf,
@@ -1039,6 +1049,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Replayverify { seed, n, out } => replayverify::replayverify(seed, n, out),
         Cmd::Replaycoverage { seed, n, out } => replaycoverage::replaycoverage(seed, n, out),
         Cmd::Bonuscap { seed, n, out } => bonuscap::bonuscap(seed, n, out),
+        Cmd::Bonusscale { seed, n, out } => bonusscale::bonusscale(seed, n, out),
         Cmd::Targethf { seed, n, out } => targethf::targethf(seed, n, out),
         Cmd::Samebloc { seed, n, out } => samebloc::samebloc(seed, n, out),
         Cmd::Defcheck { seed, n, out } => defcheck::defcheck(seed, n, out),

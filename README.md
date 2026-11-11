@@ -240,3 +240,7 @@ Source: `results/90-targethf.json`. On 1000 synthetic positions, sizing each rep
 ### bonuscap: unsaturated bonus ramp when the true bonus saturates at a ceiling (synthetic toy, seed 7)
 
 Source: `results/91-bonuscap.json`. On 1000 synthetic positions, 677 sat below the saturation cutoff (`/summary/rows_below_cutoff`). Repay sizing that assumed the unsaturated ramp missed the target health factor on 534 of them (`/summary/below_target_count`), but also on 1 row above the cutoff (`/summary/above_target_count`), so the pre-registered "zero misses above the cutoff" clause is refuted. The ceiling and ranges are assumptions fixed in `preregistration_additions.md`; no chain data is used.
+
+### bonusscale: one shared bonus scale factor across toy profiles
+
+Source: `results/92-bonusscale.json`. On 1000 synthetic positions (seed 7) split across a volatile and a correlated toy profile, a ledger that applies one shared scale factor of 60 mispriced the integer bonus on 802 rows (`/misprice_count`): 417 of 522 volatile rows and 385 of 478 correlated rows. With the shared scale equal to the true scale the count is 0 (`/control_misprice_count`). Profiles, scales and ranges are assumptions fixed in `preregistration_additions.md`, not Aave V4 parameters; no chain data is used.

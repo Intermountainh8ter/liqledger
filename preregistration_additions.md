@@ -267,3 +267,19 @@ Metric: /summary/below_target_count (below-cutoff misses). Expected: at least 1 
 miss count equals 0.
 Falsifier: a zero below-cutoff miss count, or any miss above the cutoff.
 Limit: the ceiling and ranges are assumptions; no chain data is used.
+
+## 2026-11-11T12:26:45Z bonusscale proposal:b158130cfa766e62d66f248da65fc8a1879870fd0fe07dbe7b3a81a4b47adb69
+
+Hypothesis: on seeded synthetic positions in integer bps across two toy Spoke profiles with different bonus scale
+factors and maximum bonuses, a ledger that applies one shared scale factor misprices the bonus on at least one row in
+each profile, and the mispriced count is zero only when both profiles share the same scale.
+
+Model (fixed before running): bonus bps = min(max, base + scale * (10000 - hf_bps) / 100), integer division, hf_bps
+uniform on [9000, 10000). Volatile profile: base 500, scale 100, max 1000. Correlated profile: base 200, scale 25,
+max 400. Each row is assigned to a profile by a fair coin. The shared-scale ledger uses scale 60 for both profiles and
+keeps each profile's own base and max. A row is mispriced when the integer bonus differs. Control: both profiles with
+scale 60 as the true scale give zero mispriced rows by construction.
+
+Metric: /misprice_count. Expected: at least 1 (range 1 to 100000), with a nonzero count in each profile.
+Falsifier: misprice_count equal to zero when the two toy profiles carry different scale factors.
+Limit: every parameter is an assumption, not an Aave V4 value; no chain data is used.

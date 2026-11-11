@@ -1,0 +1,35 @@
+{
+  "control_misprice_count": 0,
+  "correlated": {
+    "misprice_count": 385,
+    "rows": 478,
+    "true_scale": 25
+  },
+  "misprice_count": 802,
+  "n_fixtures": 1000,
+  "provenance": {
+    "command": "cargo run --locked -q --release -- bonusscale --seed 7 --out results/92-bonusscale.json",
+    "data_sources": [
+      {
+        "license": "MIT (repository licence)",
+        "url": "synthetic: seeded generator inside the repository, no external data"
+      },
+      {
+        "license": "public governance forum post, parameter names only, no data used",
+        "url": "https://governance.aave.com/t/arfc-deploy-aave-v4-on-avalanche/25165"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-11T12:27:09Z",
+    "wall_s": 0.000263868
+  },
+  "shared_scale": 60,
+  "volatile": {
+    "misprice_count": 417,
+    "rows": 522,
+    "true_scale": 100
+  }
+}
