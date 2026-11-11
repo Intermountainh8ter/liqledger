@@ -1,0 +1,25 @@
+{
+  "disagreement": {
+    "bonus": 0.05,
+    "count_models_differ": 988,
+    "n_fixtures": 1000,
+    "piecewise_cut_hf": 0.95,
+    "target_hf": 1.05,
+    "threshold": 0.01
+  },
+  "provenance": {
+    "command": "cargo run --locked --release -- closefactor --seed 7 --n 1000 --out results/66-closefactor.json",
+    "data_sources": [
+      {
+        "license": "public vendor docs, quoted for rule definition only; no data used",
+        "url": "https://aave.com/docs/aave-v4/liquidations"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-11T10:26:37Z",
+    "wall_s": 0.000060079
+  }
+}

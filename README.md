@@ -206,3 +206,7 @@ Source: `results/56-fallbackcheck.json`. This is arithmetic on a stated mix (see
 ### bonuscheck: fixed-bonus repay sizing on synthetic positions
 
 Source: `results/58-bonuscheck.json`. On 1000 synthetic positions (seed 7) with a health-factor-dependent bonus, sizing the repay with a fixed bonus missed the target health factor by more than the tolerance in 786 fixtures (`/summary/fixed_bonus_target_miss_count`). Ranges, bonus curve and target are assumptions fixed in `preregistration_additions.md`, not Aave V4 parameters; no chain data is used.
+
+### closefactor: do three close-factor models repay the same fraction? (synthetic fixtures, iteration 66)
+
+Source: `results/66-closefactor.json`. On 1000 synthetic positions (seed 7), a fixed-fraction, a piecewise and a target-health-factor close-factor model repaid fractions differing by more than the threshold in 988 fixtures (`/disagreement/count_models_differ`). Ranges, the piecewise cut and the target are assumptions fixed in `preregistration_additions.md`, not Aave V4 parameters; no chain data is used.

@@ -112,3 +112,17 @@ HF' = (C - x*1.05) * LT / (D - x). A fixture counts when HF' < target - 0.01.
 Metric: /summary/fixed_fraction_below_target_count. Expected: at least 300 of 1000 (range 300 to 1000).
 Falsifier: a count below 300 of 1000 under seed 7 and n 1000.
 Limit: the ranges, target set and repay fraction are assumptions, not Aave V4 parameters; no chain data is used.
+
+## 2026-11-11T10:26:24Z closefactor proposal:dbdbce8ab12810423b5f94ddbfa1ee51fcf1dd120b041da5cb567e6d7ea8817d
+
+Hypothesis: on 1000 seeded synthetic positions (seed 7; debt 1, HF uniform on [0.90, 0.99], LT uniform on [0.75, 0.90],
+bonus 0.05, target HF 1.05), three close-factor models disagree on repaid fraction (max minus min above 0.01) in at
+least 900 of 1000 fixtures.
+
+Models (fixed before running): A fixed 50 percent. B piecewise: 50 percent when HF >= 0.95, else 100 percent. C target
+health factor: repay x = (T*D - C*LT) / (T - (1 + b)*LT) capped at D and floored at 0, and 100 percent when collateral
+over debt C/D < 1/(1 + b) (the bad-debt threshold). Collateral C = HF * D / LT.
+
+Metric: /disagreement/count_models_differ. Expected: at least 900 of 1000 (range 900 to 1000).
+Falsifier: a count below 900 of 1000 under seed 7 and n 1000.
+Limit: ranges, the piecewise cut and the target are assumptions, not Aave V4 parameters; no chain data is used.
