@@ -332,3 +332,19 @@ Metrics: /adjacent_count (primary; all rows adjacent), /oracle_adjacent_share (a
 4000), oracle_adjacent_share above 0.60, mempool_only_adjacent_share at least 0.25.
 Falsifier: adjacent_count below 1000 at seed 7 and n 10000, or mempool_only_adjacent_share below 0.25.
 Limit: every parameter is an assumption, not a measured value; no chain data is used.
+
+## 2026-11-12T13:15:44Z stalelookback proposal:713304b8f18d31e405c245d88388d73016c5d0fdb8480fdf9f4c3e273a3e6fa2
+
+Hypothesis: in a seeded synthetic model of 10000 landed liquidations with health factor uniform on 0.95 to 1.0 and a
+per-block drift of standard deviation 0.003, the flag-flip count at lookback 8 blocks exceeds the count at lookback 1
+block, and the count at lookback 0 is exactly zero.
+
+Model (fixed before running): each row draws a landed health factor h uniform on [0.95, 1.0), so the liquidatable flag
+(h < 1) is true at lookback 0. The pre-state k blocks stale is h plus the sum of k independent Gaussian steps with
+standard deviation 0.003 (Box-Muller). A flip is a row whose flag is false in the stale pre-state (health factor at or
+above 1). One walk per row is reused for every lookback 0 to 8.
+
+Metric: /flag_flip_count_lookback_8. Expected: greater than /flag_flip_count_lookback_1, with lookback 0 equal to 0
+(range 100 to 10000).
+Falsifier: flag_flip_count_lookback_8 not greater than flag_flip_count_lookback_1, or lookback 0 count nonzero.
+Limit: every parameter is an assumption, not a measured value; no chain data is used.

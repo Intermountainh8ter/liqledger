@@ -1,0 +1,27 @@
+{
+  "flag_flip_count_lookback_0": 0,
+  "flag_flip_count_lookback_1": 219,
+  "flag_flip_count_lookback_2": 317,
+  "flag_flip_count_lookback_3": 410,
+  "flag_flip_count_lookback_4": 479,
+  "flag_flip_count_lookback_5": 544,
+  "flag_flip_count_lookback_6": 599,
+  "flag_flip_count_lookback_7": 648,
+  "flag_flip_count_lookback_8": 701,
+  "n_fixtures": 10000,
+  "provenance": {
+    "command": "cargo run --locked --release -- stalelookback --seed 7 --n 10000 --out results/111-stalelookback.json",
+    "data_sources": [
+      {
+        "license": "MIT (repository licence)",
+        "url": "synthetic: seeded generator inside the repository, no external data"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-12T13:15:55Z",
+    "wall_s": 0.002627985
+  }
+}

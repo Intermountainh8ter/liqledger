@@ -16,6 +16,7 @@ mod bonuscap;
 mod bonusscale;
 mod premiumround;
 mod dustdeficit;
+mod stalelookback;
 mod oracleadjacent;
 mod bonuscheck;
 mod fractioncheck;
@@ -291,6 +292,15 @@ enum Cmd {
         #[arg(long, default_value_t = 7)]
         seed: u64,
         #[arg(long, default_value_t = 1000)]
+        n: usize,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Count toy liquidatable-flag flips when a landed liquidation is re-run against a stale pre-state.
+    Stalelookback {
+        #[arg(long, default_value_t = 7)]
+        seed: u64,
+        #[arg(long, default_value_t = 10000)]
         n: usize,
         #[arg(long)]
         out: PathBuf,
@@ -1081,6 +1091,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Bonuscap { seed, n, out } => bonuscap::bonuscap(seed, n, out),
         Cmd::Bonusscale { seed, n, out } => bonusscale::bonusscale(seed, n, out),
         Cmd::Premiumround { seed, n, out } => premiumround::premiumround(seed, n, out),
+        Cmd::Stalelookback { seed, n, out } => stalelookback::stalelookback(seed, n, out),
         Cmd::Dustdeficit { seed, n, out } => dustdeficit::dustdeficit(seed, n, out),
         Cmd::Oracleadjacent { seed, n, out } => oracleadjacent::oracleadjacent(seed, n, out),
         Cmd::Targethf { seed, n, out } => targethf::targethf(seed, n, out),
