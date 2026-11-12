@@ -14,6 +14,7 @@
 
 mod bonuscap;
 mod bonusscale;
+mod premiumround;
 mod bonuscheck;
 mod fractioncheck;
 mod closefactor;
@@ -276,6 +277,15 @@ enum Cmd {
     },
     /// Count toy bonuses mispriced when one shared scale factor replaces the per-profile scale factor.
     Bonusscale {
+        #[arg(long, default_value_t = 7)]
+        seed: u64,
+        #[arg(long, default_value_t = 1000)]
+        n: usize,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Count toy liquidatable flags flipped by up to 2 wei of rounded premium debt per accrual near the boundary.
+    Premiumround {
         #[arg(long, default_value_t = 7)]
         seed: u64,
         #[arg(long, default_value_t = 1000)]
@@ -1050,6 +1060,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Replaycoverage { seed, n, out } => replaycoverage::replaycoverage(seed, n, out),
         Cmd::Bonuscap { seed, n, out } => bonuscap::bonuscap(seed, n, out),
         Cmd::Bonusscale { seed, n, out } => bonusscale::bonusscale(seed, n, out),
+        Cmd::Premiumround { seed, n, out } => premiumround::premiumround(seed, n, out),
         Cmd::Targethf { seed, n, out } => targethf::targethf(seed, n, out),
         Cmd::Samebloc { seed, n, out } => samebloc::samebloc(seed, n, out),
         Cmd::Defcheck { seed, n, out } => defcheck::defcheck(seed, n, out),

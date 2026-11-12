@@ -244,3 +244,7 @@ Source: `results/91-bonuscap.json`. On 1000 synthetic positions, 677 sat below t
 ### bonusscale: one shared bonus scale factor across toy profiles
 
 Source: `results/92-bonusscale.json`. On 1000 synthetic positions (seed 7) split across a volatile and a correlated toy profile, a ledger that applies one shared scale factor of 60 mispriced the integer bonus on 802 rows (`/misprice_count`): 417 of 522 volatile rows and 385 of 478 correlated rows. With the shared scale equal to the true scale the count is 0 (`/control_misprice_count`). Profiles, scales and ranges are assumptions fixed in `preregistration_additions.md`, not Aave V4 parameters; no chain data is used.
+
+### premiumround: rounded premium debt near the liquidation boundary
+
+Source: `results/102-premiumround.json`. On 1000 synthetic band rows (seed 7), a ledger that added up to 2 wei of rounded premium debt per accrual flipped the liquidatable flag on 211 rows versus the exact integer recompute (`/disagreements`). On control rows outside the band the count is 0 (`/control_disagreements`). The model and ranges are assumptions fixed in `preregistration_additions.md`, not Aave V4 values; no chain data is used.

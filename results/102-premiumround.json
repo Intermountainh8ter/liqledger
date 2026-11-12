@@ -1,0 +1,24 @@
+{
+  "control_disagreements": 0,
+  "disagreements": 211,
+  "n_fixtures": 1000,
+  "provenance": {
+    "command": "cargo run --locked -q --release -- premiumround --seed 7 --out results/102-premiumround.json",
+    "data_sources": [
+      {
+        "license": "MIT (repository licence)",
+        "url": "synthetic: seeded generator inside the repository, no external data"
+      },
+      {
+        "license": "public audit page, finding description only, no data used",
+        "url": "https://www.chainsecurity.com/security-audit/aave-v4"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-12T12:45:44Z",
+    "wall_s": 0.000198083
+  }
+}

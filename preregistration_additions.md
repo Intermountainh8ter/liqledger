@@ -283,3 +283,18 @@ scale 60 as the true scale give zero mispriced rows by construction.
 Metric: /misprice_count. Expected: at least 1 (range 1 to 100000), with a nonzero count in each profile.
 Falsifier: misprice_count equal to zero when the two toy profiles carry different scale factors.
 Limit: every parameter is an assumption, not an Aave V4 value; no chain data is used.
+
+## 2026-11-12T12:45:30Z premiumround proposal:d6da9a43ee2fd5ee72f4c90aeffae81c8b6523e60635f04a79b7da83642fb423
+
+Hypothesis: on seeded synthetic integer positions whose debt sits within 4 wei of the liquidation boundary, a ledger
+that adds up to 2 wei of rounded premium debt per accrual flips the liquidatable flag on at least one row versus the
+exact integer recompute, and flips none when the boundary offset exceeds 2 wei times the accrual count.
+
+Model (fixed before running): a row is liquidatable when debt exceeds a limit, both integers in wei. Band rows have
+offset = debt minus limit uniform on [-4, 4] and k accruals uniform on [1, 3]. The rounded ledger adds an independent
+uniform integer in [0, 2] wei per accrual. Control rows have offset = -(2k + 1 + u) with u uniform on [0, 3], so the
+offset lies outside the band. A disagreement is a row where the two flags differ.
+
+Metric: /disagreements (band rows). Expected: at least 1 (range 1 to 100000) and /control_disagreements equals 0.
+Falsifier: a zero disagreement count on band rows, or any disagreement on control rows.
+Limit: every parameter is an assumption, not an Aave V4 value; no chain data is used.
