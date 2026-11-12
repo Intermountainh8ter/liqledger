@@ -1,0 +1,19 @@
+{
+  "disagree_count": 1111,
+  "n_fixtures": 10000,
+  "provenance": {
+    "command": "cargo run --locked -q --release -- dustdeficit --seed 7 --n 10000 --out results/106-dustdeficit.json",
+    "data_sources": [
+      {
+        "license": "MIT (repository licence)",
+        "url": "synthetic: seeded generator inside the repository, no external data"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-12T12:57:29Z",
+    "wall_s": 0.000100231
+  }
+}

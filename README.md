@@ -248,3 +248,7 @@ Source: `results/92-bonusscale.json`. On 1000 synthetic positions (seed 7) split
 ### premiumround: rounded premium debt near the liquidation boundary
 
 Source: `results/102-premiumround.json`. On 1000 synthetic band rows (seed 7), a ledger that added up to 2 wei of rounded premium debt per accrual flipped the liquidatable flag on 211 rows versus the exact integer recompute (`/disagreements`). On control rows outside the band the count is 0 (`/control_disagreements`). The model and ranges are assumptions fixed in `preregistration_additions.md`, not Aave V4 values; no chain data is used.
+
+### dustdeficit: dust and deficit flags under floor versus ceil rounding
+
+Source: `results/106-dustdeficit.json`. On 10000 synthetic positions near a toy dust threshold (seed 7), a ceil and a floor integer recompute of the dust and deficit flags disagreed on 1111 rows (`/disagree_count`). The model and ranges are assumptions fixed in `preregistration_additions.md`, not Aave V4 values; no chain data is used.

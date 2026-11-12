@@ -298,3 +298,18 @@ offset lies outside the band. A disagreement is a row where the two flags differ
 Metric: /disagreements (band rows). Expected: at least 1 (range 1 to 100000) and /control_disagreements equals 0.
 Falsifier: a zero disagreement count on band rows, or any disagreement on control rows.
 Limit: every parameter is an assumption, not an Aave V4 value; no chain data is used.
+
+## 2026-11-12T12:57:10Z dustdeficit proposal:3550dd08ae2ad983aaac4360d928b698921fcebf7dbe7f0c6ca6d7cc20fb0acf
+
+Hypothesis: on seeded synthetic integer positions within a few units of a dust threshold, a rounding-up and a
+rounding-down integer recompute of the dust and deficit flags disagree on a nonzero count of positions.
+
+Model (fixed before running): dust threshold 1000 units. Repay = debt * 5000 / 10000, rounded down (floor) or up (ceil);
+remaining debt = debt - repay. Dust flag: remaining debt below 1000. Deficit flag: remaining debt above 0 and collateral
+left equal to 0, where collateral left = collateral - seized and seized = collateral * repay / debt (floor or ceil with
+the same direction, collateral = debt + uniform integer in [0, 2]). Debt uniform on [1996, 2004]. A disagreement is a row
+where either flag differs between the two directions.
+
+Metric: /disagree_count. Expected: at least 1 (range 1 to 100000).
+Falsifier: disagree_count equal to 0 at the default sample size.
+Limit: every parameter is an assumption, not an Aave V4 value; no chain data is used.
