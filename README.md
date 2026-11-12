@@ -252,3 +252,7 @@ Source: `results/102-premiumround.json`. On 1000 synthetic band rows (seed 7), a
 ### dustdeficit: dust and deficit flags under floor versus ceil rounding
 
 Source: `results/106-dustdeficit.json`. On 10000 synthetic positions near a toy dust threshold (seed 7), a ceil and a floor integer recompute of the dust and deficit flags disagreed on 1111 rows (`/disagree_count`). The model and ranges are assumptions fixed in `preregistration_additions.md`, not Aave V4 values; no chain data is used.
+
+### oracleadjacent: adjacency versus mempool visibility
+
+Source: `results/107-oracleadjacent.json`. On 10000 synthetic liquidations (seed 7), 3652 landed within 3 transaction indices after the oracle update (`/adjacent_count`); adjacency alone attributed 0.3146551724137931 of mempool-only rows to the oracle (`/mempool_only_adjacent_share`). The model is an assumption fixed in `preregistration_additions.md`; no chain data is used.

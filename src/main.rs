@@ -16,6 +16,7 @@ mod bonuscap;
 mod bonusscale;
 mod premiumround;
 mod dustdeficit;
+mod oracleadjacent;
 mod bonuscheck;
 mod fractioncheck;
 mod closefactor;
@@ -296,6 +297,15 @@ enum Cmd {
     },
     /// Count toy dust and deficit flag disagreements between floor and ceil integer rounding near a dust threshold.
     Dustdeficit {
+        #[arg(long, default_value_t = 7)]
+        seed: u64,
+        #[arg(long, default_value_t = 10000)]
+        n: usize,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Classify toy liquidations by transaction-index distance after a same-block oracle update, apart from a mempool flag.
+    Oracleadjacent {
         #[arg(long, default_value_t = 7)]
         seed: u64,
         #[arg(long, default_value_t = 10000)]
@@ -1072,6 +1082,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Bonusscale { seed, n, out } => bonusscale::bonusscale(seed, n, out),
         Cmd::Premiumround { seed, n, out } => premiumround::premiumround(seed, n, out),
         Cmd::Dustdeficit { seed, n, out } => dustdeficit::dustdeficit(seed, n, out),
+        Cmd::Oracleadjacent { seed, n, out } => oracleadjacent::oracleadjacent(seed, n, out),
         Cmd::Targethf { seed, n, out } => targethf::targethf(seed, n, out),
         Cmd::Samebloc { seed, n, out } => samebloc::samebloc(seed, n, out),
         Cmd::Defcheck { seed, n, out } => defcheck::defcheck(seed, n, out),

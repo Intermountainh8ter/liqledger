@@ -1,0 +1,23 @@
+{
+  "adjacent_count": 3652,
+  "mempool_only": 1856,
+  "mempool_only_adjacent_share": 0.3146551724137931,
+  "n_fixtures": 10000,
+  "oracle_adjacent_share": 0.7520828073718758,
+  "oracle_triggered": 3961,
+  "provenance": {
+    "command": "cargo run --locked --release -- oracleadjacent --seed 7 --n 10000 --out results/107-oracleadjacent.json",
+    "data_sources": [
+      {
+        "license": "arXiv abstract page, cited for the ordering-rule definition only; no data used, all data synthetic and seeded",
+        "url": "https://arxiv.org/abs/2606.03434"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-12T13:01:33Z",
+    "wall_s": 0.000208888
+  }
+}

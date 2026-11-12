@@ -313,3 +313,22 @@ where either flag differs between the two directions.
 Metric: /disagree_count. Expected: at least 1 (range 1 to 100000).
 Falsifier: disagree_count equal to 0 at the default sample size.
 Limit: every parameter is an assumption, not an Aave V4 value; no chain data is used.
+
+## 2026-11-12T13:01:22Z oracleadjacent proposal:e5fb5c30538abb1993c33d9c96098974fcd0415f0119a0c6611e418bc1484ed1
+
+Hypothesis: in a seeded synthetic block model where 40% of liquidations are triggered by a same-block oracle update and
+30% are independently mempool-visible, the count of liquidations landing within 3 transaction indices after the update
+exceeds 60% of all oracle-triggered liquidations, and classifying by adjacency alone attributes at least 25% of
+mempool-only liquidations to the oracle.
+
+Model (fixed before running): each row has an oracle-triggered flag (probability 0.4) and an independent mempool-visible
+flag (probability 0.3). The oracle update sits at a transaction index uniform on [0, 150). Oracle-triggered rows land
+d indices after the update with d uniform on [1, 4]. Mempool-only rows (visible, not oracle-triggered) backrun the update
+with probability 0.3 at d uniform on [1, 3], otherwise land at an index uniform on [0, 150). Remaining rows land at an
+index uniform on [0, 150). A row is adjacent when 1 <= d <= 3 where d = landing index minus update index.
+
+Metrics: /adjacent_count (primary; all rows adjacent), /oracle_adjacent_share (adjacent among oracle-triggered),
+/mempool_only_adjacent_share (adjacent among mempool-only rows). Expected: adjacent_count at least 1000 (range 1000 to
+4000), oracle_adjacent_share above 0.60, mempool_only_adjacent_share at least 0.25.
+Falsifier: adjacent_count below 1000 at seed 7 and n 10000, or mempool_only_adjacent_share below 0.25.
+Limit: every parameter is an assumption, not a measured value; no chain data is used.
