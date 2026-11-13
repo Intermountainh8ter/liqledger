@@ -1,0 +1,25 @@
+{
+  "n_fixtures": 10000,
+  "provenance": {
+    "command": "cargo run --locked --release -- stalestate3 --seed 7 --n 10000 --out results/124-stalestate3.json",
+    "data_sources": [
+      {
+        "license": "MIT (repository licence)",
+        "url": "synthetic: seeded generator inside the repository, no external data"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-13T13:46:31Z",
+    "wall_s": 0.000590254
+  },
+  "stalestate3": {
+    "balance_only_count": 95,
+    "multi_input_count": 248,
+    "no_omission_flip_count": 0,
+    "oracle_timing_only_count": 614,
+    "tx_only_count": 163
+  }
+}

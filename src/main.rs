@@ -19,6 +19,7 @@ mod dustdeficit;
 mod stalelookback;
 mod stalestate;
 mod stalestate2;
+mod stalestate3;
 mod oracleadjacent;
 mod bonuscheck;
 mod fractioncheck;
@@ -294,6 +295,15 @@ enum Cmd {
         #[arg(long, default_value_t = 7)]
         seed: u64,
         #[arg(long, default_value_t = 1000)]
+        n: usize,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Stalestate2 with the oracle input recast as update timing.
+    Stalestate3 {
+        #[arg(long, default_value_t = 7)]
+        seed: u64,
+        #[arg(long, default_value_t = 10000)]
         n: usize,
         #[arg(long)]
         out: PathBuf,
@@ -1113,6 +1123,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Premiumround { seed, n, out } => premiumround::premiumround(seed, n, out),
         Cmd::Stalestate { seed, n, out } => stalestate::stalestate(seed, n, out),
         Cmd::Stalestate2 { seed, n, out } => stalestate2::stalestate2(seed, n, out),
+        Cmd::Stalestate3 { seed, n, out } => stalestate3::stalestate3(seed, n, out),
         Cmd::Stalelookback { seed, n, out } => stalelookback::stalelookback(seed, n, out),
         Cmd::Dustdeficit { seed, n, out } => dustdeficit::dustdeficit(seed, n, out),
         Cmd::Oracleadjacent { seed, n, out } => oracleadjacent::oracleadjacent(seed, n, out),

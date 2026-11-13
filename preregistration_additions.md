@@ -377,3 +377,18 @@ Falsifier: tx_only_count not greater than balance_only_count, or a nonzero flip 
 Limit: every parameter is an assumption, not a measured value; no chain data is used. Shifts are applied upward to the
 stale-state health factor; a flip is a stale health factor at or above 1. A row counts toward an input's alone count
 when only that input's shift alone flips the flag; rows needing two or more inputs go to a multi-input count.
+
+## 2026-11-13T13:46:30Z stalestate3 proposal:11521c893dae6b385f198e8c62759608c64b931bdd3c8d66d0b92ec211594ee6
+
+Hypothesis: in a seeded synthetic model of 10000 landed liquidations (health factor uniform on 0.95 to 1.0; oracle
+update landing one block after the local state read in 40% of rows, shift absolute value of a Gaussian with standard
+deviation 0.012; omitted earlier same-block transaction in 30% of rows, standard deviation 0.005; omitted balance change
+in 10% of rows, standard deviation 0.008), the count of flips attributable to the oracle-timing input alone exceeds the
+count attributable to the earlier-transaction input alone, and with no input omitted the flip count is exactly zero.
+
+Metric: /stalestate3/oracle_timing_only_count. Expected: greater than /stalestate3/tx_only_count, with the no-omission
+flip count equal to 0 (range 100 to 10000).
+Falsifier: oracle_timing_only_count not greater than tx_only_count, or a nonzero flip count with no omitted input.
+Limit: every parameter is an assumption, not a measured value; no chain data is used. Shifts are applied upward to the
+stale-state health factor; a flip is a stale health factor at or above 1. A row counts toward an input's alone count
+when only that input's shift alone flips the flag; rows needing two or more inputs go to a multi-input count.
