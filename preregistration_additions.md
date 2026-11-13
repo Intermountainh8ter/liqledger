@@ -362,3 +362,18 @@ equal to 0 (range 100 to 10000).
 Falsifier: oracle_only_count not greater than tx_only_count, or a nonzero flip count with no omitted input.
 Limit: every parameter is an assumption, not a measured value; no chain data is used. Shifts are applied upward to the
 stale-state health factor; a flip is a stale health factor at or above 1.
+
+## 2026-11-13T13:38:30Z stalestate2 proposal:fc3885542ac1ca28edc6bcaa2e6102ef6d730f8fb2e79e74ee24ccd09d6ac033
+
+Hypothesis: in a seeded synthetic model of 10000 landed liquidations (health factor uniform on 0.95 to 1.0; omitted
+oracle update in 60% of rows, shift absolute value of a Gaussian with standard deviation 0.01; omitted earlier
+transaction in 30% of rows, standard deviation 0.005; omitted balance change in 10% of rows, standard deviation 0.008),
+the count of flips attributable to the earlier-transaction input alone exceeds the count attributable to the
+balance-change input alone, and with no input omitted the flip count is exactly zero.
+
+Metric: /stalestate2/tx_only_count. Expected: greater than /stalestate2/balance_only_count, with the no-omission flip
+count equal to 0 (range 100 to 10000).
+Falsifier: tx_only_count not greater than balance_only_count, or a nonzero flip count with no omitted input.
+Limit: every parameter is an assumption, not a measured value; no chain data is used. Shifts are applied upward to the
+stale-state health factor; a flip is a stale health factor at or above 1. A row counts toward an input's alone count
+when only that input's shift alone flips the flag; rows needing two or more inputs go to a multi-input count.
