@@ -348,3 +348,17 @@ Metric: /flag_flip_count_lookback_8. Expected: greater than /flag_flip_count_loo
 (range 100 to 10000).
 Falsifier: flag_flip_count_lookback_8 not greater than flag_flip_count_lookback_1, or lookback 0 count nonzero.
 Limit: every parameter is an assumption, not a measured value; no chain data is used.
+
+## 2026-11-13T13:34:09Z stalestate proposal:21b9a671e80a7c95dd466156d544399c859a213b3bf7c3fb565d01286cfe9069
+
+Hypothesis: in a seeded synthetic model of 10000 landed liquidations (health factor uniform on 0.95 to 1.0; omitted oracle
+update present in 60% of rows with shift of absolute value of a Gaussian with standard deviation 0.01; omitted earlier
+same-block transaction present in 30% of rows with shift of absolute value of a Gaussian with standard deviation 0.005),
+the count of flag flips attributable to the oracle input alone exceeds the count attributable to the earlier-transaction
+input alone, and with neither input omitted the flip count is exactly zero.
+
+Metric: /stalestate/oracle_only_count. Expected: greater than /stalestate/tx_only_count, with the no-omission flip count
+equal to 0 (range 100 to 10000).
+Falsifier: oracle_only_count not greater than tx_only_count, or a nonzero flip count with no omitted input.
+Limit: every parameter is an assumption, not a measured value; no chain data is used. Shifts are applied upward to the
+stale-state health factor; a flip is a stale health factor at or above 1.
