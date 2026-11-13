@@ -406,3 +406,16 @@ Metric: /stalestate4/multiread_divergence_count. Expected: greater than 0, with 
 Falsifier: multiread_divergence_count equal to 0, or a nonzero flip count in the no-split control arm.
 Limit: every parameter is an assumption, not a measured value; no chain data is used. A flip is a stale health factor at
 or above 1 after the shift; rows whose health factor is already at or above 1 are counted as unexplained residual.
+
+## 2026-11-13T13:53:30Z stalestate5 proposal:e32a4ac36cf744911db6fd2e9a18d197c01fb54e64265660648c9b558f07288a
+
+Hypothesis: in a seeded synthetic model of 10000 landed liquidations (health factor uniform on 0.95 to 1.0; the local
+simulation reads a block-context field that differs from the landed block in 20% of rows, shift absolute value of a
+Gaussian with standard deviation 0.01), the count of flag flips attributable to the environment input alone is greater
+than 0, and with identical environment fields the flip count is exactly 0.
+
+Metric: /stalestate5/environment_divergence_count. Expected: greater than 0, with the identical-environment control
+count equal to 0 (range 100 to 10000).
+Falsifier: environment_divergence_count equal to 0, or a nonzero flip count in the identical-environment control arm.
+Limit: every parameter is an assumption, not a measured value; no chain data is used. A flip is a stale health factor at
+or above 1 after the shift; rows whose health factor is already at or above 1 are counted as unexplained residual.

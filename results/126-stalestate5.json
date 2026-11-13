@@ -1,0 +1,23 @@
+{
+  "n_fixtures": 10000,
+  "provenance": {
+    "command": "cargo run --locked --release -- stalestate5 --seed 7 --n 10000 --out results/126-stalestate5.json",
+    "data_sources": [
+      {
+        "license": "MIT (repository licence)",
+        "url": "synthetic: seeded generator inside the repository, no external data"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-13T13:53:36Z",
+    "wall_s": 0.000246195
+  },
+  "stalestate5": {
+    "environment_divergence_count": 324,
+    "identical_env_control_flip_count": 0,
+    "unexplained_residual_count": 0
+  }
+}
