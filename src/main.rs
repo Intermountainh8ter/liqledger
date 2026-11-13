@@ -20,6 +20,7 @@ mod stalelookback;
 mod stalestate;
 mod stalestate2;
 mod stalestate3;
+mod stalestate4;
 mod oracleadjacent;
 mod bonuscheck;
 mod fractioncheck;
@@ -301,6 +302,15 @@ enum Cmd {
     },
     /// Stalestate2 with the oracle input recast as update timing.
     Stalestate3 {
+        #[arg(long, default_value_t = 7)]
+        seed: u64,
+        #[arg(long, default_value_t = 10000)]
+        n: usize,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Stalestate3 with a multi-read input (two price reads split across an oracle update).
+    Stalestate4 {
         #[arg(long, default_value_t = 7)]
         seed: u64,
         #[arg(long, default_value_t = 10000)]
@@ -1124,6 +1134,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Stalestate { seed, n, out } => stalestate::stalestate(seed, n, out),
         Cmd::Stalestate2 { seed, n, out } => stalestate2::stalestate2(seed, n, out),
         Cmd::Stalestate3 { seed, n, out } => stalestate3::stalestate3(seed, n, out),
+        Cmd::Stalestate4 { seed, n, out } => stalestate4::stalestate4(seed, n, out),
         Cmd::Stalelookback { seed, n, out } => stalelookback::stalelookback(seed, n, out),
         Cmd::Dustdeficit { seed, n, out } => dustdeficit::dustdeficit(seed, n, out),
         Cmd::Oracleadjacent { seed, n, out } => oracleadjacent::oracleadjacent(seed, n, out),

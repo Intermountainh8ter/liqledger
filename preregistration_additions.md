@@ -392,3 +392,17 @@ Falsifier: oracle_timing_only_count not greater than tx_only_count, or a nonzero
 Limit: every parameter is an assumption, not a measured value; no chain data is used. Shifts are applied upward to the
 stale-state health factor; a flip is a stale health factor at or above 1. A row counts toward an input's alone count
 when only that input's shift alone flips the flag; rows needing two or more inputs go to a multi-input count.
+
+## 2026-11-13T13:50:02Z stalestate4 proposal:4c562e8eabdc8dc2ad736c74695f6f960841afdfbd68cfbdb22576f0ad3fdf1b
+
+Hypothesis: in a seeded synthetic model of 10000 landed liquidations with two in-transaction price reads (health factor
+uniform on 0.95 to 1.0; the landed path splits the two reads across an oracle update in 25% of rows, shift absolute
+value of a Gaussian with standard deviation 0.01; the local simulation resolves both reads to one round), the count of
+flag flips attributable to the multi-read input alone is greater than 0, and with no split the multi-read flip count is
+exactly 0.
+
+Metric: /stalestate4/multiread_divergence_count. Expected: greater than 0, with the no-split control count equal to 0
+(range 100 to 10000).
+Falsifier: multiread_divergence_count equal to 0, or a nonzero flip count in the no-split control arm.
+Limit: every parameter is an assumption, not a measured value; no chain data is used. A flip is a stale health factor at
+or above 1 after the shift; rows whose health factor is already at or above 1 are counted as unexplained residual.
