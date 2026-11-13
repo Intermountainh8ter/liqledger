@@ -419,3 +419,15 @@ count equal to 0 (range 100 to 10000).
 Falsifier: environment_divergence_count equal to 0, or a nonzero flip count in the identical-environment control arm.
 Limit: every parameter is an assumption, not a measured value; no chain data is used. A flip is a stale health factor at
 or above 1 after the shift; rows whose health factor is already at or above 1 are counted as unexplained residual.
+
+## 2026-11-13T14:09:02Z reviewerdet proposal:6813aefee8e6f3b01a04899e948d9a0a8f71c74fc0e161d2daa3e2b22dd2f000
+
+Hypothesis: on 1000 seeded synthetic flag cases reviewed 5 times by a scripted reviewer with a fixed per-case systematic
+error (same wrong label every run) on 10 percent of cases and no random noise, the run-to-run disagreement count is 0
+while the count of cases wrong against planted truth is at least 80; adding 5 percent random per-run noise makes the
+disagreement count exceed 0.
+
+Metric: /reviewer/run_disagreement_count. Expected: equal to 0 for the systematic-error reviewer, with
+wrong_vs_truth_count at least 80.
+Falsifier: a nonzero run_disagreement_count for the noise-free reviewer, or fewer than 80 cases wrong against planted truth.
+Limit: every parameter is an assumption; all inputs are synthetic and seeded; no chain data is used.

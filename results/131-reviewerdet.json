@@ -1,0 +1,24 @@
+{
+  "n_fixtures": 1000,
+  "provenance": {
+    "command": "cargo run --locked -q --release -- reviewerdet --seed 7 --n 1000 --out results/131-reviewerdet.json",
+    "data_sources": [
+      {
+        "license": "MIT (repository licence)",
+        "url": "synthetic: seeded generator inside the repository, no external data"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-13T14:09:14Z",
+    "wall_s": 0.000092674
+  },
+  "reviewer": {
+    "noisy_run_disagreement_count": 259,
+    "noisy_wrong_vs_truth_count": 97,
+    "run_disagreement_count": 0,
+    "wrong_vs_truth_count": 96
+  }
+}
