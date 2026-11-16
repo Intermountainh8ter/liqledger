@@ -473,3 +473,14 @@ Falsifier: a difference under 0.01, fewer than 300 replayed touched transactions
 node that does not serve state at the parent block.
 Limit: eth_call uses the sender, target, value, input and gas of the landed transaction at the parent block state, with
 block context of the parent; read-only; samples capped at 400 per group, seeded; no traces.
+
+## 2026-11-16T11:40:55Z denimempty proposal:7e2dd5bb6a349d584b45b167d32d91af62a433644ed0b0775606e716aa9ba57e
+
+Hypothesis: on Base mainnet, the share of blocks containing no non-system (non-0x7e) transactions in the 600 blocks
+starting at block 53556127 exceeds the share in the 600 blocks ending at block 53556126 by at least 0.05 in absolute
+terms.
+
+Metric: /ranges/0/empty_block_share. Expected: post share at least 0.05 above the pre control (range 0.05 to 1.0).
+Falsifier: post share minus pre share below 0.05 on the pinned ranges.
+Limit: blocks with only deposit-type (0x7e) transactions count as empty; read-only block reads from one node; no
+receipts, no traces.

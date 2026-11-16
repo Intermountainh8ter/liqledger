@@ -268,3 +268,7 @@ Source: `results/172-denimorder.json`, chainstack:base blocks 53555927 to 535563
 ### Base: parent-block replay divergence by same-block contention (iteration 175, null)
 
 Source: `results/175-denimdrift.json`, Base blocks 53556127 to 53556276, 400 touched and 400 untouched transactions sampled with seed 7. The eth_call success flag at the parent block differed from the receipt status for 0.06 of touched transactions (24 of 400) and 0.03 of untouched ones (12 of 400); the difference is 0.03. The pre-registered expectation (touched at least 0.08, at least 0.05 above untouched) is not supported. Run: `liqledger denimdrift` (see `preregistration_additions.md`).
+
+### Base empty blocks around the Denim boundary (`denimempty`)
+
+Source: `results/176-denimempty.json`, Base blocks 53555527 to 53556726 (600 blocks each side of the boundary at 53556127). Blocks holding only deposit-type system transactions count as empty. Post-boundary: 146 of 600 blocks empty (share 0.2433), longest run 34 blocks. Pre-boundary control: 0 of 600 empty, longest run 0. Difference 0.2433, above the pre-registered 0.05 threshold. One node, no receipts or traces.
