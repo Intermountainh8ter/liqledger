@@ -458,3 +458,18 @@ Falsifier: post share below 0.70, or less than 0.05 above the pre-activation con
 pairs in a range makes the run report abstain, not a number.
 Limit: effective priority fee is computed from the transaction fields and the block base fee; deposit-type (0x7e)
 transactions are excluded; read-only block reads from one node; no traces, no receipts.
+
+## 2026-11-16T11:34:44Z denimdrift proposal:bc6e7f2772ab7e33ae9e81da3fd9d745829d98778721618ff621e204e492ac63
+
+Hypothesis: on Base mainnet, in the 150 blocks starting at block 53556127, for landed non-system transactions with a
+nonempty call target, the share whose eth_call success flag at the parent block differs from the receipt status is at
+least 0.05 higher when an earlier transaction in the same block targeted the same address (touched) than when none did
+(untouched). A difference under 0.01 means same-block contention on one address does not explain the parent-state
+replay gap.
+
+Metric: /ranges/0/divergent_share_touched. Expected: at least 0.08 (range 0.08 to 0.80), at least 0.05 above the
+untouched share.
+Falsifier: a difference under 0.01, fewer than 300 replayed touched transactions (the run then reports abstain), or a
+node that does not serve state at the parent block.
+Limit: eth_call uses the sender, target, value, input and gas of the landed transaction at the parent block state, with
+block context of the parent; read-only; samples capped at 400 per group, seeded; no traces.

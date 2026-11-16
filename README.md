@@ -264,3 +264,7 @@ Source: `results/171-denimwin.json`, Base blocks 53555527 to 53556726, headers o
 ### Base ordering around the Denim activation (`denimorder`)
 
 Source: `results/172-denimorder.json`, chainstack:base blocks 53555927 to 53556326. Share of adjacent non-system transaction pairs in non-increasing effective priority-fee order: 0.9752407152682255 post-activation (5672 of 5816 pairs) against 0.9568186050361052 in the pre-activation control (46244 of 48331 pairs); difference 0.01842211023212037. The pre-registered post share of at least 0.90 held, but the pre-registered difference of at least 0.05 did not, so the run does not show a change in landed ordering. Limits: one node, effective tip computed from transaction fields and the block base fee, deposit-type transactions excluded.
+
+### Base: parent-block replay divergence by same-block contention (iteration 175, null)
+
+Source: `results/175-denimdrift.json`, Base blocks 53556127 to 53556276, 400 touched and 400 untouched transactions sampled with seed 7. The eth_call success flag at the parent block differed from the receipt status for 0.06 of touched transactions (24 of 400) and 0.03 of untouched ones (12 of 400); the difference is 0.03. The pre-registered expectation (touched at least 0.08, at least 0.05 above untouched) is not supported. Run: `liqledger denimdrift` (see `preregistration_additions.md`).

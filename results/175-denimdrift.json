@@ -1,0 +1,34 @@
+{
+  "provenance": {
+    "command": "denimdrift --rpc-env LIQ_BASE_RPC --post-start 53556127 --window 150 --max-touched 400 --max-untouched 400 --seed 7 --out results/175-denimdrift.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:base blocks 53556127 to 53556276 (blocks, receipts, eth_call at parent block)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-16T11:35:35Z",
+    "wall_s": 54.195552609
+  },
+  "ranges": [
+    {
+      "abstain": false,
+      "difference": 0.03,
+      "divergent_share_touched": 0.06,
+      "divergent_share_untouched": 0.03,
+      "divergent_touched": 24,
+      "divergent_untouched": 12,
+      "first_block": 53556127,
+      "label": "post",
+      "last_block": 53556276,
+      "touched_pool": 2091,
+      "touched_replayed": 400,
+      "untouched_pool": 1928,
+      "untouched_replayed": 400
+    }
+  ]
+}
