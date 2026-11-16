@@ -260,3 +260,7 @@ Source: `results/107-oracleadjacent.json`. On 10000 synthetic liquidations (seed
 ### denimwin: Base block-header window study
 
 Source: `results/171-denimwin.json`, Base blocks 53555527 to 53556726, headers only. The window of 600 blocks starting at block 53556127 has a header-timestamp wall time of 119 s against 1198 s for the 600 blocks ending at block 53556126, a ratio of 0.0993322203672788 (pre-registered expectation: at most 0.15; supported). Header timestamps are whole seconds, so the post-window median per-block interval reads 0 s and only the mean interval (0.1986644407345576 s) is informative.
+
+### Base ordering around the Denim activation (`denimorder`)
+
+Source: `results/172-denimorder.json`, chainstack:base blocks 53555927 to 53556326. Share of adjacent non-system transaction pairs in non-increasing effective priority-fee order: 0.9752407152682255 post-activation (5672 of 5816 pairs) against 0.9568186050361052 in the pre-activation control (46244 of 48331 pairs); difference 0.01842211023212037. The pre-registered post share of at least 0.90 held, but the pre-registered difference of at least 0.05 did not, so the run does not show a change in landed ordering. Limits: one node, effective tip computed from transaction fields and the block base fee, deposit-type transactions excluded.

@@ -445,3 +445,16 @@ Falsifier: a ratio at or above 0.5, or a header read that cannot pin the boundar
 abstain instead of a number).
 Limit: header timestamps are whole seconds, so the ratio is coarse; read-only header reads from one node; no
 transactions, no traces.
+
+## 2026-11-16T11:20:00Z denimorder proposal:695905a809383c181c2eff54d4d318f773c046aa43e233ea71e13777646c896a
+
+Hypothesis: on Base mainnet, in the 200 blocks starting at block 53556127, at least 0.90 of adjacent non-system
+transaction pairs within a block have a non-increasing effective priority fee, and that share is at least 0.10 higher
+than in the 200 blocks ending at block 53556126. A post share below 0.70, or a difference under 0.05, means landed
+blocks do not show the documented ordering.
+
+Metric: /ranges/0/ordered_pair_share. Expected: at least 0.90 (range 0.90 to 1.0).
+Falsifier: post share below 0.70, or less than 0.05 above the pre-activation control range; fewer than 1000 adjacent
+pairs in a range makes the run report abstain, not a number.
+Limit: effective priority fee is computed from the transaction fields and the block base fee; deposit-type (0x7e)
+transactions are excluded; read-only block reads from one node; no traces, no receipts.

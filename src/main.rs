@@ -23,6 +23,7 @@ mod stalestate3;
 mod stalestate4;
 mod stalestate5;
 mod reviewerdet;
+mod denimorder;
 mod denimwin;
 mod oracleadjacent;
 mod bonuscheck;
@@ -330,6 +331,19 @@ enum Cmd {
         #[arg(long)]
         post_start: u64,
         #[arg(long, default_value_t = 600)]
+        window: u64,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Read-only Base block study: share of adjacent non-system transaction pairs in non-increasing priority-fee order.
+    Denimorder {
+        #[arg(long)]
+        rpc_env: String,
+        #[arg(long)]
+        post_start: u64,
+        #[arg(long)]
+        pre_end: u64,
+        #[arg(long, default_value_t = 200)]
         window: u64,
         #[arg(long)]
         out: PathBuf,
@@ -1169,6 +1183,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Stalestate2 { seed, n, out } => stalestate2::stalestate2(seed, n, out),
         Cmd::Stalestate3 { seed, n, out } => stalestate3::stalestate3(seed, n, out),
         Cmd::Stalestate4 { seed, n, out } => stalestate4::stalestate4(seed, n, out),
+        Cmd::Denimorder { rpc_env, post_start, pre_end, window, out } => denimorder::denimorder(rpc_env, post_start, pre_end, window, out).await,
         Cmd::Denimwin { rpc_env, pre_end, post_start, window, out } => denimwin::denimwin(rpc_env, pre_end, post_start, window, out).await,
         Cmd::Reviewerdet { seed, n, out } => reviewerdet::reviewerdet(seed, n, out),
         Cmd::Stalestate5 { seed, n, out } => stalestate5::stalestate5(seed, n, out),

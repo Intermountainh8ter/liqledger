@@ -1,0 +1,40 @@
+{
+  "post_minus_pre_share": 0.01842211023212037,
+  "provenance": {
+    "command": "denimorder --rpc-env LIQ_BASE_RPC --post-start 53556127 --pre-end 53556126 --window 200 --out results/172-denimorder.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:base blocks 53555927 to 53556326 (full blocks with transactions)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-16T11:20:55Z",
+    "wall_s": 15.034951844
+  },
+  "ranges": [
+    {
+      "abstain": false,
+      "first_block": 53556127,
+      "label": "post",
+      "last_block": 53556326,
+      "ordered_pair_share": 0.9752407152682255,
+      "ordered_pairs": 5672,
+      "skipped_below_base_fee": 0,
+      "total_pairs": 5816
+    },
+    {
+      "abstain": false,
+      "first_block": 53555927,
+      "label": "pre",
+      "last_block": 53556126,
+      "ordered_pair_share": 0.9568186050361052,
+      "ordered_pairs": 46244,
+      "skipped_below_base_fee": 0,
+      "total_pairs": 48331
+    }
+  ]
+}
