@@ -494,3 +494,15 @@ Metric: /comparison/gas_limit_median_ratio. Expected: post/pre ratio at most 0.2
 Falsifier: post median gasLimit divided by pre median gasLimit above 0.2 on the pinned ranges.
 Limit: header reads from one node; also reports gas-used share of the limit and the share of blocks whose base fee
 rose versus the previous block; no receipts, no traces.
+
+## 2026-11-16T12:01:24Z denimoracle proposal:3746f40d2fef700ab8024f6d3f416716864ffdda4577ec29d1b5e43c6cdb0b28
+
+Hypothesis: on the 150000 pinned Base blocks starting at block 53556127, at least 0.30 of blocks containing an Aave V3
+pool LiquidationCall log also contain a Chainlink AnswerUpdated log (any feed address), provided at least 20 liquidation
+blocks are found.
+
+Metric: /ranges/0/same_block_update_share. Expected: at least 0.30 (range 0.30 to 1.0).
+Falsifier: share below 0.30 with at least 20 liquidation blocks; with fewer the run reports abstain.
+Limit: only AnswerUpdated logs count as feed updates (OCR2 NewTransmission-only feeds and SVR auction updates that do
+not emit it are missed, so the share is a lower bound); also reports the median transaction-index offset (liquidation
+minus first update in the block); aggregates only; read-only getLogs, no traces.

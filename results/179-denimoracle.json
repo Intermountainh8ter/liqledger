@@ -1,0 +1,30 @@
+{
+  "provenance": {
+    "command": "denimoracle --rpc-env LIQ_BASE_RPC --start 53556127 --blocks 150000 --out results/179-denimoracle.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:base blocks 53556127 to 53706126 (logs)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-16T12:01:43Z",
+    "wall_s": 0.873073835
+  },
+  "ranges": [
+    {
+      "abstain": true,
+      "blocks": 150000,
+      "first_block": 53556127,
+      "last_block": 53706126,
+      "liquidation_blocks": 1,
+      "liquidation_blocks_with_update": 0,
+      "liquidation_logs": 1,
+      "median_tx_index_offset": null,
+      "same_block_update_share": 0.0
+    }
+  ]
+}

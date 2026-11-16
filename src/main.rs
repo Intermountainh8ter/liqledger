@@ -25,6 +25,7 @@ mod stalestate5;
 mod reviewerdet;
 mod denimorder;
 mod denimempty;
+mod denimoracle;
 mod denimfee;
 mod denimdrift;
 mod denimwin;
@@ -348,6 +349,17 @@ enum Cmd {
         pre_end: u64,
         #[arg(long, default_value_t = 200)]
         window: u64,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Read-only Base log study: share of Aave liquidation blocks that also hold a Chainlink AnswerUpdated log.
+    Denimoracle {
+        #[arg(long)]
+        rpc_env: String,
+        #[arg(long)]
+        start: u64,
+        #[arg(long)]
+        blocks: u64,
         #[arg(long)]
         out: PathBuf,
     },
@@ -1230,6 +1242,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Stalestate3 { seed, n, out } => stalestate3::stalestate3(seed, n, out),
         Cmd::Stalestate4 { seed, n, out } => stalestate4::stalestate4(seed, n, out),
         Cmd::Denimdrift { rpc_env, post_start, window, max_touched, max_untouched, seed, out } => denimdrift::denimdrift(rpc_env, post_start, window, max_touched, max_untouched, seed, out).await,
+        Cmd::Denimoracle { rpc_env, start, blocks, out } => denimoracle::denimoracle(rpc_env, start, blocks, out).await,
         Cmd::Denimempty { rpc_env, post_start, pre_end, window, out } => denimempty::denimempty(rpc_env, post_start, pre_end, window, out).await,
         Cmd::Denimfee { rpc_env, post_start, pre_end, window, out } => denimfee::denimfee(rpc_env, post_start, pre_end, window, out).await,
         Cmd::Denimorder { rpc_env, post_start, pre_end, window, out } => denimorder::denimorder(rpc_env, post_start, pre_end, window, out).await,
