@@ -53,11 +53,12 @@ async fn range(p: &impl Provider, from: u64, to: u64) -> anyhow::Result<Vec<bool
 pub async fn denimempty(rpc_env: String, post_start: u64, pre_end: u64, window: u64, out: PathBuf) -> anyhow::Result<()> {
     let started = std::time::Instant::now();
     let started_at = chrono_now();
-    anyhow::ensure!(post_start == pre_end + 1 && window >= 1, "boundary must be adjacent");
+    anyhow::ensure!(post_start > pre_end && window >= 1, "post window must start after the pre window");
     let url = std::env::var(&rpc_env).map_err(|_| anyhow::anyhow!("env {rpc_env} not set"))?;
     let p = ProviderBuilder::new().connect_http(url.parse().map_err(|_| anyhow::anyhow!("bad endpoint in {rpc_env}"))?);
     let pre_first = pre_end + 1 - window;
     let post_last = post_start + window - 1;
+    let out_name = out.display().to_string();
     let spans = [(post_start, post_last, "post"), (pre_first, pre_end, "pre")];
     let mut ranges = Vec::new();
     for (a, z, label) in spans {
@@ -76,11 +77,11 @@ pub async fn denimempty(rpc_env: String, post_start: u64, pre_end: u64, window: 
         "provenance": {
             "started_at": started_at,
             "seeds": [7],
-            "command": format!("denimempty --rpc-env {rpc_env} --post-start {post_start} --pre-end {pre_end} --window {window} --out results/176-denimempty.json"),
+            "command": format!("denimempty --rpc-env {rpc_env} --post-start {post_start} --pre-end {pre_end} --window {window} --out {out_name}"),
             "hardware": format!("{} on {} logical cpus", std::env::consts::ARCH, std::thread::available_parallelism().map(|x| x.get()).unwrap_or(1)),
             "wall_s": started.elapsed().as_secs_f64(),
             "data_sources": [
-                {"url": format!("chainstack:base blocks {pre_first} to {post_last} (full blocks with transactions)"),
+                {"url": format!("chainstack:base blocks {pre_first} to {pre_end} and {post_start} to {post_last} (full blocks with transactions)"),
                  "license": "public chain data via the owner's Chainstack node"}
             ],
         }

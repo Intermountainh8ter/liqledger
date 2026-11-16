@@ -516,3 +516,13 @@ liquidation blocks are found.
 Metric: /ranges/0/same_block_update_share. Expected: at least 0.30 (range 0.30 to 1.0).
 Falsifier: share below 0.30 with at least 20 liquidation blocks; with fewer the run reports abstain.
 Limit: same as denimoracle (AnswerUpdated only, so the share is a lower bound); no code change; read-only getLogs.
+
+## 2026-11-16T13:57:55Z denimemptypersist proposal:2568d046599015d5564ed5e14da34166da795e4374e319723a8d288e3731f72f
+
+Hypothesis: on Base mainnet, the share of blocks holding no non-0x7e transactions in the 2000 blocks starting at block
+55556127 exceeds the share in the 2000 blocks ending at block 53556126 by at least 0.05 in absolute terms.
+
+Metric: /ranges/0/empty_block_share (post window). Expected: at least 0.05 (range 0.05 to 1.0), pre control near 0.
+Falsifier: post share minus pre share below 0.05 on the pinned ranges.
+Limit: denimempty's adjacency check is relaxed to post_start > pre_end; the provenance command now records the real
+out path; one node, full-block reads, no receipts; abstain (error) if block 55556127 does not exist on the node.

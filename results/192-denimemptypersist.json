@@ -1,0 +1,38 @@
+{
+  "post_minus_pre_share": 0.0045,
+  "provenance": {
+    "command": "denimempty --rpc-env LIQ_BASE_RPC --post-start 55556127 --pre-end 53556126 --window 2000 --out results/192-denimemptypersist.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:base blocks 53554127 to 53556126 and 55556127 to 55558126 (full blocks with transactions)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-16T13:58:06Z",
+    "wall_s": 157.534957706
+  },
+  "ranges": [
+    {
+      "blocks": 2000,
+      "empty_block_share": 0.0045,
+      "empty_blocks": 9,
+      "first_block": 55556127,
+      "label": "post",
+      "last_block": 55558126,
+      "longest_empty_run": 2
+    },
+    {
+      "blocks": 2000,
+      "empty_block_share": 0.0,
+      "empty_blocks": 0,
+      "first_block": 53554127,
+      "label": "pre",
+      "last_block": 53556126,
+      "longest_empty_run": 0
+    }
+  ]
+}
