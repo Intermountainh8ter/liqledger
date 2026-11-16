@@ -506,3 +506,13 @@ Falsifier: share below 0.30 with at least 20 liquidation blocks; with fewer the 
 Limit: only AnswerUpdated logs count as feed updates (OCR2 NewTransmission-only feeds and SVR auction updates that do
 not emit it are missed, so the share is a lower bound); also reports the median transaction-index offset (liquidation
 minus first update in the block); aggregates only; read-only getLogs, no traces.
+
+## 2026-11-16T13:42:21Z denimoraclepre proposal:13c181c337c039c8354cbac5fe903e94811d68a3aade5c0f26a3e479532c79e4
+
+Hypothesis: on the 600000 pinned Base blocks 52956127 to 53556126 (pre-Denim, 2s blocks), at least 0.30 of blocks
+containing an Aave V3 pool LiquidationCall log also contain a Chainlink AnswerUpdated log, provided at least 20
+liquidation blocks are found.
+
+Metric: /ranges/0/same_block_update_share. Expected: at least 0.30 (range 0.30 to 1.0).
+Falsifier: share below 0.30 with at least 20 liquidation blocks; with fewer the run reports abstain.
+Limit: same as denimoracle (AnswerUpdated only, so the share is a lower bound); no code change; read-only getLogs.
