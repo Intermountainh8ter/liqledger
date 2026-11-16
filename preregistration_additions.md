@@ -484,3 +484,13 @@ Metric: /ranges/0/empty_block_share. Expected: post share at least 0.05 above th
 Falsifier: post share minus pre share below 0.05 on the pinned ranges.
 Limit: blocks with only deposit-type (0x7e) transactions count as empty; read-only block reads from one node; no
 receipts, no traces.
+
+## 2026-11-16T11:46:33Z denimfee proposal:e6c4a277b1d54a15c870c520b8f3e39cba1fe5c88df1e6f49c64f89ed1f5fe28
+
+Hypothesis: on Base mainnet, the median per-block gasLimit over the 600 blocks starting at block 53556127 is at most
+0.2 times the median per-block gasLimit over the 600 blocks ending at block 53556126.
+
+Metric: /comparison/gas_limit_median_ratio. Expected: post/pre ratio at most 0.2 (range 0.0 to 0.2).
+Falsifier: post median gasLimit divided by pre median gasLimit above 0.2 on the pinned ranges.
+Limit: header reads from one node; also reports gas-used share of the limit and the share of blocks whose base fee
+rose versus the previous block; no receipts, no traces.

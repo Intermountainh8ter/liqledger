@@ -272,3 +272,7 @@ Source: `results/175-denimdrift.json`, Base blocks 53556127 to 53556276, 400 tou
 ### Base empty blocks around the Denim boundary (`denimempty`)
 
 Source: `results/176-denimempty.json`, Base blocks 53555527 to 53556726 (600 blocks each side of the boundary at 53556127). Blocks holding only deposit-type system transactions count as empty. Post-boundary: 146 of 600 blocks empty (share 0.2433), longest run 34 blocks. Pre-boundary control: 0 of 600 empty, longest run 0. Difference 0.2433, above the pre-registered 0.05 threshold. One node, no receipts or traces.
+
+### Base gas limit around the Denim boundary (`denimfee`)
+
+Source: `results/177-denimfee.json`, Base block headers 53555527 to 53556726 (600 blocks each side of the boundary at 53556127). Median gas limit post-boundary 40000000, pre-boundary control 400000000; ratio 0.1, within the pre-registered bound of at most 0.2. Median gas used share of the limit 0.0846 post versus 0.1024 pre; share of blocks whose base fee rose over the previous block 0.1419 post versus 0.0417 pre. One node, headers only.

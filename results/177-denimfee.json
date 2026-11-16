@@ -1,0 +1,44 @@
+{
+  "comparison": {
+    "gas_limit_median_ratio": 0.1
+  },
+  "provenance": {
+    "command": "denimfee --rpc-env LIQ_BASE_RPC --post-start 53556127 --pre-end 53556126 --window 600 --out results/177-denimfee.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:base blocks 53555527 to 53556726 (headers)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-16T11:47:03Z",
+    "wall_s": 33.660105587
+  },
+  "ranges": [
+    {
+      "base_fee_median_wei": 5000000.0,
+      "base_fee_rise_share": 0.1419031719532554,
+      "blocks": 600,
+      "first_block": 53556127,
+      "gas_limit_median": 40000000.0,
+      "gas_used_median": 3384997.5,
+      "gas_used_share_median": 0.0846249375,
+      "label": "post",
+      "last_block": 53556726
+    },
+    {
+      "base_fee_median_wei": 5000000.0,
+      "base_fee_rise_share": 0.041736227045075125,
+      "blocks": 600,
+      "first_block": 53555527,
+      "gas_limit_median": 400000000.0,
+      "gas_used_median": 40947400.5,
+      "gas_used_share_median": 0.10236850125,
+      "label": "pre",
+      "last_block": 53556126
+    }
+  ]
+}
