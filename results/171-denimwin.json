@@ -1,0 +1,44 @@
+{
+  "boundary": {
+    "post_start_block": 53556127,
+    "post_start_timestamp": 1793901601,
+    "pre_end_block": 53556126,
+    "pre_end_timestamp": 1793901599
+  },
+  "provenance": {
+    "command": "denimwin --rpc-env LIQ_BASE_RPC --pre-end 53556126 --post-start 53556127 --window 600 --out results/171-denimwin.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:base blocks 53555527 to 53556726 (headers only)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-16T11:14:19Z",
+    "wall_s": 32.987298231
+  },
+  "windows": [
+    {
+      "abstain": false,
+      "block_count": 600,
+      "post": {
+        "first_block": 53556127,
+        "last_block": 53556726,
+        "mean_interval_s": 0.1986644407345576,
+        "median_interval_s": 0.0,
+        "wall_s": 119
+      },
+      "pre": {
+        "first_block": 53555527,
+        "last_block": 53556126,
+        "mean_interval_s": 2.0,
+        "median_interval_s": 2.0,
+        "wall_s": 1198
+      },
+      "wall_time_ratio": 0.0993322203672788
+    }
+  ]
+}

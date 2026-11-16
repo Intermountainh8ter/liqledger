@@ -256,3 +256,7 @@ Source: `results/106-dustdeficit.json`. On 10000 synthetic positions near a toy 
 ### oracleadjacent: adjacency versus mempool visibility
 
 Source: `results/107-oracleadjacent.json`. On 10000 synthetic liquidations (seed 7), 3652 landed within 3 transaction indices after the oracle update (`/adjacent_count`); adjacency alone attributed 0.3146551724137931 of mempool-only rows to the oracle (`/mempool_only_adjacent_share`). The model is an assumption fixed in `preregistration_additions.md`; no chain data is used.
+
+### denimwin: Base block-header window study
+
+Source: `results/171-denimwin.json`, Base blocks 53555527 to 53556726, headers only. The window of 600 blocks starting at block 53556127 has a header-timestamp wall time of 119 s against 1198 s for the 600 blocks ending at block 53556126, a ratio of 0.0993322203672788 (pre-registered expectation: at most 0.15; supported). Header timestamps are whole seconds, so the post-window median per-block interval reads 0 s and only the mean interval (0.1986644407345576 s) is informative.

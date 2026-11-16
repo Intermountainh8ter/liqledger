@@ -23,6 +23,7 @@ mod stalestate3;
 mod stalestate4;
 mod stalestate5;
 mod reviewerdet;
+mod denimwin;
 mod oracleadjacent;
 mod bonuscheck;
 mod fractioncheck;
@@ -317,6 +318,19 @@ enum Cmd {
         seed: u64,
         #[arg(long, default_value_t = 10000)]
         n: usize,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Read-only Base header study: wall time of equal block-count windows around a pinned boundary.
+    Denimwin {
+        #[arg(long)]
+        rpc_env: String,
+        #[arg(long)]
+        pre_end: u64,
+        #[arg(long)]
+        post_start: u64,
+        #[arg(long, default_value_t = 600)]
+        window: u64,
         #[arg(long)]
         out: PathBuf,
     },
@@ -1155,6 +1169,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Stalestate2 { seed, n, out } => stalestate2::stalestate2(seed, n, out),
         Cmd::Stalestate3 { seed, n, out } => stalestate3::stalestate3(seed, n, out),
         Cmd::Stalestate4 { seed, n, out } => stalestate4::stalestate4(seed, n, out),
+        Cmd::Denimwin { rpc_env, pre_end, post_start, window, out } => denimwin::denimwin(rpc_env, pre_end, post_start, window, out).await,
         Cmd::Reviewerdet { seed, n, out } => reviewerdet::reviewerdet(seed, n, out),
         Cmd::Stalestate5 { seed, n, out } => stalestate5::stalestate5(seed, n, out),
         Cmd::Stalelookback { seed, n, out } => stalelookback::stalelookback(seed, n, out),

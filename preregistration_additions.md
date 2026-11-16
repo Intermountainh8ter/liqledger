@@ -431,3 +431,17 @@ Metric: /reviewer/run_disagreement_count. Expected: equal to 0 for the systemati
 wrong_vs_truth_count at least 80.
 Falsifier: a nonzero run_disagreement_count for the noise-free reviewer, or fewer than 80 cases wrong against planted truth.
 Limit: every parameter is an assumption; all inputs are synthetic and seeded; no chain data is used.
+
+## 2026-11-16T11:14:00Z denimwin proposal:19e67f19bfabaf1a250bd2f55ad273aa69563aac0f1163b9f14f6016d77111fd
+
+Hypothesis: on Base mainnet, the window of 600 blocks starting at block 53556127 spans less than 0.15 of the header
+timestamp wall time of the window of 600 blocks ending at block 53556126, because the post-activation block interval is
+much shorter than the pre-activation one. A ratio of 0.5 or more would mean the documented shorter block interval does
+not show in block headers.
+
+Metric: /windows/0/wall_time_ratio. Expected: at most 0.15 (range 0.05 to 0.15), with the per-block median interval
+reported alongside.
+Falsifier: a ratio at or above 0.5, or a header read that cannot pin the boundary from chain data (the run then reports
+abstain instead of a number).
+Limit: header timestamps are whole seconds, so the ratio is coarse; read-only header reads from one node; no
+transactions, no traces.
