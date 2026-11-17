@@ -1,0 +1,36 @@
+{
+  "provenance": {
+    "command": "mainoraclespec --chainstack-network ethereum --start 25400000 --blocks 200000 --out results/235-spec.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 25400000 to 25599999 (logs)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-17T16:41:16Z",
+    "wall_s": 12.50976037
+  },
+  "ranges": [
+    {
+      "abstain": false,
+      "blocks": 200000,
+      "earlier_tx_same_block_update": 22,
+      "first_block": 25400000,
+      "last_block": 25599999,
+      "liquidation_blocks": 122,
+      "liquidation_logs": 145,
+      "liquidation_txs": 130,
+      "liquidation_txs_counted": 130,
+      "prior_two_blocks_update_only": 45,
+      "speculative": 63,
+      "speculative_of_which_same_tx_update": 0,
+      "speculative_share": 0.4846153846153846,
+      "wilson_high": 0.5697271932559522,
+      "wilson_low": 0.4003867324592215
+    }
+  ]
+}

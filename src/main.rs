@@ -36,6 +36,7 @@ mod mainoracleupdatepair;
 mod mainoraclereliq;
 mod mainoraclereplayshift;
 mod mainoraclesametx;
+mod mainoraclespec;
 mod mainoracleimmediatepay;
 mod mainoracleimmediatesize;
 mod mainoraclesizecb;
@@ -423,6 +424,17 @@ enum Cmd {
     },
     /// Read-only Ethereum log study: share of liquidation logs whose borrower was liquidated in the previous 100 blocks.
     Mainoraclereliq {
+        #[arg(long)]
+        chainstack_network: String,
+        #[arg(long)]
+        start: u64,
+        #[arg(long)]
+        blocks: u64,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Read-only Ethereum log study: share of liquidation transactions with no oracle update in an earlier tx or 2 prior blocks.
+    Mainoraclespec {
         #[arg(long)]
         chainstack_network: String,
         #[arg(long)]
@@ -1412,6 +1424,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Denimdrift { rpc_env, post_start, window, max_touched, max_untouched, seed, out } => denimdrift::denimdrift(rpc_env, post_start, window, max_touched, max_untouched, seed, out).await,
         Cmd::Mainoraclereplayshift { chainstack_network, start, blocks, out } => mainoraclereplayshift::mainoraclereplayshift(chainstack_network, start, blocks, out).await,
         Cmd::Mainoraclereliq { chainstack_network, start, blocks, out } => mainoraclereliq::mainoraclereliq(chainstack_network, start, blocks, out).await,
+        Cmd::Mainoraclespec { chainstack_network, start, blocks, out } => mainoraclespec::mainoraclespec(chainstack_network, start, blocks, out).await,
         Cmd::Mainoraclesametx { chainstack_network, start, blocks, out } => mainoraclesametx::mainoraclesametx(chainstack_network, start, blocks, out).await,
         Cmd::Mainoracleupdatepair { chainstack_network, start, blocks, out } => mainoracleupdatepair::mainoracleupdatepair(chainstack_network, start, blocks, out).await,
         Cmd::Mainoraclesendercb { chainstack_network, start, blocks, out } => mainoraclesendercb::mainoraclesendercb(chainstack_network, start, blocks, out).await,

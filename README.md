@@ -320,3 +320,7 @@ Source: `results/233-reliq.json`, Ethereum blocks 25000000 to 25199999. Of 348 A
 ### Replay at adjacent states (mainoraclereplayshift)
 
 Source: `results/234-replayshift.json`, blocks 25200000 to 25399999. Of 1328 replayed Aave V3 liquidation transactions, 358 had an eth_call success flag at the parent block state that differed from the flag at the state one block earlier (0.2696 of replayed); in all 358 the call succeeded at the parent state and failed at the earlier state. Pre-registered expectation was at least 5 (range 5 to 200); the count is above that range. Success flags only; no revert reasons or addresses recorded.
+
+### mainoraclespec (iteration 235)
+
+Source: `results/235-spec.json`, blocks 25400000 to 25599999. Of 130 Aave V3 liquidation transactions, 63 had no Chainlink AnswerUpdated log in an earlier transaction of the same block or in the 2 preceding blocks: share 0.4846 (Wilson 95% interval 0.4004 to 0.5697). Pre-registered expectation was at least 0.10; supported.

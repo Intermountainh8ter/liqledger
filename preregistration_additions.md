@@ -686,3 +686,14 @@ block state differs from its success flag at the state of the block before the p
 Metric: /ranges/0/state_shift_differs_count. Expected: at least 5 (range 5 to 200).
 Falsifier: state_shift_differs_count below 5 with at least 100 replayed liquidation transactions.
 Limit: read-only getLogs, transactions, eth_call at fixed historical blocks; no addresses written.
+
+## 2026-11-17T16:40:00Z mainoraclespec proposal:98c0bd49a0e0c2192e01e341aa11ff66b787b7601f7074970cad528c5fa88726
+
+Hypothesis: on Ethereum mainnet blocks 25400000 to 25599999, among Aave V3 LiquidationCall transactions (at least 100
+required, else abstain), at least 0.10 have no AnswerUpdated log in an earlier transaction of the same block or in the 2
+preceding blocks (the speculative class).
+
+Metric: /ranges/0/speculative_share. Expected: at least 0.10 (range 0.10 to 0.60).
+Falsifier: speculative_share below 0.10 with at least 100 liquidation transactions in the range.
+Limit: read-only getLogs; no traces, no addresses written. A liquidation in the same transaction as an update is not an
+earlier-transaction update and is counted separately.
