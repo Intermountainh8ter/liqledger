@@ -526,3 +526,14 @@ Metric: /ranges/0/empty_block_share (post window). Expected: at least 0.05 (rang
 Falsifier: post share minus pre share below 0.05 on the pinned ranges.
 Limit: denimempty's adjacency check is relaxed to post_start > pre_end; the provenance command now records the real
 out path; one node, full-block reads, no receipts; abstain (error) if block 55556127 does not exist on the node.
+
+## 2026-11-17T14:48:48Z mainoracleimmediate proposal:d4f69826f2a018d9c13fda0c6c94eed16d50bb01786f0cfc6f1f1faa4e574450
+
+Hypothesis: on Ethereum mainnet blocks 23000000 to 23099999, among Aave V3 pool LiquidationCall transactions in blocks
+that also contain a Chainlink AnswerUpdated log, at least 0.40 sit at transaction index (some AnswerUpdated transaction
+index + 1), provided at least 20 such liquidation transactions are found.
+
+Metric: /ranges/0/immediate_follow_share. Expected: at least 0.40 (range 0.40 to 1.0).
+Falsifier: share below 0.40 with at least 20 same-block liquidation transactions; with fewer the run reports abstain.
+Limit: only AnswerUpdated logs count as feed updates (lower bound on updates); aggregates only; read-only getLogs, no
+traces. The endpoint is resolved from the platform API at run time and never printed.

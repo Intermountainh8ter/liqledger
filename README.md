@@ -276,3 +276,7 @@ Source: `results/176-denimempty.json`, Base blocks 53555527 to 53556726 (600 blo
 ### Base gas limit around the Denim boundary (`denimfee`)
 
 Source: `results/177-denimfee.json`, Base block headers 53555527 to 53556726 (600 blocks each side of the boundary at 53556127). Median gas limit post-boundary 40000000, pre-boundary control 400000000; ratio 0.1, within the pre-registered bound of at most 0.2. Median gas used share of the limit 0.0846 post versus 0.1024 pre; share of blocks whose base fee rose over the previous block 0.1419 post versus 0.0417 pre. One node, headers only.
+
+### Mainnet liquidations directly after an oracle update (`mainoracleimmediate`)
+
+Source: `results/219-mainoracleimmediate.json`, Ethereum blocks 23000000 to 23099999. 106 Aave V3 liquidation transactions sit in blocks that also hold a Chainlink AnswerUpdated log (105 liquidation blocks, 140 liquidation logs in the range). 45 of them sit at the transaction index directly after an update transaction: share 0.4245, above the pre-registered 0.40 threshold. AnswerUpdated logs only, so updates are a lower bound; logs only, no traces. The endpoint is resolved from the platform API at run time.
