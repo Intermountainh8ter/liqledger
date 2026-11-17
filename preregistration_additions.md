@@ -803,3 +803,14 @@ as on 24000000 to 25199999 and unlike the 22800000 ranges.
 Metric: /ranges/0/cutoffs/0/tail_spec_share. Expected: greater than 0.0 and at most 0.05 (range 0.0001 to 0.05).
 Falsifier: tail_spec_share at threshold_units 10000 equals 0.0, or the run abstains for lack of tail txs.
 Limit: read-only getLogs; no traces, no addresses written. Unchanged rerun of the mainoraclespecsweep subcommand.
+
+## 2026-11-17T18:29:30Z specsweep5 proposal:7fd62b62d8663ab92f9e7adfb9b4238595450b27b91c5de683b438a3d41cb192
+
+Hypothesis: on Ethereum mainnet blocks 20400000 to 21599999, among single-log Aave V3 USDC/USDT-debt liquidation
+transactions (at least 100 total, and at least 20 in a cutoff's tail, else that cutoff abstains and the metric is null
+if all abstain), the tail speculative share stays at or below 0.05 at every non-abstaining cutoff (10000, 20000, 40000
+units), on a fifth disjoint range.
+
+Metric: /ranges/0/max_tail_spec_share. Expected: at most 0.05 (range 0.0 to 0.05).
+Falsifier: max_tail_spec_share above 0.05 with at least one non-abstaining cutoff having at least 20 tail txs, or all cutoffs abstaining so the metric is null.
+Limit: read-only getLogs; no traces, no addresses written. Unchanged rerun of the mainoraclespecsweep subcommand.
