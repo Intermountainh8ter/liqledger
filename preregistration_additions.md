@@ -794,3 +794,12 @@ units), extending the zero-tail result from 245, 247 and 248 to a third disjoint
 Metric: /ranges/0/max_tail_spec_share. Expected: at most 0.05 (range 0.0 to 0.05).
 Falsifier: max_tail_spec_share above 0.05 with at least one non-abstaining cutoff having at least 20 tail txs.
 Limit: read-only getLogs; no traces, no addresses written. Unchanged rerun of the mainoraclespecsweep subcommand.
+
+## 2026-11-17T18:19:30Z specsweep4 proposal:e47bbeb818c5172a302307e7398c57d7270263aafdc8c0e5081fa89f926b8dae
+
+Hypothesis: on Ethereum mainnet blocks 21600000 to 22799999 the tail_spec_share at threshold_units 10000 is nonzero,
+as on 24000000 to 25199999 and unlike the 22800000 ranges.
+
+Metric: /ranges/0/cutoffs/0/tail_spec_share. Expected: greater than 0.0 and at most 0.05 (range 0.0001 to 0.05).
+Falsifier: tail_spec_share at threshold_units 10000 equals 0.0, or the run abstains for lack of tail txs.
+Limit: read-only getLogs; no traces, no addresses written. Unchanged rerun of the mainoraclespecsweep subcommand.
