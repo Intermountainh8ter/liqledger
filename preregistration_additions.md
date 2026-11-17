@@ -657,3 +657,13 @@ at-least-1000-units debtToCover bucket than in the below-1000-units bucket.
 Metric: /ranges/0/large_minus_small_cb_share. Expected: at least 0.10 (range 0.10 to 0.80).
 Falsifier: large_minus_small_cb_share below 0.10 with both buckets at or above 30 transactions.
 Limit: read-only getLogs, headers, trace_transaction; no addresses written.
+
+## 2026-11-17T16:18:00Z mainoraclesametx proposal:0fa5cce702c542bafa9c4c8cd7315ae1f38a76ca6f951433d2e544b4542bb554
+
+Hypothesis: on Ethereum mainnet blocks 24800000 to 24999999, among Aave V3 LiquidationCall transactions in blocks that also
+contain a Chainlink AnswerUpdated log (at least 50 required, else abstain), at most 0.10 are in a transaction that itself
+carries an AnswerUpdated log.
+
+Metric: /ranges/0/same_tx_as_oracle_update_share. Expected: at most 0.10 (range 0.0 to 0.10).
+Falsifier: same_tx_as_oracle_update_share above 0.10 with at least 50 same-block liquidation transactions.
+Limit: read-only getLogs; no traces, no addresses written.

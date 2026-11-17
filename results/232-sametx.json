@@ -1,0 +1,35 @@
+{
+  "provenance": {
+    "command": "mainoraclesametx --chainstack-network ethereum --start 24800000 --blocks 200000 --out results/232-sametx.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 24800000 to 24999999 (logs)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-17T16:19:07Z",
+    "wall_s": 9.462456929
+  },
+  "ranges": [
+    {
+      "abstain": false,
+      "after_update_in_earlier_tx": 60,
+      "before_all_updates_in_block": 27,
+      "blocks": 200000,
+      "first_block": 24800000,
+      "last_block": 24999999,
+      "liquidation_blocks": 177,
+      "liquidation_logs": 256,
+      "liquidation_txs": 201,
+      "same_block_liquidation_txs": 87,
+      "same_tx_as_oracle_update": 0,
+      "same_tx_as_oracle_update_share": 0.0,
+      "wilson_high": 0.04228899535014795,
+      "wilson_low": 0.0
+    }
+  ]
+}

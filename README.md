@@ -308,3 +308,7 @@ Source: `results/230-sendercb.json`, blocks 24500000 to 24599999. Of Aave V3 liq
 ### Traced coinbase transfer by debtToCover bucket (iteration 231, null result)
 
 Source: `results/231-sizecb.json`, blocks 24600000 to 24799999. Among single-log Aave V3 USDC/USDT-debt liquidation transactions, 40 in the at-least-1000-units bucket and 92 in the below-1000-units bucket, all traced. Coinbase-transfer share 0.85 (large) versus 0.837 (small); difference 0.013, below the pre-registered 0.10, so the hypothesis is refuted. Reproduce: `cargo run --release --locked -q -- mainoraclesizecb --chainstack-network ethereum --start 24600000 --blocks 200000 --out results/231-sizecb.json`.
+
+### Same-transaction oracle updates (mainoraclesametx)
+
+Source: `results/232-sametx.json`, blocks 24800000 to 24999999. Of 87 Aave V3 liquidation transactions in blocks that also hold an AnswerUpdated log, 0 carry an AnswerUpdated log in their own transaction (share 0.0, Wilson interval [0.0, 0.042]); 60 follow an update in an earlier transaction of the block and 27 precede every update in the block. The pre-registered upper bound of 0.10 held.
