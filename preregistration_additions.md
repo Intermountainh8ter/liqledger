@@ -751,3 +751,13 @@ the large-minus-small speculative share is negative at all three debtToCover cut
 Metric: /ranges/0/negative_cutoff_count. Expected: equals 3 (range 3 to 3).
 Falsifier: negative_cutoff_count below 3 with at least 100 transactions and at least 20 per bucket at every cutoff.
 Limit: read-only getLogs; no traces, no addresses written. Reuses the specsize classification with the cutoff varied.
+
+## 2026-11-17T17:35:22Z spectail proposal:4de90ac4bf00e4c4ddf4d1969efb5a26db9d229bd7046fa3105b2b7a3763231f
+
+Hypothesis: on Ethereum mainnet blocks 23200000 to 23999999, among single-log Aave V3 USDC/USDT-debt liquidation
+transactions (at least 100 total and at least 20 in the tail, else the metric is null with abstain true), the speculative
+share of the at-least-20000-unit debtToCover tail is lower than that of the below-20000-unit rest by at least 0.02.
+
+Metric: /ranges/0/tail_minus_rest_spec_share. Expected: at most -0.02 (range -1.0 to -0.02).
+Falsifier: tail_minus_rest_spec_share above -0.02 with at least 100 transactions and at least 20 in the tail.
+Limit: read-only getLogs; no traces, no addresses written. Reuses the specsize classification with a 20000-unit cutoff.
