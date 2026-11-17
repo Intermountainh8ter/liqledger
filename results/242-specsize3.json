@@ -1,0 +1,32 @@
+{
+  "provenance": {
+    "command": "mainoraclespecsize --chainstack-network ethereum --start 23200000 --blocks 400000 --out results/242-specsize3.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 23200000 to 23599999 (logs)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-17T17:22:17Z",
+    "wall_s": 42.856950839
+  },
+  "ranges": [
+    {
+      "abstain": false,
+      "blocks": 400000,
+      "first_block": 23200000,
+      "large_minus_small_spec_share": -0.14320563361299235,
+      "large_spec_share": 0.01576872536136662,
+      "large_txs": 761,
+      "last_block": 23599999,
+      "liquidation_logs": 1501,
+      "small_spec_share": 0.15897435897435896,
+      "small_txs": 195,
+      "threshold_units": 1000
+    }
+  ]
+}

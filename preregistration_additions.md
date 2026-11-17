@@ -731,3 +731,13 @@ debtToCover at-least-1000-unit bucket is at least 0.10 lower than that of the be
 Metric: /ranges/0/large_minus_small_spec_share. Expected: at most -0.10 (range -1.0 to -0.10).
 Falsifier: large_minus_small_spec_share above -0.10 with at least 100 transactions and each bucket at least 20.
 Limit: read-only getLogs; no traces, no addresses written.
+
+## 2026-11-17T17:22:15Z specsize3 proposal:d4eed528f998773ba64959e67cffd00bfd64b8870735e8a93dbac1241f812124
+
+Hypothesis: on Ethereum mainnet blocks 23200000 to 23599999, among single-log Aave V3 USDC/USDT-debt liquidation
+transactions (at least 100 required, each bucket at least 20, else the metric is written as null with abstain true), the
+speculative share of the debtToCover at-least-1000-unit bucket is lower than that of the below-1000-unit bucket by at least 0.05.
+
+Metric: /ranges/0/large_minus_small_spec_share. Expected: at most -0.05 (range -1.0 to -0.05).
+Falsifier: large_minus_small_spec_share above -0.05 with at least 100 transactions and each bucket at least 20.
+Limit: read-only getLogs; no traces, no addresses written. Unchanged rerun of the specsize subcommand on a disjoint range.
