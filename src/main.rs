@@ -40,6 +40,7 @@ mod mainoraclesametx;
 mod mainoraclespec;
 mod mainoraclespeccb;
 mod mainoraclespecsize;
+mod mainoraclespecthresh;
 mod mainoracleimmediatepay;
 mod mainoracleimmediatesize;
 mod mainoraclesizecb;
@@ -493,6 +494,17 @@ enum Cmd {
     },
     /// Read-only Ethereum study: speculative share of single-log Aave V3 stablecoin-debt liquidations, small versus large debtToCover.
     Mainoraclespecsize {
+        #[arg(long)]
+        chainstack_network: String,
+        #[arg(long)]
+        start: u64,
+        #[arg(long)]
+        blocks: u64,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Read-only Ethereum study: large-minus-small speculative share of Aave V3 stablecoin-debt liquidations at three cutoffs.
+    Mainoraclespecthresh {
         #[arg(long)]
         chainstack_network: String,
         #[arg(long)]
@@ -1464,6 +1476,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Mainoraclesametx { chainstack_network, start, blocks, out } => mainoraclesametx::mainoraclesametx(chainstack_network, start, blocks, out).await,
         Cmd::Mainoracleupdatepair { chainstack_network, start, blocks, out } => mainoracleupdatepair::mainoracleupdatepair(chainstack_network, start, blocks, out).await,
         Cmd::Mainoraclespecsize { chainstack_network, start, blocks, out } => mainoraclespecsize::mainoraclespecsize(chainstack_network, start, blocks, out).await,
+        Cmd::Mainoraclespecthresh { chainstack_network, start, blocks, out } => mainoraclespecthresh::mainoraclespecthresh(chainstack_network, start, blocks, out).await,
         Cmd::Mainoraclespeccb { chainstack_network, start, blocks, out } => mainoraclespeccb::mainoraclespeccb(chainstack_network, start, blocks, out).await,
         Cmd::Mainoraclebuildercb { chainstack_network, start, blocks, out } => mainoraclebuildercb::mainoraclebuildercb(chainstack_network, start, blocks, out).await,
         Cmd::Mainoraclesendercb { chainstack_network, start, blocks, out } => mainoraclesendercb::mainoraclesendercb(chainstack_network, start, blocks, out).await,

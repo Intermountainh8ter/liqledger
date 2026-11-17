@@ -741,3 +741,13 @@ speculative share of the debtToCover at-least-1000-unit bucket is lower than tha
 Metric: /ranges/0/large_minus_small_spec_share. Expected: at most -0.05 (range -1.0 to -0.05).
 Falsifier: large_minus_small_spec_share above -0.05 with at least 100 transactions and each bucket at least 20.
 Limit: read-only getLogs; no traces, no addresses written. Unchanged rerun of the specsize subcommand on a disjoint range.
+
+## 2026-11-17T17:29:29Z specthresh proposal:21c9cd0fe93847dc45fb59d72fb36583c2fed29f6377e1f1db0d00bcbac9ae30
+
+Hypothesis: on Ethereum mainnet blocks 23600000 to 23999999, among single-log Aave V3 USDC/USDT-debt liquidation
+transactions (at least 100 total and at least 20 per bucket at every cutoff, else the metric is null with abstain true),
+the large-minus-small speculative share is negative at all three debtToCover cutoffs (250, 1000, 4000 units).
+
+Metric: /ranges/0/negative_cutoff_count. Expected: equals 3 (range 3 to 3).
+Falsifier: negative_cutoff_count below 3 with at least 100 transactions and at least 20 per bucket at every cutoff.
+Limit: read-only getLogs; no traces, no addresses written. Reuses the specsize classification with the cutoff varied.

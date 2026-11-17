@@ -1,0 +1,57 @@
+{
+  "provenance": {
+    "command": "mainoraclespecthresh --chainstack-network ethereum --start 23600000 --blocks 400000 --out results/244-specthresh.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 23600000 to 23999999 (logs)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-17T17:29:52Z",
+    "wall_s": 55.154727008
+  },
+  "ranges": [
+    {
+      "abstain": false,
+      "blocks": 400000,
+      "cutoffs": [
+        {
+          "abstain": false,
+          "large_minus_small_spec_share": -0.31045517683513196,
+          "large_spec_share": 0.019387755102040816,
+          "large_txs": 980,
+          "small_spec_share": 0.3298429319371728,
+          "small_txs": 191,
+          "threshold_units": 250
+        },
+        {
+          "abstain": false,
+          "large_minus_small_spec_share": -0.2174490904468021,
+          "large_spec_share": 0.014874141876430207,
+          "large_txs": 874,
+          "small_spec_share": 0.23232323232323232,
+          "small_txs": 297,
+          "threshold_units": 1000
+        },
+        {
+          "abstain": false,
+          "large_minus_small_spec_share": -0.12208439912634172,
+          "large_spec_share": 0.007054673721340388,
+          "large_txs": 567,
+          "small_spec_share": 0.1291390728476821,
+          "small_txs": 604,
+          "threshold_units": 4000
+        }
+      ],
+      "first_block": 23600000,
+      "last_block": 23999999,
+      "liquidation_logs": 2151,
+      "negative_cutoff_count": 3,
+      "txs": 1171
+    }
+  ]
+}
