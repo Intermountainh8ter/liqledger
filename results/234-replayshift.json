@@ -1,0 +1,32 @@
+{
+  "provenance": {
+    "command": "mainoraclereplayshift --chainstack-network ethereum --start 25200000 --blocks 200000 --out results/234-replayshift.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 25200000 to 25399999 (logs, transactions, eth_call at fixed historical blocks)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-17T16:31:52Z",
+    "wall_s": 126.549123898
+  },
+  "ranges": [
+    {
+      "abstain": false,
+      "blocks": 200000,
+      "earlier_state_success": 320,
+      "first_block": 25200000,
+      "last_block": 25399999,
+      "liquidation_logs": 2131,
+      "parent_ok_earlier_fail": 358,
+      "parent_state_success": 678,
+      "replayed_txs": 1328,
+      "state_shift_differs_count": 358,
+      "state_shift_differs_share": 0.26957831325301207
+    }
+  ]
+}

@@ -316,3 +316,7 @@ Source: `results/232-sametx.json`, blocks 24800000 to 24999999. Of 87 Aave V3 li
 ### Repeat liquidations of one borrower (mainoraclereliq, null result)
 
 Source: `results/233-reliq.json`, Ethereum blocks 25000000 to 25199999. Of 348 Aave V3 LiquidationCall logs, 1 targets a borrower that already had a log in the previous 100 blocks (share 0.0029, Wilson interval 0.0005 to 0.0161). The pre-registered expectation of at least 0.10 is refuted. History before the range start is not read, and a same-block repeat is not counted.
+
+### Replay at adjacent states (mainoraclereplayshift)
+
+Source: `results/234-replayshift.json`, blocks 25200000 to 25399999. Of 1328 replayed Aave V3 liquidation transactions, 358 had an eth_call success flag at the parent block state that differed from the flag at the state one block earlier (0.2696 of replayed); in all 358 the call succeeded at the parent state and failed at the earlier state. Pre-registered expectation was at least 5 (range 5 to 200); the count is above that range. Success flags only; no revert reasons or addresses recorded.

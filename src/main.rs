@@ -34,6 +34,7 @@ mod mainoraclesendercb;
 mod mainoraclesendershare;
 mod mainoracleupdatepair;
 mod mainoraclereliq;
+mod mainoraclereplayshift;
 mod mainoraclesametx;
 mod mainoracleimmediatepay;
 mod mainoracleimmediatesize;
@@ -400,6 +401,17 @@ enum Cmd {
     },
     /// Read-only Ethereum log study: share of oracle update transactions directly followed by a liquidation transaction.
     Mainoracleupdatepair {
+        #[arg(long)]
+        chainstack_network: String,
+        #[arg(long)]
+        start: u64,
+        #[arg(long)]
+        blocks: u64,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Read-only Ethereum replay study: landed liquidation calls whose eth_call success differs between two adjacent states.
+    Mainoraclereplayshift {
         #[arg(long)]
         chainstack_network: String,
         #[arg(long)]
@@ -1398,6 +1410,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Stalestate3 { seed, n, out } => stalestate3::stalestate3(seed, n, out),
         Cmd::Stalestate4 { seed, n, out } => stalestate4::stalestate4(seed, n, out),
         Cmd::Denimdrift { rpc_env, post_start, window, max_touched, max_untouched, seed, out } => denimdrift::denimdrift(rpc_env, post_start, window, max_touched, max_untouched, seed, out).await,
+        Cmd::Mainoraclereplayshift { chainstack_network, start, blocks, out } => mainoraclereplayshift::mainoraclereplayshift(chainstack_network, start, blocks, out).await,
         Cmd::Mainoraclereliq { chainstack_network, start, blocks, out } => mainoraclereliq::mainoraclereliq(chainstack_network, start, blocks, out).await,
         Cmd::Mainoraclesametx { chainstack_network, start, blocks, out } => mainoraclesametx::mainoraclesametx(chainstack_network, start, blocks, out).await,
         Cmd::Mainoracleupdatepair { chainstack_network, start, blocks, out } => mainoracleupdatepair::mainoracleupdatepair(chainstack_network, start, blocks, out).await,

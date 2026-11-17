@@ -676,3 +676,13 @@ else abstain), at least 0.10 target a borrower that already had a LiquidationCal
 Metric: /ranges/0/reliq_share. Expected: at least 0.10 (range 0.10 to 0.60).
 Falsifier: reliq_share below 0.10 with at least 100 liquidation logs in the range.
 Limit: read-only getLogs; no traces, no addresses written. A different measure from a refund-transfer count.
+
+## 2026-11-17T16:31:12Z replayshift proposal:21103710a1638e5b1694ddf109f197f607b89dd1082517fc47ace51348845e18
+
+Hypothesis: on Ethereum mainnet blocks 25200000 to 25399999, among landed Aave V3 LiquidationCall transactions (at least 100
+required, else abstain), at least 5 have an eth_call replay (same from, to, input, value) whose success flag at the parent
+block state differs from its success flag at the state of the block before the parent.
+
+Metric: /ranges/0/state_shift_differs_count. Expected: at least 5 (range 5 to 200).
+Falsifier: state_shift_differs_count below 5 with at least 100 replayed liquidation transactions.
+Limit: read-only getLogs, transactions, eth_call at fixed historical blocks; no addresses written.
