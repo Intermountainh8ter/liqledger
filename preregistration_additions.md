@@ -594,3 +594,14 @@ Metric: /ranges/0/immediate_follow_coinbase_transfer_share. Expected: at least 0
 Falsifier: share below 0.30 with at least 20 immediate-follow transactions; with fewer the run reports abstain.
 Limit: AnswerUpdated only; read-only getLogs, headers and trace_transaction; Wilson 95% intervals; split by zero versus
 nonzero priority fee.
+
+## 2026-11-17T15:23:23Z mainoracleimmediatecbsplit proposal:c6f028dd6e7b2fb7cbd576acc479a14f4d923ab76b40cb35dbff76b6c28b3029
+
+Hypothesis: on Ethereum mainnet blocks 23700000 to 23899999, the share of Aave V3 LiquidationCall transactions containing
+a call with nonzero ETH value sent to the block header coinbase (found by trace_transaction) is at least 0.20 higher among
+immediate-follow transactions (index equal to some AnswerUpdated index + 1 in the same block) than among all other
+liquidation transactions, provided each arm holds at least 20 transactions.
+
+Metric: /ranges/0/share_difference_immediate_minus_other. Expected: at least 0.20 (range 0.20 to 1.0).
+Falsifier: difference below 0.20 with at least 20 transactions in each arm; with fewer in either arm the run reports abstain.
+Limit: AnswerUpdated only; read-only getLogs, headers and trace_transaction; Wilson 95% intervals per arm.
