@@ -709,3 +709,14 @@ Metric: /ranges/0/top1_minus_rest_cb_share. Expected: at least 0.10 (range 0.10 
 Falsifier: top1_minus_rest_cb_share below 0.10 with at least 100 traced liquidation transactions in the range.
 Limit: read-only getLogs, headers, trace_transaction; builders ranked by frequency only, no address written. Retry of the
 236 design on a different range.
+
+## 2026-11-17T17:05:30Z speccb2 proposal:6a04c3dcbbf42e3204207727e7576b75708e9952577ed0262aa8746150bb56ad
+
+Hypothesis: on Ethereum mainnet blocks 22800000 to 23199999, among traced Aave V3 liquidation transactions (at least 100
+required, each class at least 20, else the metric is written as null with abstain true), the coinbase-transfer share (a
+traced call with nonzero value to the header miner) of speculative transactions (no AnswerUpdated log in an earlier
+transaction of the same block or the 2 preceding blocks) is at least 0.10 higher than that of non-speculative ones.
+
+Metric: /ranges/0/spec_minus_nonspec_cb_share. Expected: at least 0.10 (range 0.10 to 0.80).
+Falsifier: spec_minus_nonspec_cb_share below 0.10 with at least 100 traced liquidation transactions and each class at least 20.
+Limit: read-only getLogs, headers, trace_transaction; no addresses written. Retry of the 238 design on a different range.

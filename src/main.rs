@@ -38,6 +38,7 @@ mod mainoraclereliq;
 mod mainoraclereplayshift;
 mod mainoraclesametx;
 mod mainoraclespec;
+mod mainoraclespeccb;
 mod mainoracleimmediatepay;
 mod mainoracleimmediatesize;
 mod mainoraclesizecb;
@@ -469,6 +470,17 @@ enum Cmd {
     },
     /// Read-only Ethereum trace study: coinbase-transfer share of the total builder payment per liquidation transaction.
     Mainoracleimmediatecbshare {
+        #[arg(long)]
+        chainstack_network: String,
+        #[arg(long)]
+        start: u64,
+        #[arg(long)]
+        blocks: u64,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Read-only Ethereum study: traced coinbase-transfer share, speculative versus non-speculative Aave V3 liquidations.
+    Mainoraclespeccb {
         #[arg(long)]
         chainstack_network: String,
         #[arg(long)]
@@ -1439,6 +1451,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Mainoraclespec { chainstack_network, start, blocks, out } => mainoraclespec::mainoraclespec(chainstack_network, start, blocks, out).await,
         Cmd::Mainoraclesametx { chainstack_network, start, blocks, out } => mainoraclesametx::mainoraclesametx(chainstack_network, start, blocks, out).await,
         Cmd::Mainoracleupdatepair { chainstack_network, start, blocks, out } => mainoracleupdatepair::mainoracleupdatepair(chainstack_network, start, blocks, out).await,
+        Cmd::Mainoraclespeccb { chainstack_network, start, blocks, out } => mainoraclespeccb::mainoraclespeccb(chainstack_network, start, blocks, out).await,
         Cmd::Mainoraclebuildercb { chainstack_network, start, blocks, out } => mainoraclebuildercb::mainoraclebuildercb(chainstack_network, start, blocks, out).await,
         Cmd::Mainoraclesendercb { chainstack_network, start, blocks, out } => mainoraclesendercb::mainoraclesendercb(chainstack_network, start, blocks, out).await,
         Cmd::Mainoraclesendershare { chainstack_network, start, blocks, out } => mainoraclesendershare::mainoraclesendershare(chainstack_network, start, blocks, out).await,

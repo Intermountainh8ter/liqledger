@@ -1,0 +1,33 @@
+{
+  "provenance": {
+    "command": "mainoraclespeccb --chainstack-network ethereum --start 22800000 --blocks 400000 --out results/239-speccb.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 22800000 to 23199999 (logs, headers, traces)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-17T17:05:52Z",
+    "wall_s": 139.167234087
+  },
+  "ranges": [
+    {
+      "abstain": false,
+      "blocks": 400000,
+      "first_block": 22800000,
+      "last_block": 23199999,
+      "liquidation_logs": 425,
+      "nonspec_cb_share": 0.5887323943661972,
+      "nonspec_traced": 355,
+      "nonspec_txs": 355,
+      "spec_cb_share": 0.09230769230769231,
+      "spec_minus_nonspec_cb_share": -0.49642470205850486,
+      "spec_traced": 65,
+      "spec_txs": 65
+    }
+  ]
+}
