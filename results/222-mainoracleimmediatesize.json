@@ -1,0 +1,48 @@
+{
+  "provenance": {
+    "command": "mainoracleimmediatesize --chainstack-network ethereum --start 23300000 --blocks 200000 --out results/222-mainoracleimmediatesize.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 23300000 to 23499999 (logs)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-17T15:04:33Z",
+    "wall_s": 8.173956033
+  },
+  "ranges": [
+    {
+      "blocks": 200000,
+      "buckets": [
+        {
+          "abstain": false,
+          "immediate_follow_share": 0.12121212121212122,
+          "immediate_follow_txs": 4,
+          "label": "below_1000_units",
+          "same_block_liquidation_txs": 33,
+          "wilson_high": 0.2732584325026516,
+          "wilson_low": 0.04816083267584231
+        },
+        {
+          "abstain": false,
+          "immediate_follow_share": 0.2636363636363636,
+          "immediate_follow_txs": 29,
+          "label": "at_least_1000_units",
+          "same_block_liquidation_txs": 110,
+          "wilson_high": 0.3529429024030867,
+          "wilson_low": 0.19028206983904628
+        }
+      ],
+      "first_block": 23300000,
+      "last_block": 23499999,
+      "liquidation_blocks": 140,
+      "liquidation_logs": 275,
+      "stable_debt_logs": 217,
+      "threshold_units": 1000
+    }
+  ]
+}

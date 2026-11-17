@@ -558,3 +558,15 @@ Metric: /ranges/0/buckets/0/immediate_follow_share (single-log bucket). Expected
 Falsifier: single-log bucket share below 0.30 with at least 20 same-block transactions in that bucket; with fewer the run
 reports abstain. Bucket 1 holds transactions with two or more logs; log count is a labelled size proxy only.
 Limit: AnswerUpdated only; read-only getLogs; Wilson 95% intervals reported.
+
+## 2026-11-17T15:03:41Z mainoracleimmediatesize proposal:f3b417d32385870c75a993c0e790a42d488fa83d3e5b8c27b0afc831b7481fd1
+
+Hypothesis: on Ethereum mainnet blocks 23300000 to 23499999, among Aave V3 LiquidationCall transactions with a single log
+whose debt asset is USDC or USDT and that sit in blocks also containing a Chainlink AnswerUpdated log, the share at
+transaction index (some AnswerUpdated transaction index + 1) is at least 0.30 in the bucket with debtToCover of 1000 units
+or more, provided at least 20 such transactions are found in that bucket.
+
+Metric: /ranges/0/buckets/1/immediate_follow_share. Expected: at least 0.30 (range 0.30 to 1.0).
+Falsifier: large-bucket share below 0.30 with at least 20 same-block transactions in that bucket; with fewer the run
+reports abstain. Bucket 0 holds debtToCover below 1000 units.
+Limit: AnswerUpdated only; read-only getLogs; Wilson 95% intervals reported; USDC and USDT only (6 decimals).
