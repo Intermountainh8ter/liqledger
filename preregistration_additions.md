@@ -582,3 +582,15 @@ Metric: /ranges/0/immediate_follow_zero_priority_share. Expected: at least 0.40 
 Falsifier: share below 0.40 with at least 20 immediate-follow transactions; with fewer the run reports abstain.
 Limit: AnswerUpdated only; read-only getLogs and receipts; Wilson 95% intervals; a zero priority fee does not show
 whether a coinbase transfer was paid.
+
+## 2026-11-17T15:18:22Z mainoracleimmediatecb proposal:b871762a2637200753c3b0944ad3afbdab1a5cb8a3ca123ef747f2367921065b
+
+Hypothesis: on Ethereum mainnet blocks 23600000 to 23699999, among Aave V3 LiquidationCall transactions at transaction
+index (some AnswerUpdated transaction index + 1) in blocks that also contain a Chainlink AnswerUpdated log, at least 0.30
+contain a call with nonzero ETH value sent to the block header coinbase (found by trace_transaction), provided at least 20
+such transactions are found.
+
+Metric: /ranges/0/immediate_follow_coinbase_transfer_share. Expected: at least 0.30 (range 0.30 to 1.0).
+Falsifier: share below 0.30 with at least 20 immediate-follow transactions; with fewer the run reports abstain.
+Limit: AnswerUpdated only; read-only getLogs, headers and trace_transaction; Wilson 95% intervals; split by zero versus
+nonzero priority fee.
