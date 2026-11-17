@@ -1,0 +1,33 @@
+{
+  "provenance": {
+    "command": "mainoraclebuildercb --chainstack-network ethereum --start 22600000 --blocks 200000 --out results/237-buildercb2.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 22600000 to 22799999 (logs, receipts, headers, traces)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-17T16:52:39Z",
+    "wall_s": 68.883903975
+  },
+  "ranges": [
+    {
+      "abstain": false,
+      "blocks": 200000,
+      "first_block": 22600000,
+      "last_block": 22799999,
+      "liquidation_logs": 323,
+      "rest_cb_share": 0.5773809523809523,
+      "rest_traced": 168,
+      "rest_txs": 168,
+      "top1_cb_share": 0.5304347826086957,
+      "top1_minus_rest_cb_share": -0.04694616977225663,
+      "top1_traced": 115,
+      "top1_txs": 115
+    }
+  ]
+}

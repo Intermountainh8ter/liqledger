@@ -324,3 +324,7 @@ Source: `results/234-replayshift.json`, blocks 25200000 to 25399999. Of 1328 rep
 ### mainoraclespec (iteration 235)
 
 Source: `results/235-spec.json`, blocks 25400000 to 25599999. Of 130 Aave V3 liquidation transactions, 63 had no Chainlink AnswerUpdated log in an earlier transaction of the same block or in the 2 preceding blocks: share 0.4846 (Wilson 95% interval 0.4004 to 0.5697). Pre-registered expectation was at least 0.10; supported.
+
+### Builder split of traced coinbase transfers, retry (iteration 237)
+
+Source: `results/237-buildercb2.json`, blocks 22600000 to 22799999. The range held 323 liquidation logs; 115 traced transactions came from the most frequent builder and 168 from all others. Coinbase-transfer share was 0.5304 for the most frequent builder and 0.5774 for the rest, a difference of -0.0469. Pre-registered expectation was at least 0.10; refuted.
