@@ -1,0 +1,48 @@
+{
+  "provenance": {
+    "command": "mainoracleimmediatepay --chainstack-network ethereum --start 23500000 --blocks 100000 --out results/223-mainoracleimmediatepay.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 23500000 to 23599999 (logs, headers, receipts)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-17T15:09:18Z",
+    "wall_s": 45.729957495
+  },
+  "ranges": [
+    {
+      "blocks": 100000,
+      "buckets": [
+        {
+          "abstain": false,
+          "label": "immediate_follow",
+          "txs": 167,
+          "wilson_high": 0.8188885070131389,
+          "wilson_low": 0.6903551432453461,
+          "zero_priority_share": 0.7604790419161677,
+          "zero_priority_txs": 127
+        },
+        {
+          "abstain": false,
+          "label": "other_same_block",
+          "txs": 613,
+          "wilson_high": 0.7752932658683236,
+          "wilson_low": 0.7061917701603748,
+          "zero_priority_share": 0.7422512234910277,
+          "zero_priority_txs": 455
+        }
+      ],
+      "first_block": 23500000,
+      "immediate_follow_zero_priority_share": 0.7604790419161677,
+      "last_block": 23599999,
+      "liquidation_logs": 1106,
+      "same_block_liquidation_txs": 780,
+      "update_blocks_with_liquidations": 299
+    }
+  ]
+}

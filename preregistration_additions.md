@@ -570,3 +570,15 @@ Metric: /ranges/0/buckets/1/immediate_follow_share. Expected: at least 0.30 (ran
 Falsifier: large-bucket share below 0.30 with at least 20 same-block transactions in that bucket; with fewer the run
 reports abstain. Bucket 0 holds debtToCover below 1000 units.
 Limit: AnswerUpdated only; read-only getLogs; Wilson 95% intervals reported; USDC and USDT only (6 decimals).
+
+## 2026-11-17T15:08:34Z mainoracleimmediatepay proposal:92b79188fb39ac5d1838009e973dd3b01bed05d45f8510b48f555f13b64892e0
+
+Hypothesis: on Ethereum mainnet blocks 23500000 to 23599999, among Aave V3 LiquidationCall transactions at transaction
+index (some AnswerUpdated transaction index + 1) in blocks that also contain a Chainlink AnswerUpdated log, at least 0.40
+have an exactly zero priority fee (effectiveGasPrice equal to the block base fee), provided at least 20 such transactions
+are found.
+
+Metric: /ranges/0/immediate_follow_zero_priority_share. Expected: at least 0.40 (range 0.40 to 1.0).
+Falsifier: share below 0.40 with at least 20 immediate-follow transactions; with fewer the run reports abstain.
+Limit: AnswerUpdated only; read-only getLogs and receipts; Wilson 95% intervals; a zero priority fee does not show
+whether a coinbase transfer was paid.
