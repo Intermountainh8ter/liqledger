@@ -635,3 +635,14 @@ required, else abstain), the top-3 tx.from senders together account for less tha
 Metric: /ranges/0/top3_sender_share. Expected: below 0.50 (range 0.20 to 0.50).
 Falsifier: top3_sender_share of at least 0.50 with at least 50 liquidation transactions in the range.
 Limit: ranks only, no addresses written; read-only getLogs and transactions.
+
+## 2026-11-17T16:04:35Z mainoraclesendercb proposal:9b983d3ae8f6874533d2e71759e2e30043f329f24c100767576c45abd9e89a37
+
+Hypothesis: on Ethereum mainnet blocks 24500000 to 24599999, among Aave V3 LiquidationCall transactions (at least 50 from
+top-3 senders and at least 50 from other senders, else abstain; if the trace budget binds, trace the first 600 of each
+group in block and index order), the share with a nonzero traced coinbase transfer to the header miner is at least 0.10
+higher for the top-3 senders than for the other senders.
+
+Metric: /ranges/0/top3_minus_rest_cb_share. Expected: at least 0.10 (range 0.10 to 0.60).
+Falsifier: top3_minus_rest_cb_share below 0.10 with both groups at or above 50 transactions.
+Limit: senders ranked by tx.from count, no addresses written; read-only getLogs, headers, trace_transaction.

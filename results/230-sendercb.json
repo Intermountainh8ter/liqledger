@@ -1,0 +1,33 @@
+{
+  "provenance": {
+    "command": "mainoraclesendercb --chainstack-network ethereum --start 24500000 --blocks 100000 --out results/230-sendercb.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 24500000 to 24599999 (logs, receipts, headers, traces)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-17T16:05:18Z",
+    "wall_s": 83.267767103
+  },
+  "ranges": [
+    {
+      "abstain": false,
+      "blocks": 100000,
+      "first_block": 24500000,
+      "last_block": 24599999,
+      "liquidation_logs": 185,
+      "rest_cb_share": 0.6435643564356436,
+      "rest_traced": 101,
+      "rest_txs": 101,
+      "top3_cb_share": 0.4520547945205479,
+      "top3_minus_rest_cb_share": -0.19150956191509566,
+      "top3_traced": 73,
+      "top3_txs": 73
+    }
+  ]
+}

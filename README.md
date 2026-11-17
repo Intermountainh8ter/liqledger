@@ -300,3 +300,7 @@ Source: `results/228-cbshare.json`, Ethereum blocks 24100000 to 24299999. Pre-re
 ### Sender concentration, blocks 24300000 to 24499999
 
 Source: `results/229-sendershare.json`. 3860 Aave V3 liquidation transactions from 221 distinct senders; top-1 sender share 0.118, top-3 sender share 0.245 (pre-registered hypothesis: below 0.50, supported). No addresses are recorded. Reproduce with `cargo run --locked -q --release -- mainoraclesendershare --chainstack-network ethereum --start 24300000 --blocks 200000 --out results/229-sendershare.json`.
+
+### Traced coinbase transfer by sender group (iteration 230, null result)
+
+Source: `results/230-sendercb.json`, blocks 24500000 to 24599999. Of Aave V3 liquidation transactions, 73 came from the top-3 senders and 101 from all other senders; all were traced. Share with a nonzero traced coinbase transfer: top-3 0.452, others 0.644, difference -0.192. The pre-registered expectation (difference at least 0.10) is not supported.

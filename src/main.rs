@@ -30,6 +30,7 @@ mod mainoracleimmediate;
 mod mainoracleimmediatecb;
 mod mainoracleimmediatecbsplit;
 mod mainoracleimmediatecbshare;
+mod mainoraclesendercb;
 mod mainoraclesendershare;
 mod mainoracleupdatepair;
 mod mainoracleimmediatepay;
@@ -418,6 +419,17 @@ enum Cmd {
     },
     /// Read-only Ethereum trace study: coinbase-transfer share of the total builder payment per liquidation transaction.
     Mainoracleimmediatecbshare {
+        #[arg(long)]
+        chainstack_network: String,
+        #[arg(long)]
+        start: u64,
+        #[arg(long)]
+        blocks: u64,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Read-only Ethereum study: traced coinbase-transfer share, top-3 senders versus the rest, Aave V3 liquidations.
+    Mainoraclesendercb {
         #[arg(long)]
         chainstack_network: String,
         #[arg(long)]
@@ -1351,6 +1363,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Stalestate4 { seed, n, out } => stalestate4::stalestate4(seed, n, out),
         Cmd::Denimdrift { rpc_env, post_start, window, max_touched, max_untouched, seed, out } => denimdrift::denimdrift(rpc_env, post_start, window, max_touched, max_untouched, seed, out).await,
         Cmd::Mainoracleupdatepair { chainstack_network, start, blocks, out } => mainoracleupdatepair::mainoracleupdatepair(chainstack_network, start, blocks, out).await,
+        Cmd::Mainoraclesendercb { chainstack_network, start, blocks, out } => mainoraclesendercb::mainoraclesendercb(chainstack_network, start, blocks, out).await,
         Cmd::Mainoraclesendershare { chainstack_network, start, blocks, out } => mainoraclesendershare::mainoraclesendershare(chainstack_network, start, blocks, out).await,
         Cmd::Mainoracleimmediatecbshare { chainstack_network, start, blocks, out } => mainoracleimmediatecbshare::mainoracleimmediatecbshare(chainstack_network, start, blocks, out).await,
         Cmd::Mainoracleimmediatecbsplit { chainstack_network, start, blocks, out } => mainoracleimmediatecbsplit::mainoracleimmediatecbsplit(chainstack_network, start, blocks, out).await,
