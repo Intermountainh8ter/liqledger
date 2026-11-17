@@ -288,3 +288,7 @@ Ethereum blocks 23200000 to 23299999, single-LiquidationCall-log transactions in
 ### Coinbase-transfer share, immediate-follow versus other liquidation transactions (iteration 225)
 
 Source: `results/225-mainoracleimmediatecbsplit.json`, Ethereum blocks 23700000 to 23899999. Pre-registered: difference of at least 0.20; measured 0.0387, so the hypothesis is not supported. Immediate-follow: 177 of 246 transactions (share 0.720, Wilson 95% [0.660, 0.772]); other: 802 of 1178 (share 0.681, [0.654, 0.707]). Coinbase transfers found by `trace_transaction` as a call with nonzero value to the header miner; AnswerUpdated only. Reproduce: `cargo run --locked --release -q -- mainoracleimmediatecbsplit --chainstack-network ethereum --start 23700000 --blocks 200000 --out results/225-mainoracleimmediatecbsplit.json`.
+
+### Oracle update followed by a liquidation (iteration 227)
+
+Source: `results/227-mainoracleupdatepair.json`, blocks 23900000 to 24099999. Among 352 AnswerUpdated transactions in blocks holding an Aave V3 liquidation, 56 are directly followed by a liquidation transaction at the next index: share 0.159 (Wilson 95% interval 0.125 to 0.201). The pre-registered bound was at most 0.25, so the hypothesis held on this range. Limit: AnswerUpdated only, one range.

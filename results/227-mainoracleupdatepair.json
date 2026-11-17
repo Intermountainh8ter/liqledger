@@ -1,0 +1,33 @@
+{
+  "provenance": {
+    "command": "mainoracleupdatepair --chainstack-network ethereum --start 23900000 --blocks 200000 --out results/227-mainoracleupdatepair.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 23900000 to 24099999 (logs)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-17T15:41:18Z",
+    "wall_s": 9.199057014
+  },
+  "ranges": [
+    {
+      "abstain": false,
+      "blocks": 200000,
+      "first_block": 23900000,
+      "last_block": 24099999,
+      "liquidation_blocks": 159,
+      "liquidation_logs": 212,
+      "liquidation_txs": 188,
+      "update_followed_by_liquidation_share": 0.1590909090909091,
+      "update_txs": 352,
+      "update_txs_followed_by_liquidation": 56,
+      "wilson_high": 0.20095271071633264,
+      "wilson_low": 0.12458989026118089
+    }
+  ]
+}

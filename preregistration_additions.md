@@ -605,3 +605,13 @@ liquidation transactions, provided each arm holds at least 20 transactions.
 Metric: /ranges/0/share_difference_immediate_minus_other. Expected: at least 0.20 (range 0.20 to 1.0).
 Falsifier: difference below 0.20 with at least 20 transactions in each arm; with fewer in either arm the run reports abstain.
 Limit: AnswerUpdated only; read-only getLogs, headers and trace_transaction; Wilson 95% intervals per arm.
+
+## 2026-11-17T15:40:15Z mainoracleupdatepair proposal:5ed5b836190f60f4333a2fa24a732d0d4ac0abab4959c9104716d5a80b869539
+
+Hypothesis: on Ethereum mainnet blocks 23900000 to 24099999, among Chainlink AnswerUpdated transactions (distinct block and
+transaction index) in blocks that hold an Aave V3 LiquidationCall, the share whose next transaction index holds a
+LiquidationCall is at most 0.25, provided at least 20 update transactions exist.
+
+Metric: /ranges/0/update_followed_by_liquidation_share. Expected: at most 0.25 (range 0.0 to 0.25).
+Falsifier: share above 0.25 with at least 20 update transactions; with fewer the run reports abstain.
+Limit: AnswerUpdated only; read-only getLogs; Wilson 95% interval reported.
