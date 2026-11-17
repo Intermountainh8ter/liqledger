@@ -720,3 +720,14 @@ transaction of the same block or the 2 preceding blocks) is at least 0.10 higher
 Metric: /ranges/0/spec_minus_nonspec_cb_share. Expected: at least 0.10 (range 0.10 to 0.80).
 Falsifier: spec_minus_nonspec_cb_share below 0.10 with at least 100 traced liquidation transactions and each class at least 20.
 Limit: read-only getLogs, headers, trace_transaction; no addresses written. Retry of the 238 design on a different range.
+
+## 2026-11-17T17:14:18Z specsize proposal:67769b2f514190f0354e67690868d63d209b420f1bb7143188805095156f0d40
+
+Hypothesis: on Ethereum mainnet blocks 22800000 to 23199999, among single-log Aave V3 USDC/USDT-debt liquidation
+transactions (at least 100 required, each bucket at least 20, else the metric is written as null with abstain true), the
+speculative share (no AnswerUpdated log in an earlier transaction of the same block or the 2 preceding blocks) of the
+debtToCover at-least-1000-unit bucket is at least 0.10 lower than that of the below-1000-unit bucket.
+
+Metric: /ranges/0/large_minus_small_spec_share. Expected: at most -0.10 (range -1.0 to -0.10).
+Falsifier: large_minus_small_spec_share above -0.10 with at least 100 transactions and each bucket at least 20.
+Limit: read-only getLogs; no traces, no addresses written.

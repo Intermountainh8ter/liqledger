@@ -332,3 +332,7 @@ Source: `results/237-buildercb2.json`, blocks 22600000 to 22799999. The range he
 ### Speculative versus non-speculative coinbase transfers, retry (iteration 239)
 
 Source: `results/239-speccb.json`, blocks 22800000 to 23199999. The range held 425 liquidation logs; 355 traced transactions were non-speculative and 65 speculative. Coinbase-transfer share was 0.5887 for non-speculative and 0.0923 for speculative, a difference of -0.4964. Pre-registered expectation was at least 0.10; refuted.
+
+### Speculative share by liquidation size (iteration 240)
+
+Source: `results/240-specsize.json`, Ethereum blocks 22800000 to 23199999. Among single-log Aave V3 USDC/USDT-debt liquidation transactions, the speculative share (no oracle update in an earlier transaction of the same block or the 2 preceding blocks) was 0.1714 for debtToCover below 1000 units (70 transactions) and 0.0168 at or above it (119 transactions), a difference of -0.1546. The pre-registered expectation (at most -0.10) held on this range. Logs only; one range.
