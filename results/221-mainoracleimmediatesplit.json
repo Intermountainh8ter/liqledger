@@ -1,0 +1,46 @@
+{
+  "provenance": {
+    "command": "mainoracleimmediatesplit --chainstack-network ethereum --start 23200000 --blocks 100000 --out results/221-mainoracleimmediatesplit.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 23200000 to 23299999 (logs)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-17T14:59:22Z",
+    "wall_s": 6.091526572
+  },
+  "ranges": [
+    {
+      "blocks": 100000,
+      "buckets": [
+        {
+          "abstain": false,
+          "immediate_follow_share": 0.5,
+          "immediate_follow_txs": 46,
+          "label": "one_log",
+          "same_block_liquidation_txs": 92,
+          "wilson_high": 0.6001034506049849,
+          "wilson_low": 0.39989654939501507
+        },
+        {
+          "abstain": true,
+          "immediate_follow_share": null,
+          "immediate_follow_txs": 0,
+          "label": "two_or_more_logs",
+          "same_block_liquidation_txs": 0,
+          "wilson_high": null,
+          "wilson_low": null
+        }
+      ],
+      "first_block": 23200000,
+      "last_block": 23299999,
+      "liquidation_blocks": 92,
+      "liquidation_logs": 120
+    }
+  ]
+}

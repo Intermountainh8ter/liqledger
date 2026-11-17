@@ -21,11 +21,11 @@ pub fn immediate(liqs: &[(u64, u64)], updates: &[(u64, u64)]) -> Vec<(u64, u64, 
     txs.into_iter().map(|(b, i)| (b, i, i > 0 && upd.contains(&(b, i - 1)))).collect()
 }
 
-fn pos(logs: &[Log]) -> Vec<(u64, u64)> {
+pub fn pos(logs: &[Log]) -> Vec<(u64, u64)> {
     logs.iter().filter_map(|l| Some((l.block_number?, l.transaction_index?))).collect()
 }
 
-async fn logs_retry(p: &impl Provider, f: &Filter) -> anyhow::Result<Vec<Log>> {
+pub async fn logs_retry(p: &impl Provider, f: &Filter) -> anyhow::Result<Vec<Log>> {
     let mut tries = 0;
     loop {
         match p.get_logs(f).await {
@@ -40,7 +40,7 @@ async fn logs_retry(p: &impl Provider, f: &Filter) -> anyhow::Result<Vec<Log>> {
 }
 
 /// Liquidation logs over [from, to], halving the span when the node refuses a range.
-async fn liq_logs(p: &impl Provider, from: u64, to: u64) -> anyhow::Result<Vec<Log>> {
+pub async fn liq_logs(p: &impl Provider, from: u64, to: u64) -> anyhow::Result<Vec<Log>> {
     let f = Filter::new()
         .address(addr(BASE_AAVE_V3_POOL))
         .event_signature(LiquidationCall::SIGNATURE_HASH)
@@ -71,7 +71,7 @@ pub fn pick_endpoint(list: &serde_json::Value, network: &str) -> Option<String> 
 }
 
 /// Resolve the endpoint from the platform API at run time; errors name the network and method only.
-fn chainstack_endpoint(network: &str) -> anyhow::Result<String> {
+pub fn chainstack_endpoint(network: &str) -> anyhow::Result<String> {
     let key = std::env::var("CHAINSTACK_API_KEY").map_err(|_| anyhow::anyhow!("CHAINSTACK_API_KEY not set"))?;
     let out = std::process::Command::new("curl")
         .args(["-sS", "-f", "-A", "liqledger/0.1 curl", "-H", &format!("Authorization: Bearer {key}"), "https://api.chainstack.com/v1/nodes/?limit=100"])

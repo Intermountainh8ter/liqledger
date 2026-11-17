@@ -27,6 +27,7 @@ mod denimorder;
 mod denimempty;
 mod denimoracle;
 mod mainoracleimmediate;
+mod mainoracleimmediatesplit;
 mod denimfee;
 mod denimdrift;
 mod denimwin;
@@ -355,6 +356,17 @@ enum Cmd {
     },
     /// Read-only Ethereum log study: share of Aave liquidation transactions directly after an oracle update transaction.
     Mainoracleimmediate {
+        #[arg(long)]
+        chainstack_network: String,
+        #[arg(long)]
+        start: u64,
+        #[arg(long)]
+        blocks: u64,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Read-only Ethereum log study: the mainoracleimmediate count split by LiquidationCall logs per transaction.
+    Mainoracleimmediatesplit {
         #[arg(long)]
         chainstack_network: String,
         #[arg(long)]
@@ -1254,6 +1266,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Stalestate3 { seed, n, out } => stalestate3::stalestate3(seed, n, out),
         Cmd::Stalestate4 { seed, n, out } => stalestate4::stalestate4(seed, n, out),
         Cmd::Denimdrift { rpc_env, post_start, window, max_touched, max_untouched, seed, out } => denimdrift::denimdrift(rpc_env, post_start, window, max_touched, max_untouched, seed, out).await,
+        Cmd::Mainoracleimmediatesplit { chainstack_network, start, blocks, out } => mainoracleimmediatesplit::mainoracleimmediatesplit(chainstack_network, start, blocks, out).await,
         Cmd::Mainoracleimmediate { chainstack_network, start, blocks, out } => mainoracleimmediate::mainoracleimmediate(chainstack_network, start, blocks, out).await,
         Cmd::Denimoracle { rpc_env, start, blocks, out } => denimoracle::denimoracle(rpc_env, start, blocks, out).await,
         Cmd::Denimempty { rpc_env, post_start, pre_end, window, out } => denimempty::denimempty(rpc_env, post_start, pre_end, window, out).await,

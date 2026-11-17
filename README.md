@@ -280,3 +280,7 @@ Source: `results/177-denimfee.json`, Base block headers 53555527 to 53556726 (60
 ### Mainnet liquidations directly after an oracle update (`mainoracleimmediate`)
 
 Source: `results/219-mainoracleimmediate.json`, Ethereum blocks 23000000 to 23099999. 106 Aave V3 liquidation transactions sit in blocks that also hold a Chainlink AnswerUpdated log (105 liquidation blocks, 140 liquidation logs in the range). 45 of them sit at the transaction index directly after an update transaction: share 0.4245, above the pre-registered 0.40 threshold. AnswerUpdated logs only, so updates are a lower bound; logs only, no traces. The endpoint is resolved from the platform API at run time.
+
+### mainoracleimmediatesplit (results/221-mainoracleimmediatesplit.json)
+
+Ethereum blocks 23200000 to 23299999, single-LiquidationCall-log transactions in blocks with an AnswerUpdated log: 46 of 92 sit directly after an update transaction (share 0.5, Wilson 95% interval 0.3999 to 0.6001). The two-or-more-logs bucket held 0 transactions, so the run abstains for that bucket and no size comparison is possible.

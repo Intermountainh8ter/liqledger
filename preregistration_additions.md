@@ -547,3 +547,14 @@ index + 1), provided at least 20 such transactions are found.
 Metric: /ranges/0/immediate_follow_share. Expected: at least 0.30 (range 0.30 to 1.0).
 Falsifier: share below 0.30 with at least 20 same-block liquidation transactions; with fewer the run reports abstain.
 Limit: no code change, replication on a disjoint range; AnswerUpdated only; read-only getLogs.
+
+## 2026-11-17T14:58:32Z mainoracleimmediatesplit proposal:389e2e481f8c2801bf0bdb39f9edb373166dfa5dd0653bc066b7900c3e056d1f
+
+Hypothesis: on Ethereum mainnet blocks 23200000 to 23299999, among Aave V3 LiquidationCall transactions that carry exactly
+one LiquidationCall log and sit in blocks that also contain a Chainlink AnswerUpdated log, at least 0.30 sit at
+transaction index (some AnswerUpdated transaction index + 1), provided at least 20 such transactions are found.
+
+Metric: /ranges/0/buckets/0/immediate_follow_share (single-log bucket). Expected: at least 0.30 (range 0.30 to 1.0).
+Falsifier: single-log bucket share below 0.30 with at least 20 same-block transactions in that bucket; with fewer the run
+reports abstain. Bucket 1 holds transactions with two or more logs; log count is a labelled size proxy only.
+Limit: AnswerUpdated only; read-only getLogs; Wilson 95% intervals reported.
