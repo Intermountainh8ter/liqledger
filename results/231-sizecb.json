@@ -1,0 +1,34 @@
+{
+  "provenance": {
+    "command": "mainoraclesizecb --chainstack-network ethereum --start 24600000 --blocks 200000 --out results/231-sizecb.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 24600000 to 24799999 (logs, headers, traces)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-17T16:12:49Z",
+    "wall_s": 46.484304865
+  },
+  "ranges": [
+    {
+      "abstain": false,
+      "blocks": 200000,
+      "first_block": 24600000,
+      "large_cb_share": 0.85,
+      "large_minus_small_cb_share": 0.01304347826086949,
+      "large_traced": 40,
+      "large_txs": 40,
+      "last_block": 24799999,
+      "liquidation_logs": 302,
+      "small_cb_share": 0.8369565217391305,
+      "small_traced": 92,
+      "small_txs": 92,
+      "threshold_units": 1000
+    }
+  ]
+}

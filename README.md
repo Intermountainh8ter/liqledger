@@ -304,3 +304,7 @@ Source: `results/229-sendershare.json`. 3860 Aave V3 liquidation transactions fr
 ### Traced coinbase transfer by sender group (iteration 230, null result)
 
 Source: `results/230-sendercb.json`, blocks 24500000 to 24599999. Of Aave V3 liquidation transactions, 73 came from the top-3 senders and 101 from all other senders; all were traced. Share with a nonzero traced coinbase transfer: top-3 0.452, others 0.644, difference -0.192. The pre-registered expectation (difference at least 0.10) is not supported.
+
+### Traced coinbase transfer by debtToCover bucket (iteration 231, null result)
+
+Source: `results/231-sizecb.json`, blocks 24600000 to 24799999. Among single-log Aave V3 USDC/USDT-debt liquidation transactions, 40 in the at-least-1000-units bucket and 92 in the below-1000-units bucket, all traced. Coinbase-transfer share 0.85 (large) versus 0.837 (small); difference 0.013, below the pre-registered 0.10, so the hypothesis is refuted. Reproduce: `cargo run --release --locked -q -- mainoraclesizecb --chainstack-network ethereum --start 24600000 --blocks 200000 --out results/231-sizecb.json`.

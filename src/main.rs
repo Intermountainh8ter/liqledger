@@ -35,6 +35,7 @@ mod mainoraclesendershare;
 mod mainoracleupdatepair;
 mod mainoracleimmediatepay;
 mod mainoracleimmediatesize;
+mod mainoraclesizecb;
 mod mainoracleimmediatesplit;
 mod denimfee;
 mod denimdrift;
@@ -463,6 +464,17 @@ enum Cmd {
     },
     /// Read-only Ethereum log study: the mainoracleimmediate count split by debtToCover for USDC/USDT debt.
     Mainoracleimmediatesize {
+        #[arg(long)]
+        chainstack_network: String,
+        #[arg(long)]
+        start: u64,
+        #[arg(long)]
+        blocks: u64,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Read-only Ethereum trace study: traced coinbase-transfer share by debtToCover bucket for USDC/USDT debt.
+    Mainoraclesizecb {
         #[arg(long)]
         chainstack_network: String,
         #[arg(long)]
@@ -1369,6 +1381,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Mainoracleimmediatecbsplit { chainstack_network, start, blocks, out } => mainoracleimmediatecbsplit::mainoracleimmediatecbsplit(chainstack_network, start, blocks, out).await,
         Cmd::Mainoracleimmediatecb { chainstack_network, start, blocks, out } => mainoracleimmediatecb::mainoracleimmediatecb(chainstack_network, start, blocks, out).await,
         Cmd::Mainoracleimmediatepay { chainstack_network, start, blocks, out } => mainoracleimmediatepay::mainoracleimmediatepay(chainstack_network, start, blocks, out).await,
+        Cmd::Mainoraclesizecb { chainstack_network, start, blocks, out } => mainoraclesizecb::mainoraclesizecb(chainstack_network, start, blocks, out).await,
         Cmd::Mainoracleimmediatesize { chainstack_network, start, blocks, out } => mainoracleimmediatesize::mainoracleimmediatesize(chainstack_network, start, blocks, out).await,
         Cmd::Mainoracleimmediatesplit { chainstack_network, start, blocks, out } => mainoracleimmediatesplit::mainoracleimmediatesplit(chainstack_network, start, blocks, out).await,
         Cmd::Mainoracleimmediate { chainstack_network, start, blocks, out } => mainoracleimmediate::mainoracleimmediate(chainstack_network, start, blocks, out).await,

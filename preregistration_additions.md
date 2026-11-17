@@ -646,3 +646,14 @@ higher for the top-3 senders than for the other senders.
 Metric: /ranges/0/top3_minus_rest_cb_share. Expected: at least 0.10 (range 0.10 to 0.60).
 Falsifier: top3_minus_rest_cb_share below 0.10 with both groups at or above 50 transactions.
 Limit: senders ranked by tx.from count, no addresses written; read-only getLogs, headers, trace_transaction.
+
+## 2026-11-17T16:11:42Z mainoraclesizecb proposal:a26b0710047112682cacbef3d895c3fae41690889744b195b7e7b0e1219690be
+
+Hypothesis: on Ethereum mainnet blocks 24600000 to 24799999, among single-log Aave V3 liquidation transactions with USDC or
+USDT debt (at least 30 in each bucket, else abstain; if the trace budget binds, trace the first 600 per bucket in block and
+index order), the share with a nonzero traced coinbase transfer to the header miner is at least 0.10 higher in the
+at-least-1000-units debtToCover bucket than in the below-1000-units bucket.
+
+Metric: /ranges/0/large_minus_small_cb_share. Expected: at least 0.10 (range 0.10 to 0.80).
+Falsifier: large_minus_small_cb_share below 0.10 with both buckets at or above 30 transactions.
+Limit: read-only getLogs, headers, trace_transaction; no addresses written.
