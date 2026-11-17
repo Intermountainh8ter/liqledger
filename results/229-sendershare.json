@@ -1,0 +1,30 @@
+{
+  "provenance": {
+    "command": "mainoraclesendershare --chainstack-network ethereum --start 24300000 --blocks 200000 --out results/229-sendershare.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 24300000 to 24499999 (logs, receipts)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-17T15:57:22Z",
+    "wall_s": 109.819661105
+  },
+  "ranges": [
+    {
+      "abstain": false,
+      "blocks": 200000,
+      "distinct_senders": 221,
+      "first_block": 24300000,
+      "last_block": 24499999,
+      "liquidation_logs": 5623,
+      "liquidation_txs": 3860,
+      "top1_sender_share": 0.11787564766839378,
+      "top3_sender_share": 0.24507772020725388
+    }
+  ]
+}

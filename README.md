@@ -296,3 +296,7 @@ Source: `results/227-mainoracleupdatepair.json`, blocks 23900000 to 24099999. Am
 ### Coinbase-transfer share of builder payment (iteration 228)
 
 Source: `results/228-cbshare.json`, Ethereum blocks 24100000 to 24299999. Pre-registered: median coinbase-transfer share of at least 0.50; measured 1.0, so the hypothesis is supported. 137 liquidation transactions, 135 with a positive builder payment and 2 with none; 76 paid by coinbase transfer only and 37 by priority fee only. Payment is priority fee times gas used plus traced nonzero value to the header miner (calls with an error excluded). Reproduce: `cargo run --locked --release -q -- mainoracleimmediatecbshare --chainstack-network ethereum --start 24100000 --blocks 200000 --out results/228-cbshare.json`.
+
+### Sender concentration, blocks 24300000 to 24499999
+
+Source: `results/229-sendershare.json`. 3860 Aave V3 liquidation transactions from 221 distinct senders; top-1 sender share 0.118, top-3 sender share 0.245 (pre-registered hypothesis: below 0.50, supported). No addresses are recorded. Reproduce with `cargo run --locked -q --release -- mainoraclesendershare --chainstack-network ethereum --start 24300000 --blocks 200000 --out results/229-sendershare.json`.

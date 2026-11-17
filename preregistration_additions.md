@@ -626,3 +626,12 @@ Metric: /ranges/0/coinbase_share_of_builder_payment_median. Expected: at least 0
 Falsifier: median share below 0.50 with at least 20 paying transactions; with fewer the run reports abstain.
 Limit: priority fee is (effectiveGasPrice minus block base fee) times gasUsed; trace calls carrying an error are not
 counted; zero-payment transactions are counted separately; read-only getLogs, headers, receipts and trace_transaction.
+
+## 2026-11-17T15:56:48Z mainoraclesendershare proposal:8d6e6dcce2606268ec9bf02931a99dc1fd6d9b22c3fe75e6d9b23f780f18fc16
+
+Hypothesis: on Ethereum mainnet blocks 24300000 to 24499999, among Aave V3 LiquidationCall transactions (at least 50
+required, else abstain), the top-3 tx.from senders together account for less than 0.50 of liquidation transactions.
+
+Metric: /ranges/0/top3_sender_share. Expected: below 0.50 (range 0.20 to 0.50).
+Falsifier: top3_sender_share of at least 0.50 with at least 50 liquidation transactions in the range.
+Limit: ranks only, no addresses written; read-only getLogs and transactions.
