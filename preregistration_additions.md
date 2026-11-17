@@ -537,3 +537,13 @@ Metric: /ranges/0/immediate_follow_share. Expected: at least 0.40 (range 0.40 to
 Falsifier: share below 0.40 with at least 20 same-block liquidation transactions; with fewer the run reports abstain.
 Limit: only AnswerUpdated logs count as feed updates (lower bound on updates); aggregates only; read-only getLogs, no
 traces. The endpoint is resolved from the platform API at run time and never printed.
+
+## 2026-11-17T14:53:41Z mainoracleimmediate2 proposal:eaaf4c66dbfdcc9bf91aa64ab83eb09e0c63655489c18be8f019eaee85f79a17
+
+Hypothesis: on Ethereum mainnet blocks 23100000 to 23199999, among Aave V3 LiquidationCall transactions in blocks that
+also contain a Chainlink AnswerUpdated log, at least 0.30 sit at transaction index (some AnswerUpdated transaction
+index + 1), provided at least 20 such transactions are found.
+
+Metric: /ranges/0/immediate_follow_share. Expected: at least 0.30 (range 0.30 to 1.0).
+Falsifier: share below 0.30 with at least 20 same-block liquidation transactions; with fewer the run reports abstain.
+Limit: no code change, replication on a disjoint range; AnswerUpdated only; read-only getLogs.

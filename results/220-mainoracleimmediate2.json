@@ -1,0 +1,30 @@
+{
+  "provenance": {
+    "command": "mainoracleimmediate --chainstack-network ethereum --start 23100000 --blocks 100000 --out results/220-mainoracleimmediate2.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 23100000 to 23199999 (logs)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-17T14:54:22Z",
+    "wall_s": 6.404094037
+  },
+  "ranges": [
+    {
+      "abstain": false,
+      "blocks": 100000,
+      "first_block": 23100000,
+      "immediate_follow_share": 0.44086021505376344,
+      "immediate_follow_txs": 41,
+      "last_block": 23199999,
+      "liquidation_blocks": 111,
+      "liquidation_logs": 134,
+      "same_block_liquidation_txs": 93
+    }
+  ]
+}
