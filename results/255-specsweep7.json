@@ -1,0 +1,48 @@
+{
+  "provenance": {
+    "command": "mainoraclespecsweep --chainstack-network ethereum --start 18000000 --blocks 1200000 --out results/255-specsweep7.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 18000000 to 19199999 (logs)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-17T18:44:58Z",
+    "wall_s": 27.169549272
+  },
+  "ranges": [
+    {
+      "abstain": false,
+      "blocks": 1200000,
+      "cutoffs": [
+        {
+          "abstain": false,
+          "tail_spec_share": 0.0,
+          "tail_txs": 63,
+          "threshold_units": 10000
+        },
+        {
+          "abstain": false,
+          "tail_spec_share": 0.0,
+          "tail_txs": 48,
+          "threshold_units": 20000
+        },
+        {
+          "abstain": false,
+          "tail_spec_share": 0.0,
+          "tail_txs": 35,
+          "threshold_units": 40000
+        }
+      ],
+      "first_block": 18000000,
+      "last_block": 19199999,
+      "liquidation_logs": 392,
+      "max_tail_spec_share": 0.0,
+      "txs": 206
+    }
+  ]
+}
