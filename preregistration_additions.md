@@ -761,3 +761,14 @@ share of the at-least-20000-unit debtToCover tail is lower than that of the belo
 Metric: /ranges/0/tail_minus_rest_spec_share. Expected: at most -0.02 (range -1.0 to -0.02).
 Falsifier: tail_minus_rest_spec_share above -0.02 with at least 100 transactions and at least 20 in the tail.
 Limit: read-only getLogs; no traces, no addresses written. Reuses the specsize classification with a 20000-unit cutoff.
+
+## 2026-11-17T17:44:56Z spectail3 proposal:9216651a844ac9e535f3a1e020043466287c3e0d747f008f730f7779a3fb7255
+
+Hypothesis: on Ethereum mainnet blocks 22800000 to 23199999, among single-log Aave V3 USDC/USDT-debt liquidation
+transactions (at least 100 total and at least 20 in the tail, else the metric is null with abstain true), the speculative
+share of the at-least-20000-unit debtToCover tail is lower than that of the below-20000-unit rest by at least 0.02
+(a replication of the 245 tail result on a disjoint range).
+
+Metric: /ranges/0/tail_minus_rest_spec_share. Expected: at most -0.02 (range -1.0 to -0.02).
+Falsifier: tail_minus_rest_spec_share above -0.02 with at least 100 transactions and at least 20 in the tail.
+Limit: read-only getLogs; no traces, no addresses written. Unchanged rerun of the mainoraclespectail subcommand.

@@ -1,0 +1,33 @@
+{
+  "provenance": {
+    "command": "mainoraclespectail --chainstack-network ethereum --start 22800000 --blocks 400000 --out results/247-spectail3.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 22800000 to 23199999 (logs)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-17T17:45:01Z",
+    "wall_s": 17.36690303
+  },
+  "ranges": [
+    {
+      "abstain": false,
+      "blocks": 400000,
+      "first_block": 22800000,
+      "last_block": 23199999,
+      "liquidation_logs": 425,
+      "rest_spec_share": 0.09333333333333334,
+      "rest_txs": 150,
+      "tail_minus_rest_spec_share": -0.09333333333333334,
+      "tail_spec_share": 0.0,
+      "tail_txs": 39,
+      "threshold_units": 20000,
+      "txs": 189
+    }
+  ]
+}
