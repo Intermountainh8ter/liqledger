@@ -783,3 +783,14 @@ units), so the zero-tail result from 245 and 247 is not an artefact of the 20000
 Metric: /ranges/0/max_tail_spec_share. Expected: at most 0.05 (range 0.0 to 0.05).
 Falsifier: max_tail_spec_share above 0.05 with at least one non-abstaining cutoff having at least 20 tail txs.
 Limit: read-only getLogs; no traces, no addresses written. Reuses the spectail classification with the cutoff varied.
+
+## 2026-11-17T18:02:50Z specsweep3 proposal:cf72b65cc03a52815fee3069f656c8670445403251d3d949b6de77ca7110640a
+
+Hypothesis: on Ethereum mainnet blocks 24000000 to 25199999, among single-log Aave V3 USDC/USDT-debt liquidation
+transactions (at least 100 total, and at least 20 in a cutoff's tail, else that cutoff abstains and the metric is null
+if all abstain), the tail speculative share stays at or below 0.05 at every non-abstaining cutoff (10000, 20000, 40000
+units), extending the zero-tail result from 245, 247 and 248 to a third disjoint range.
+
+Metric: /ranges/0/max_tail_spec_share. Expected: at most 0.05 (range 0.0 to 0.05).
+Falsifier: max_tail_spec_share above 0.05 with at least one non-abstaining cutoff having at least 20 tail txs.
+Limit: read-only getLogs; no traces, no addresses written. Unchanged rerun of the mainoraclespecsweep subcommand.
