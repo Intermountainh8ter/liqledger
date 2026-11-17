@@ -667,3 +667,12 @@ carries an AnswerUpdated log.
 Metric: /ranges/0/same_tx_as_oracle_update_share. Expected: at most 0.10 (range 0.0 to 0.10).
 Falsifier: same_tx_as_oracle_update_share above 0.10 with at least 50 same-block liquidation transactions.
 Limit: read-only getLogs; no traces, no addresses written.
+
+## 2026-11-17T16:23:17Z mainoraclereliq proposal:c3f3efce95f384c89f294a0e13ce963a82052e443dbc3a602a822f739a5e031d
+
+Hypothesis: on Ethereum mainnet blocks 25000000 to 25199999, among Aave V3 LiquidationCall logs (at least 100 required,
+else abstain), at least 0.10 target a borrower that already had a LiquidationCall log in the previous 100 blocks.
+
+Metric: /ranges/0/reliq_share. Expected: at least 0.10 (range 0.10 to 0.60).
+Falsifier: reliq_share below 0.10 with at least 100 liquidation logs in the range.
+Limit: read-only getLogs; no traces, no addresses written. A different measure from a refund-transfer count.

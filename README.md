@@ -312,3 +312,7 @@ Source: `results/231-sizecb.json`, blocks 24600000 to 24799999. Among single-log
 ### Same-transaction oracle updates (mainoraclesametx)
 
 Source: `results/232-sametx.json`, blocks 24800000 to 24999999. Of 87 Aave V3 liquidation transactions in blocks that also hold an AnswerUpdated log, 0 carry an AnswerUpdated log in their own transaction (share 0.0, Wilson interval [0.0, 0.042]); 60 follow an update in an earlier transaction of the block and 27 precede every update in the block. The pre-registered upper bound of 0.10 held.
+
+### Repeat liquidations of one borrower (mainoraclereliq, null result)
+
+Source: `results/233-reliq.json`, Ethereum blocks 25000000 to 25199999. Of 348 Aave V3 LiquidationCall logs, 1 targets a borrower that already had a log in the previous 100 blocks (share 0.0029, Wilson interval 0.0005 to 0.0161). The pre-registered expectation of at least 0.10 is refuted. History before the range start is not read, and a same-block repeat is not counted.

@@ -1,0 +1,32 @@
+{
+  "provenance": {
+    "command": "mainoraclereliq --chainstack-network ethereum --start 25000000 --blocks 200000 --out results/233-reliq.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 25000000 to 25199999 (logs)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-17T16:24:23Z",
+    "wall_s": 3.197103225
+  },
+  "ranges": [
+    {
+      "abstain": false,
+      "blocks": 200000,
+      "distinct_borrowers": 317,
+      "first_block": 25000000,
+      "last_block": 25199999,
+      "liquidation_logs": 348,
+      "liquidation_logs_scored": 348,
+      "reliq_logs": 1,
+      "reliq_share": 0.0028735632183908046,
+      "wilson_high": 0.016095504224361623,
+      "wilson_low": 0.0005074216377308604
+    }
+  ]
+}
