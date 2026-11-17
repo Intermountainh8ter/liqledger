@@ -29,6 +29,7 @@ mod denimoracle;
 mod mainoracleimmediate;
 mod mainoracleimmediatecb;
 mod mainoracleimmediatecbsplit;
+mod mainoracleimmediatecbshare;
 mod mainoracleupdatepair;
 mod mainoracleimmediatepay;
 mod mainoracleimmediatesize;
@@ -405,6 +406,17 @@ enum Cmd {
     },
     /// Read-only Ethereum trace study: coinbase-transfer share, immediate-follow versus other liquidation transactions.
     Mainoracleimmediatecbsplit {
+        #[arg(long)]
+        chainstack_network: String,
+        #[arg(long)]
+        start: u64,
+        #[arg(long)]
+        blocks: u64,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Read-only Ethereum trace study: coinbase-transfer share of the total builder payment per liquidation transaction.
+    Mainoracleimmediatecbshare {
         #[arg(long)]
         chainstack_network: String,
         #[arg(long)]
@@ -1327,6 +1339,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Stalestate4 { seed, n, out } => stalestate4::stalestate4(seed, n, out),
         Cmd::Denimdrift { rpc_env, post_start, window, max_touched, max_untouched, seed, out } => denimdrift::denimdrift(rpc_env, post_start, window, max_touched, max_untouched, seed, out).await,
         Cmd::Mainoracleupdatepair { chainstack_network, start, blocks, out } => mainoracleupdatepair::mainoracleupdatepair(chainstack_network, start, blocks, out).await,
+        Cmd::Mainoracleimmediatecbshare { chainstack_network, start, blocks, out } => mainoracleimmediatecbshare::mainoracleimmediatecbshare(chainstack_network, start, blocks, out).await,
         Cmd::Mainoracleimmediatecbsplit { chainstack_network, start, blocks, out } => mainoracleimmediatecbsplit::mainoracleimmediatecbsplit(chainstack_network, start, blocks, out).await,
         Cmd::Mainoracleimmediatecb { chainstack_network, start, blocks, out } => mainoracleimmediatecb::mainoracleimmediatecb(chainstack_network, start, blocks, out).await,
         Cmd::Mainoracleimmediatepay { chainstack_network, start, blocks, out } => mainoracleimmediatepay::mainoracleimmediatepay(chainstack_network, start, blocks, out).await,

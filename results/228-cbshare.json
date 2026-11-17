@@ -1,0 +1,32 @@
+{
+  "provenance": {
+    "command": "mainoracleimmediatecbshare --chainstack-network ethereum --start 24100000 --blocks 200000 --out results/228-cbshare.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 24100000 to 24299999 (logs, headers, receipts, traces)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-17T15:49:32Z",
+    "wall_s": 51.520215887
+  },
+  "ranges": [
+    {
+      "abstain": false,
+      "blocks": 200000,
+      "coinbase_only_txs": 76,
+      "coinbase_share_of_builder_payment_median": 1.0,
+      "first_block": 24100000,
+      "last_block": 24299999,
+      "liquidation_logs": 161,
+      "liquidation_txs": 137,
+      "paying_txs": 135,
+      "priority_fee_only_txs": 37,
+      "zero_payment_txs": 2
+    }
+  ]
+}

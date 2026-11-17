@@ -615,3 +615,14 @@ LiquidationCall is at most 0.25, provided at least 20 update transactions exist.
 Metric: /ranges/0/update_followed_by_liquidation_share. Expected: at most 0.25 (range 0.0 to 0.25).
 Falsifier: share above 0.25 with at least 20 update transactions; with fewer the run reports abstain.
 Limit: AnswerUpdated only; read-only getLogs; Wilson 95% interval reported.
+
+## 2026-11-17T15:49:13Z mainoracleimmediatecbshare proposal:d9b5e7e0b3ecbff285451f00ada04d569e494504f055a2e514beed366d0077c7
+
+Hypothesis: on Ethereum mainnet blocks 24100000 to 24299999, among Aave V3 LiquidationCall transactions with positive total
+builder payment (priority fee times gas used plus traced nonzero ETH value sent to the header coinbase), the median
+coinbase-transfer share of that payment is at least 0.50, provided at least 20 such transactions exist.
+
+Metric: /ranges/0/coinbase_share_of_builder_payment_median. Expected: at least 0.50 (range 0.50 to 1.0).
+Falsifier: median share below 0.50 with at least 20 paying transactions; with fewer the run reports abstain.
+Limit: priority fee is (effectiveGasPrice minus block base fee) times gasUsed; trace calls carrying an error are not
+counted; zero-payment transactions are counted separately; read-only getLogs, headers, receipts and trace_transaction.

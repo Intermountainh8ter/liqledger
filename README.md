@@ -292,3 +292,7 @@ Source: `results/225-mainoracleimmediatecbsplit.json`, Ethereum blocks 23700000 
 ### Oracle update followed by a liquidation (iteration 227)
 
 Source: `results/227-mainoracleupdatepair.json`, blocks 23900000 to 24099999. Among 352 AnswerUpdated transactions in blocks holding an Aave V3 liquidation, 56 are directly followed by a liquidation transaction at the next index: share 0.159 (Wilson 95% interval 0.125 to 0.201). The pre-registered bound was at most 0.25, so the hypothesis held on this range. Limit: AnswerUpdated only, one range.
+
+### Coinbase-transfer share of builder payment (iteration 228)
+
+Source: `results/228-cbshare.json`, Ethereum blocks 24100000 to 24299999. Pre-registered: median coinbase-transfer share of at least 0.50; measured 1.0, so the hypothesis is supported. 137 liquidation transactions, 135 with a positive builder payment and 2 with none; 76 paid by coinbase transfer only and 37 by priority fee only. Payment is priority fee times gas used plus traced nonzero value to the header miner (calls with an error excluded). Reproduce: `cargo run --locked --release -q -- mainoracleimmediatecbshare --chainstack-network ethereum --start 24100000 --blocks 200000 --out results/228-cbshare.json`.
