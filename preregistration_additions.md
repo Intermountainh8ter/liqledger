@@ -922,3 +922,15 @@ Metric: /exact_fail_count_index_zero. Expected: decrease to at most 3 (range 0 t
 Falsifier: exact_fail_count_index_zero of 4 or more of replayed_n_index_zero 7, or the node rejects the override
 (counted in trace_error_count) so no index-zero replay runs with it.
 Limit: read-only; no addresses written. New mode trace-call-ctx; other modes unchanged.
+
+## 2026-11-19T20:07:14Z 288-oracle-pred proposal:21593e124505b08b335d34447ad7d765af3bd0d6c89a07defaa600d1d2c10418
+
+Hypothesis: among the 95 replayed Aave V3 liquidation transactions in blocks 23550000 to 23550999, the trace-call-ctx
+mismatch rate is higher for transactions with a same-block oracle-update predecessor (an earlier transaction in the
+block whose receipt carries an AnswerUpdated log) than for those without one.
+
+Metric: /exact_fail_count_oracle_predecessor. Expected: at least 9 of the 17 trace-call-ctx mismatches (range 9 to 17).
+Falsifier: exact_fail_count_oracle_predecessor of 8 or fewer, or a mismatch rate with an oracle-update predecessor not
+higher than the rate without one.
+Limit: read-only; no addresses written. New mode trace-call-ctx-oracle replays as trace-call-ctx and adds the flag
+from eth_getBlockReceipts; the replay logic is unchanged.

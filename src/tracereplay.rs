@@ -79,9 +79,45 @@ fn block_override(h: &serde_json::Value) -> serde_json::Value {
     })
 }
 
+/// Topic0 of Chainlink AnswerUpdated(int256,uint256,uint256).
+fn answer_updated_topic() -> String {
+    format!("{:#x}", crate::AnswerUpdated::SIGNATURE_HASH)
+}
+
+/// True when a receipt with transaction index below `ti` in a block receipt array carries an AnswerUpdated log.
+pub fn has_oracle_predecessor(block_receipts: &serde_json::Value, ti: u64) -> bool {
+    let t = answer_updated_topic();
+    block_receipts.as_array().map_or(false, |a| {
+        a.iter().any(|r| {
+            let idx = r["transactionIndex"].as_str().and_then(|x| u64::from_str_radix(x.trim_start_matches("0x"), 16).ok()).unwrap_or(u64::MAX);
+            idx < ti
+                && r["logs"].as_array().map_or(false, |ls| {
+                    ls.iter().any(|l| l["topics"].get(0).and_then(|x| x.as_str()).map_or(false, |x| x.eq_ignore_ascii_case(&t)))
+                })
+        })
+    })
+}
+
+/// (with-predecessor replayed, with-predecessor failed, without replayed, without failed) from (flag, exact) rows.
+pub fn split_by_flag(rows: &[(bool, bool)]) -> (u64, u64, u64, u64) {
+    let mut r = (0, 0, 0, 0);
+    for (f, e) in rows {
+        if *f {
+            r.0 += 1;
+            r.1 += !e as u64;
+        } else {
+            r.2 += 1;
+            r.3 += !e as u64;
+        }
+    }
+    r
+}
+
 pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, seed: u64, mode: String, out: PathBuf) -> anyhow::Result<()> {
-    anyhow::ensure!(mode == "trace-call" || mode == "trace-transaction" || mode == "trace-call-ctx", "mode must be trace-call, trace-call-ctx or trace-transaction");
+    anyhow::ensure!(mode == "trace-call" || mode == "trace-transaction" || mode == "trace-call-ctx" || mode == "trace-call-ctx-oracle", "mode must be trace-call, trace-call-ctx, trace-call-ctx-oracle or trace-transaction");
     let by_tx = mode == "trace-transaction";
+    let ctx = mode == "trace-call-ctx" || mode == "trace-call-ctx-oracle";
+    let oracle_mode = mode == "trace-call-ctx-oracle";
     let started = std::time::Instant::now();
     let started_at = chrono_now();
     anyhow::ensure!(end >= start, "end block before start block");
@@ -105,6 +141,7 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
     let (mut n, mut fail, mut status_diff, mut count_diff, mut trace_err) = (0u64, 0u64, 0u64, 0u64, 0u64);
     let mut nonzero_index = 0u64;
     let mut rows: Vec<(u64, bool)> = Vec::new();
+    let mut oracle_rows: Vec<(bool, bool)> = Vec::new();
     for (b, ti, h) in &txs {
         if *ti > 0 {
             nonzero_index += 1;
@@ -118,7 +155,7 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
             "from": tx["from"], "to": tx["to"], "gas": tx["gas"], "value": tx["value"], "data": tx["input"],
         });
         let mut cfg = serde_json::json!({"tracer": "callTracer", "tracerConfig": {"withLog": true}});
-        if mode == "trace-call-ctx" {
+        if ctx {
             let hd = raw(&p, "eth_getBlockByNumber", serde_json::json!([format!("0x{:x}", b), false])).await?;
             cfg["blockOverrides"] = block_override(&hd);
         }
@@ -153,12 +190,17 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
             }
         }
         rows.push((*ti, fail == fail_before));
+        if oracle_mode {
+            let brc = raw(&p, "eth_getBlockReceipts", serde_json::json!([format!("0x{:x}", b)])).await?;
+            oracle_rows.push((has_oracle_predecessor(&brc, *ti), fail == fail_before));
+        }
     }
     let (zero_n, zero_fail, nonzero_n, nonzero_fail) = split_by_index(&rows);
     let per_tx: Vec<serde_json::Value> = rows.iter().map(|(i, e)| serde_json::json!({"tx_index": i, "exact": e})).collect();
     let last = end;
+    let (o_n, o_fail, no_n, no_fail) = split_by_flag(&oracle_rows);
     let fail_key = if by_tx { "exact_fail_count_trace_transaction" } else { "exact_fail_count" };
-    let v = serde_json::json!({
+    let mut v = serde_json::json!({
         fail_key: fail,
         "mode": mode,
         "nonzero_tx_index_count": nonzero_index,
@@ -188,6 +230,12 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
             ],
         }
     });
+    if oracle_mode {
+        v["exact_fail_count_oracle_predecessor"] = o_fail.into();
+        v["replayed_n_oracle_predecessor"] = o_n.into();
+        v["exact_fail_count_no_oracle_predecessor"] = no_fail.into();
+        v["replayed_n_no_oracle_predecessor"] = no_n.into();
+    }
     std::fs::write(&out, serde_json::to_string_pretty(&v)? + "\n")?;
     Ok(())
 }
@@ -230,6 +278,24 @@ mod tests {
     fn splits_by_index() {
         assert_eq!(split_by_index(&[(0, true), (0, false), (3, false), (5, true), (7, false)]), (2, 1, 3, 2));
         assert_eq!(split_by_index(&[]), (0, 0, 0, 0));
+    }
+
+    #[test]
+    fn oracle_predecessor_flag() {
+        let t = answer_updated_topic();
+        let b = serde_json::json!([
+            {"transactionIndex": "0x0", "logs": [{"topics": [t.to_uppercase().replace("0X", "0x")]}]},
+            {"transactionIndex": "0x1", "logs": [{"topics": ["0xabc"]}]},
+            {"transactionIndex": "0x2", "logs": []}
+        ]);
+        assert!(has_oracle_predecessor(&b, 1));
+        assert!(!has_oracle_predecessor(&b, 0));
+        assert!(!has_oracle_predecessor(&serde_json::json!(null), 5));
+    }
+
+    #[test]
+    fn splits_by_flag() {
+        assert_eq!(split_by_flag(&[(true, false), (true, true), (false, false)]), (2, 1, 1, 1));
     }
 
     #[test]

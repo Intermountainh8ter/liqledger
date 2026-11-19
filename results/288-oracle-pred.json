@@ -1,0 +1,419 @@
+{
+  "exact_fail_count": 17,
+  "exact_fail_count_index_nonzero": 17,
+  "exact_fail_count_index_zero": 0,
+  "exact_fail_count_no_oracle_predecessor": 8,
+  "exact_fail_count_oracle_predecessor": 9,
+  "exact_match_count": 78,
+  "first_block": 23550000,
+  "last_block": 23550999,
+  "liq_count_diff_count": 17,
+  "liquidation_txs_in_window": 95,
+  "max_txs": 100,
+  "mode": "trace-call-ctx-oracle",
+  "nonzero_tx_index_count": 88,
+  "per_tx": [
+    {
+      "exact": true,
+      "tx_index": 0
+    },
+    {
+      "exact": true,
+      "tx_index": 8
+    },
+    {
+      "exact": true,
+      "tx_index": 14
+    },
+    {
+      "exact": true,
+      "tx_index": 23
+    },
+    {
+      "exact": true,
+      "tx_index": 385
+    },
+    {
+      "exact": true,
+      "tx_index": 1
+    },
+    {
+      "exact": true,
+      "tx_index": 14
+    },
+    {
+      "exact": true,
+      "tx_index": 15
+    },
+    {
+      "exact": false,
+      "tx_index": 56
+    },
+    {
+      "exact": true,
+      "tx_index": 16
+    },
+    {
+      "exact": true,
+      "tx_index": 12
+    },
+    {
+      "exact": true,
+      "tx_index": 2
+    },
+    {
+      "exact": true,
+      "tx_index": 7
+    },
+    {
+      "exact": true,
+      "tx_index": 8
+    },
+    {
+      "exact": true,
+      "tx_index": 1
+    },
+    {
+      "exact": true,
+      "tx_index": 110
+    },
+    {
+      "exact": true,
+      "tx_index": 5
+    },
+    {
+      "exact": true,
+      "tx_index": 21
+    },
+    {
+      "exact": true,
+      "tx_index": 7
+    },
+    {
+      "exact": true,
+      "tx_index": 1
+    },
+    {
+      "exact": false,
+      "tx_index": 4
+    },
+    {
+      "exact": true,
+      "tx_index": 3
+    },
+    {
+      "exact": true,
+      "tx_index": 8
+    },
+    {
+      "exact": true,
+      "tx_index": 25
+    },
+    {
+      "exact": true,
+      "tx_index": 61
+    },
+    {
+      "exact": true,
+      "tx_index": 186
+    },
+    {
+      "exact": true,
+      "tx_index": 0
+    },
+    {
+      "exact": true,
+      "tx_index": 3
+    },
+    {
+      "exact": true,
+      "tx_index": 1
+    },
+    {
+      "exact": true,
+      "tx_index": 69
+    },
+    {
+      "exact": false,
+      "tx_index": 13
+    },
+    {
+      "exact": false,
+      "tx_index": 72
+    },
+    {
+      "exact": true,
+      "tx_index": 0
+    },
+    {
+      "exact": true,
+      "tx_index": 13
+    },
+    {
+      "exact": true,
+      "tx_index": 49
+    },
+    {
+      "exact": false,
+      "tx_index": 57
+    },
+    {
+      "exact": false,
+      "tx_index": 17
+    },
+    {
+      "exact": true,
+      "tx_index": 4
+    },
+    {
+      "exact": true,
+      "tx_index": 20
+    },
+    {
+      "exact": true,
+      "tx_index": 14
+    },
+    {
+      "exact": true,
+      "tx_index": 44
+    },
+    {
+      "exact": true,
+      "tx_index": 267
+    },
+    {
+      "exact": true,
+      "tx_index": 0
+    },
+    {
+      "exact": true,
+      "tx_index": 354
+    },
+    {
+      "exact": true,
+      "tx_index": 2
+    },
+    {
+      "exact": true,
+      "tx_index": 0
+    },
+    {
+      "exact": true,
+      "tx_index": 0
+    },
+    {
+      "exact": true,
+      "tx_index": 100
+    },
+    {
+      "exact": true,
+      "tx_index": 179
+    },
+    {
+      "exact": false,
+      "tx_index": 275
+    },
+    {
+      "exact": true,
+      "tx_index": 1
+    },
+    {
+      "exact": false,
+      "tx_index": 22
+    },
+    {
+      "exact": true,
+      "tx_index": 157
+    },
+    {
+      "exact": true,
+      "tx_index": 181
+    },
+    {
+      "exact": true,
+      "tx_index": 7
+    },
+    {
+      "exact": true,
+      "tx_index": 196
+    },
+    {
+      "exact": true,
+      "tx_index": 61
+    },
+    {
+      "exact": true,
+      "tx_index": 20
+    },
+    {
+      "exact": true,
+      "tx_index": 9
+    },
+    {
+      "exact": false,
+      "tx_index": 16
+    },
+    {
+      "exact": false,
+      "tx_index": 20
+    },
+    {
+      "exact": true,
+      "tx_index": 95
+    },
+    {
+      "exact": true,
+      "tx_index": 33
+    },
+    {
+      "exact": true,
+      "tx_index": 182
+    },
+    {
+      "exact": true,
+      "tx_index": 7
+    },
+    {
+      "exact": true,
+      "tx_index": 16
+    },
+    {
+      "exact": true,
+      "tx_index": 27
+    },
+    {
+      "exact": true,
+      "tx_index": 18
+    },
+    {
+      "exact": true,
+      "tx_index": 185
+    },
+    {
+      "exact": true,
+      "tx_index": 358
+    },
+    {
+      "exact": true,
+      "tx_index": 5
+    },
+    {
+      "exact": false,
+      "tx_index": 8
+    },
+    {
+      "exact": false,
+      "tx_index": 111
+    },
+    {
+      "exact": true,
+      "tx_index": 13
+    },
+    {
+      "exact": false,
+      "tx_index": 31
+    },
+    {
+      "exact": false,
+      "tx_index": 190
+    },
+    {
+      "exact": true,
+      "tx_index": 16
+    },
+    {
+      "exact": true,
+      "tx_index": 108
+    },
+    {
+      "exact": true,
+      "tx_index": 48
+    },
+    {
+      "exact": false,
+      "tx_index": 10
+    },
+    {
+      "exact": true,
+      "tx_index": 47
+    },
+    {
+      "exact": true,
+      "tx_index": 154
+    },
+    {
+      "exact": false,
+      "tx_index": 53
+    },
+    {
+      "exact": true,
+      "tx_index": 0
+    },
+    {
+      "exact": true,
+      "tx_index": 27
+    },
+    {
+      "exact": true,
+      "tx_index": 83
+    },
+    {
+      "exact": true,
+      "tx_index": 31
+    },
+    {
+      "exact": false,
+      "tx_index": 8
+    },
+    {
+      "exact": true,
+      "tx_index": 241
+    },
+    {
+      "exact": true,
+      "tx_index": 45
+    },
+    {
+      "exact": true,
+      "tx_index": 307
+    },
+    {
+      "exact": true,
+      "tx_index": 213
+    },
+    {
+      "exact": true,
+      "tx_index": 13
+    },
+    {
+      "exact": true,
+      "tx_index": 179
+    },
+    {
+      "exact": true,
+      "tx_index": 22
+    }
+  ],
+  "provenance": {
+    "command": "tracereplay --chainstack-network ethereum --start-block 23550000 --end-block 23550999 --max-txs 100 --seed 7 --mode trace-call-ctx-oracle --out results/288-oracle-pred.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 23550000 to 23550999 (logs, receipts, debug_traceCall at parent block)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-19T20:07:35Z",
+    "wall_s": 19.030520523
+  },
+  "replayed_n": 95,
+  "replayed_n_index_nonzero": 88,
+  "replayed_n_index_zero": 7,
+  "replayed_n_no_oracle_predecessor": 52,
+  "replayed_n_oracle_predecessor": 43,
+  "status_diff_count": 17,
+  "trace_error_count": 0
+}
