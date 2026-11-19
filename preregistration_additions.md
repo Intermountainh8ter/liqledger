@@ -900,3 +900,14 @@ receipt for all up to 95 Aave V3 liquidation transactions that trace-call at the
 Metric: /exact_fail_count_trace_transaction. Expected: 0 (range 0 to 2) with replayed_n 95.
 Falsifier: exact_fail_count_trace_transaction of 3 or more, or replayed_n differing from 95.
 Limit: read-only; no addresses written. Unchanged rerun of tracereplay in trace-transaction mode.
+
+## 2026-11-19T19:54:00Z 285-tracecall-index proposal:9c5defd50c9ff0bdf3c3b6d890b9348cf0feb595404b841db9fb8bc057bd32f3
+
+Hypothesis: in trace-call mode at the parent block on blocks 23550000 to 23550999, every Aave V3 liquidation
+transaction at block index 0 (no same-block predecessors) replays exactly, so exact_fail_count_index_zero is 0, while
+mismatches concentrate at nonzero index (at least 70 of the 88 nonzero-index transactions).
+
+Metric: /exact_fail_count_index_zero. Expected: 0 (range 0 to 1) with index-zero replayed count above 0.
+Falsifier: exact_fail_count_index_zero of 2 or more, or an index-zero replayed count of 0 (sizing null).
+Limit: read-only; no addresses written. tracereplay now also writes one row per transaction (index, exact flag) and
+the split counts; the replay logic is unchanged.

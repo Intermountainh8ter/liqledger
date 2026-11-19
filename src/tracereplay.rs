@@ -56,6 +56,21 @@ pub fn exact(receipt_ok: bool, receipt_liq: usize, replay_ok: bool, replay_liq: 
     receipt_ok == replay_ok && receipt_liq == replay_liq
 }
 
+/// (index-zero replayed, index-zero failed, nonzero replayed, nonzero failed) from (tx index, exact) rows.
+pub fn split_by_index(rows: &[(u64, bool)]) -> (u64, u64, u64, u64) {
+    let mut r = (0, 0, 0, 0);
+    for (i, e) in rows {
+        if *i == 0 {
+            r.0 += 1;
+            r.1 += !e as u64;
+        } else {
+            r.2 += 1;
+            r.3 += !e as u64;
+        }
+    }
+    r
+}
+
 pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, seed: u64, mode: String, out: PathBuf) -> anyhow::Result<()> {
     anyhow::ensure!(mode == "trace-call" || mode == "trace-transaction", "mode must be trace-call or trace-transaction");
     let by_tx = mode == "trace-transaction";
@@ -81,6 +96,7 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
     txs.truncate(max_txs);
     let (mut n, mut fail, mut status_diff, mut count_diff, mut trace_err) = (0u64, 0u64, 0u64, 0u64, 0u64);
     let mut nonzero_index = 0u64;
+    let mut rows: Vec<(u64, bool)> = Vec::new();
     for (b, ti, h) in &txs {
         if *ti > 0 {
             nonzero_index += 1;
@@ -100,6 +116,7 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
             raw(&p, "debug_traceCall", serde_json::json!([call, format!("0x{:x}", b - 1), cfg])).await
         };
         n += 1;
+        let fail_before = fail;
         match tr {
             Ok(t) => {
                 let ok = t["error"].is_null();
@@ -123,7 +140,10 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
                 fail += 1;
             }
         }
+        rows.push((*ti, fail == fail_before));
     }
+    let (zero_n, zero_fail, nonzero_n, nonzero_fail) = split_by_index(&rows);
+    let per_tx: Vec<serde_json::Value> = rows.iter().map(|(i, e)| serde_json::json!({"tx_index": i, "exact": e})).collect();
     let last = end;
     let fail_key = if by_tx { "exact_fail_count_trace_transaction" } else { "exact_fail_count" };
     let v = serde_json::json!({
@@ -131,6 +151,11 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
         "mode": mode,
         "nonzero_tx_index_count": nonzero_index,
         "replayed_n": n,
+        "exact_fail_count_index_zero": zero_fail,
+        "replayed_n_index_zero": zero_n,
+        "exact_fail_count_index_nonzero": nonzero_fail,
+        "replayed_n_index_nonzero": nonzero_n,
+        "per_tx": per_tx,
         "exact_match_count": n - fail,
         "status_diff_count": status_diff,
         "liq_count_diff_count": count_diff,
@@ -178,6 +203,12 @@ mod tests {
     async fn rejects_unknown_mode() {
         let r = tracereplay("ethereum".into(), 2, 1, 1, 7, "bogus".into(), PathBuf::from("/nonexistent/x.json")).await;
         assert!(r.unwrap_err().to_string().contains("mode must be"));
+    }
+
+    #[test]
+    fn splits_by_index() {
+        assert_eq!(split_by_index(&[(0, true), (0, false), (3, false), (5, true), (7, false)]), (2, 1, 3, 2));
+        assert_eq!(split_by_index(&[]), (0, 0, 0, 0));
     }
 
     #[test]
