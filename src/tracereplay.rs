@@ -143,6 +143,7 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
     let mut nonzero_index = 0u64;
     let mut rows: Vec<(u64, bool)> = Vec::new();
     let mut oracle_rows: Vec<(bool, bool)> = Vec::new();
+    let mut details: Vec<serde_json::Value> = Vec::new();
     for (b, ti, h) in &txs {
         if *ti > 0 {
             nonzero_index += 1;
@@ -170,6 +171,10 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
         };
         n += 1;
         let fail_before = fail;
+        let mut detail = serde_json::json!({
+            "landed_status_ok": r_ok, "landed_liq_logs": r_liq, "landed_gas_used": rc["gasUsed"],
+            "replayed_status_ok": null, "replayed_liq_logs": null, "replayed_gas_used": null,
+        });
         match tr {
             Ok(t) => {
                 let ok = t["error"].is_null();
@@ -178,6 +183,9 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
                     trace_logs(&t, &mut ls);
                 }
                 let liq = count_liq(&serde_json::Value::Array(ls));
+                detail["replayed_status_ok"] = ok.into();
+                detail["replayed_liq_logs"] = liq.into();
+                detail["replayed_gas_used"] = t["gasUsed"].clone();
                 if ok != r_ok {
                     status_diff += 1;
                 }
@@ -194,13 +202,24 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
             }
         }
         rows.push((*ti, fail == fail_before));
+        details.push(detail);
         if oracle_mode {
             let brc = raw(&p, "eth_getBlockReceipts", serde_json::json!([format!("0x{:x}", b)])).await?;
             oracle_rows.push((has_oracle_predecessor(&brc, *ti), fail == fail_before));
         }
     }
     let (zero_n, zero_fail, nonzero_n, nonzero_fail) = split_by_index(&rows);
-    let per_tx: Vec<serde_json::Value> = rows.iter().map(|(i, e)| serde_json::json!({"tx_index": i, "exact": e})).collect();
+    let per_tx: Vec<serde_json::Value> = rows
+        .iter()
+        .zip(details)
+        .map(|((i, e), d)| {
+            let mut row = serde_json::json!({"tx_index": i, "exact": e});
+            if let (Some(r), Some(d)) = (row.as_object_mut(), d.as_object()) {
+                r.extend(d.clone());
+            }
+            row
+        })
+        .collect();
     let last = end;
     let (o_n, o_fail, no_n, no_fail) = split_by_flag(&oracle_rows);
     let fail_key = if by_tx { "exact_fail_count_trace_transaction" } else { "exact_fail_count" };
@@ -217,6 +236,7 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
         "exact_match_count": n - fail,
         "status_diff_count": status_diff,
         "liq_count_diff_count": count_diff,
+        "log_count_diff_count": count_diff,
         "trace_error_count": trace_err,
         "liquidation_txs_in_window": liq_txs_in_window,
         "first_block": start,

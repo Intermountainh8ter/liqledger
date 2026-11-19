@@ -953,3 +953,13 @@ exact_fail_count_txindex of 0 with replayed_n of at least 50.
 Metric: /exact_fail_count_txindex. Expected: 0 (range 0 to 0), valid only if /replayed_n is at least 50.
 Falsifier: exact_fail_count_txindex of 1 or more with replayed_n at least 50; replayed_n below 50 makes the test void.
 Limit: read-only; no addresses written. Existing mode, no code change.
+
+## 2026-11-19T20:25:29Z 293-txindex-diff proposal:c26cba261885fb69dc74bf5f12084cd51c3b666eef19ebcc608f237bcdc932fb
+
+Hypothesis: in window 23821000 to 23821999 under trace-call-txindex mode, the mismatching transactions differ in
+liquidation log count and not in execution status, so status_diff_count is 0 while log_count_diff_count is at least 1.
+
+Metric: /log_count_diff_count. Expected: 1 (range 1 to 1), with status_diff_count of 0.
+Falsifier: status_diff_count of 1 or more among the mismatching rows, or log_count_diff_count of 0 with
+exact_fail_count_txindex of 1 or more.
+Limit: read-only; no addresses written. per_tx rows gain landed and replayed log counts, status and gas used.
