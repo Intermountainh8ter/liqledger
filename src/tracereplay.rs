@@ -166,7 +166,7 @@ pub fn split_by_flag(rows: &[(bool, bool)]) -> (u64, u64, u64, u64) {
     r
 }
 
-pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, seed: u64, mode: String, out: PathBuf) -> anyhow::Result<()> {
+pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, seed: u64, mode: String, summary_only: bool, out: PathBuf) -> anyhow::Result<()> {
     anyhow::ensure!(mode == "trace-call" || mode == "trace-transaction" || mode == "trace-call-ctx" || mode == "trace-call-ctx-oracle" || mode == "trace-call-txindex" || mode == "trace-call-txindex-calldiff", "mode must be trace-call, trace-call-ctx, trace-call-ctx-oracle, trace-call-txindex, trace-call-txindex-calldiff or trace-transaction");
     let by_tx = mode == "trace-transaction";
     let calldiff = mode == "trace-call-txindex-calldiff";
@@ -310,6 +310,7 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
             row
         })
         .collect();
+    let per_tx = if summary_only { cap_failing_rows(per_tx, SUMMARY_ROW_CAP) } else { per_tx };
     let last = end;
     let (o_n, o_fail, no_n, no_fail) = split_by_flag(&oracle_rows);
     let fail_key = if by_tx { "exact_fail_count_trace_transaction" } else { "exact_fail_count" };
@@ -335,7 +336,7 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
         "provenance": {
             "started_at": started_at,
             "seeds": [seed],
-            "command": format!("tracereplay --chainstack-network {network} --start-block {start} --end-block {end} --max-txs {max_txs} --seed {seed} --mode {mode} --out {}", out.display()),
+            "command": format!("tracereplay --chainstack-network {network} --start-block {start} --end-block {end} --max-txs {max_txs} --seed {seed} --mode {mode}{} --out {}", if summary_only { " --summary-only" } else { "" }, out.display()),
             "hardware": format!("{} on {} logical cpus", std::env::consts::ARCH, std::thread::available_parallelism().map(|x| x.get()).unwrap_or(1)),
             "wall_s": started.elapsed().as_secs_f64(),
             "data_sources": [
@@ -366,8 +367,23 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
     Ok(())
 }
 
+const SUMMARY_ROW_CAP: usize = 10;
+
+/// Keep only rows whose `exact` is false, at most `cap` of them.
+fn cap_failing_rows(rows: Vec<serde_json::Value>, cap: usize) -> Vec<serde_json::Value> {
+    rows.into_iter().filter(|r| r["exact"] == false).take(cap).collect()
+}
+
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn cap_failing_rows_keeps_only_capped_failures() {
+        let rows: Vec<_> = (0..30).map(|i| serde_json::json!({"tx_index": i, "exact": i % 2 == 0})).collect();
+        let kept = super::cap_failing_rows(rows, 10);
+        assert_eq!(kept.len(), 10);
+        assert!(kept.iter().all(|r| r["exact"] == false));
+    }
+
     use super::*;
 
     #[test]
@@ -379,7 +395,7 @@ mod tests {
 
     #[tokio::test]
     async fn accepts_txindex_mode_name() {
-        let r = tracereplay("none".into(), 2, 1, 1, 7, "trace-call-txindex".into(), "/tmp/x.json".into()).await;
+        let r = tracereplay("none".into(), 2, 1, 1, 7, "trace-call-txindex".into(), false, "/tmp/x.json".into()).await;
         assert!(!r.unwrap_err().to_string().contains("mode must be"));
     }
 
@@ -402,7 +418,7 @@ mod tests {
 
     #[tokio::test]
     async fn rejects_unknown_mode() {
-        let r = tracereplay("ethereum".into(), 2, 1, 1, 7, "bogus".into(), PathBuf::from("/nonexistent/x.json")).await;
+        let r = tracereplay("ethereum".into(), 2, 1, 1, 7, "bogus".into(), false, PathBuf::from("/nonexistent/x.json")).await;
         assert!(r.unwrap_err().to_string().contains("mode must be"));
     }
 

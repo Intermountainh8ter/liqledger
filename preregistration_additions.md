@@ -984,3 +984,13 @@ Metric: /divergence_value_only_count. Expected: 1 (range 1 to 1), with divergenc
 divergence_classified_count equal to exact_fail_count_txindex.
 Falsifier: divergence_value_only_count of 0 (target, selector or call type differs), or divergence_classified_count of 0.
 Limit: read-only; no addresses written. Existing calldiff mode gains classification fields.
+
+## 2026-11-19T20:45:26Z 298-txindex-summary proposal:daef0aab6a968bf7f0e0a3dd2694d71b6c2a6f5d9e142147b2b0c353b904a12f
+
+Hypothesis: in blocks 23725000 to 23729999 under trace-call-txindex with max-txs 100 and summary-only output,
+replayed_n is at least 50 and exact_fail_count_txindex is at most 3, so the txIndex replay mismatch rate stays at or
+below 3 percent as in the earlier windows (0 of 95 and 1 of 13).
+
+Metric: /exact_fail_count_txindex. Expected: at most 3 (range 0 to 3) with replayed_n at least 50.
+Falsifier: exact_fail_count_txindex of 4 or more, or replayed_n below 50 (vacuous run).
+Limit: read-only; no addresses written. New flag --summary-only keeps only mismatching per_tx rows, capped at 10.

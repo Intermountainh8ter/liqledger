@@ -444,6 +444,9 @@ enum Cmd {
         /// trace-call (parent block, default) or trace-transaction (same-block predecessors applied).
         #[arg(long, default_value = "trace-call")]
         mode: String,
+        /// Keep only mismatching per_tx rows, capped at 10.
+        #[arg(long)]
+        summary_only: bool,
         #[arg(long)]
         out: PathBuf,
     },
@@ -1514,7 +1517,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Stalestate4 { seed, n, out } => stalestate4::stalestate4(seed, n, out),
         Cmd::Denimdrift { rpc_env, post_start, window, max_touched, max_untouched, seed, out } => denimdrift::denimdrift(rpc_env, post_start, window, max_touched, max_untouched, seed, out).await,
         Cmd::Mainoraclereplayshift { chainstack_network, start, blocks, out } => mainoraclereplayshift::mainoraclereplayshift(chainstack_network, start, blocks, out).await,
-        Cmd::Tracereplay { chainstack_network, start_block, end_block, max_txs, seed, mode, out } => tracereplay::tracereplay(chainstack_network, start_block, end_block, max_txs, seed, mode, out).await,
+        Cmd::Tracereplay { chainstack_network, start_block, end_block, max_txs, seed, mode, summary_only, out } => tracereplay::tracereplay(chainstack_network, start_block, end_block, max_txs, seed, mode, summary_only, out).await,
         Cmd::Mainoraclereliq { chainstack_network, start, blocks, out } => mainoraclereliq::mainoraclereliq(chainstack_network, start, blocks, out).await,
         Cmd::Mainoraclespec { chainstack_network, start, blocks, out } => mainoraclespec::mainoraclespec(chainstack_network, start, blocks, out).await,
         Cmd::Mainoraclesametx { chainstack_network, start, blocks, out } => mainoraclesametx::mainoraclesametx(chainstack_network, start, blocks, out).await,
