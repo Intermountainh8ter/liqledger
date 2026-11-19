@@ -963,3 +963,14 @@ Metric: /log_count_diff_count. Expected: 1 (range 1 to 1), with status_diff_coun
 Falsifier: status_diff_count of 1 or more among the mismatching rows, or log_count_diff_count of 0 with
 exact_fail_count_txindex of 1 or more.
 Limit: read-only; no addresses written. per_tx rows gain landed and replayed log counts, status and gas used.
+
+## 2026-11-19T20:30:39Z 294-call-diff proposal:00559d2832450aeb2e2501c50903b8ff21471df81180b855aee185111e1b8057
+
+Hypothesis: in window 23821000 to 23821999 under mode trace-call-txindex-calldiff, every txIndex-replay mismatching
+transaction has a located first divergence in its call tree between the landed debug_traceTransaction (callTracer) and the
+txIndex traceCall replay, so divergence_located_count equals exact_fail_count_txindex.
+
+Metric: /divergence_located_count. Expected: 1 (range 1 to 1), with exact_fail_count_txindex 1 and replayed_n 13.
+Falsifier: divergence_located_count of 0 while exact_fail_count_txindex is 1 or more (call trees identical), or a trace error
+on the mismatching transaction.
+Limit: read-only; no addresses written. New mode trace-call-txindex-calldiff; other modes unchanged.

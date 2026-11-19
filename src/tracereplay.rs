@@ -71,6 +71,44 @@ pub fn split_by_index(rows: &[(u64, bool)]) -> (u64, u64, u64, u64) {
     r
 }
 
+/// Call frames in depth-first preorder as (depth, frame).
+fn flatten<'a>(f: &'a serde_json::Value, d: u64, out: &mut Vec<(u64, &'a serde_json::Value)>) {
+    out.push((d, f));
+    if let Some(c) = f["calls"].as_array() {
+        for x in c {
+            flatten(x, d + 1, out);
+        }
+    }
+}
+
+/// First call frame, in depth-first order, where two callTracer trees differ: (depth, ordinal, field name).
+/// Gas fields are ignored; no address or calldata is returned, only the name of the differing field.
+pub fn first_divergence(landed: &serde_json::Value, replay: &serde_json::Value) -> Option<(u64, usize, &'static str)> {
+    let (mut a, mut b) = (Vec::new(), Vec::new());
+    flatten(landed, 0, &mut a);
+    flatten(replay, 0, &mut b);
+    for (i, ((da, fa), (db, fb))) in a.iter().zip(b.iter()).enumerate() {
+        if da != db {
+            return Some((*da.min(db), i, "depth"));
+        }
+        for k in ["type", "from", "to", "input", "value", "error"] {
+            if fa[k] != fb[k] {
+                return Some((*da, i, match k { "type" => "type", "from" => "from", "to" => "to", "input" => "input", "value" => "value", _ => "error" }));
+            }
+        }
+        let n = |f: &serde_json::Value| f["logs"].as_array().map_or(0, |l| l.len());
+        if n(fa) != n(fb) {
+            return Some((*da, i, "log_count"));
+        }
+    }
+    if a.len() != b.len() {
+        let i = a.len().min(b.len());
+        let d = a.get(i).or(b.get(i)).map_or(0, |x| x.0);
+        return Some((d, i, "missing_call"));
+    }
+    None
+}
+
 /// Block override for debug_traceCall built from the landed block's header.
 fn block_override(h: &serde_json::Value) -> serde_json::Value {
     serde_json::json!({
@@ -114,9 +152,10 @@ pub fn split_by_flag(rows: &[(bool, bool)]) -> (u64, u64, u64, u64) {
 }
 
 pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, seed: u64, mode: String, out: PathBuf) -> anyhow::Result<()> {
-    anyhow::ensure!(mode == "trace-call" || mode == "trace-transaction" || mode == "trace-call-ctx" || mode == "trace-call-ctx-oracle" || mode == "trace-call-txindex", "mode must be trace-call, trace-call-ctx, trace-call-ctx-oracle, trace-call-txindex or trace-transaction");
+    anyhow::ensure!(mode == "trace-call" || mode == "trace-transaction" || mode == "trace-call-ctx" || mode == "trace-call-ctx-oracle" || mode == "trace-call-txindex" || mode == "trace-call-txindex-calldiff", "mode must be trace-call, trace-call-ctx, trace-call-ctx-oracle, trace-call-txindex, trace-call-txindex-calldiff or trace-transaction");
     let by_tx = mode == "trace-transaction";
-    let txindex_mode = mode == "trace-call-txindex";
+    let calldiff = mode == "trace-call-txindex-calldiff";
+    let txindex_mode = mode == "trace-call-txindex" || calldiff;
     let ctx = mode == "trace-call-ctx" || mode == "trace-call-ctx-oracle" || txindex_mode;
     let oracle_mode = mode == "trace-call-ctx-oracle";
     let started = std::time::Instant::now();
@@ -144,6 +183,7 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
     let mut rows: Vec<(u64, bool)> = Vec::new();
     let mut oracle_rows: Vec<(bool, bool)> = Vec::new();
     let mut details: Vec<serde_json::Value> = Vec::new();
+    let mut located = 0u64;
     for (b, ti, h) in &txs {
         if *ti > 0 {
             nonzero_index += 1;
@@ -178,6 +218,7 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
         match tr {
             Ok(t) => {
                 let ok = t["error"].is_null();
+                let mut mismatch = false;
                 let mut ls = Vec::new();
                 if ok {
                     trace_logs(&t, &mut ls);
@@ -194,6 +235,23 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
                 }
                 if !exact(r_ok, r_liq, ok, liq) {
                     fail += 1;
+                    mismatch = true;
+                }
+                if calldiff && mismatch {
+                    match raw(&p, "debug_traceTransaction", serde_json::json!([hs, {"tracer": "callTracer", "tracerConfig": {"withLog": true}}])).await {
+                        Ok(lt) => {
+                            if let Some((d, i, f)) = first_divergence(&lt, &t) {
+                                located += 1;
+                                detail["divergence"] = serde_json::json!({"depth": d, "ordinal": i, "field": f});
+                            } else {
+                                detail["divergence"] = serde_json::json!({"depth": null, "ordinal": null, "field": "none"});
+                            }
+                        }
+                        Err(_) => {
+                            trace_err += 1;
+                            detail["divergence"] = serde_json::json!({"depth": null, "ordinal": null, "field": "trace_error"});
+                        }
+                    }
                 }
             }
             Err(_) => {
@@ -264,6 +322,9 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
         // Supported means the node answered every request carrying the option without a transport or RPC error.
         v["txindex_supported"] = (trace_err == 0 && n > 0).into();
         v["exact_fail_count_txindex"] = fail.into();
+        if calldiff {
+            v["divergence_located_count"] = located.into();
+        }
     }
     std::fs::write(&out, serde_json::to_string_pretty(&v)? + "\n")?;
     Ok(())
@@ -331,6 +392,19 @@ mod tests {
     #[test]
     fn splits_by_flag() {
         assert_eq!(split_by_flag(&[(true, false), (true, true), (false, false)]), (2, 1, 1, 1));
+    }
+
+    #[test]
+    fn locates_first_divergence() {
+        let a = serde_json::json!({"type": "CALL", "to": "0x1", "calls": [{"type": "CALL", "to": "0x2"}, {"type": "CALL", "to": "0x3", "logs": [{}]}]});
+        assert_eq!(first_divergence(&a, &a), None);
+        let mut b = a.clone();
+        b["calls"][1]["logs"] = serde_json::json!([{}, {}]);
+        assert_eq!(first_divergence(&a, &b), Some((1, 2, "log_count")));
+        b["calls"][0]["to"] = "0x9".into();
+        assert_eq!(first_divergence(&a, &b), Some((1, 1, "to")));
+        let c = serde_json::json!({"type": "CALL", "to": "0x1", "calls": [{"type": "CALL", "to": "0x2"}]});
+        assert_eq!(first_divergence(&a, &c), Some((1, 2, "missing_call")));
     }
 
     #[test]
