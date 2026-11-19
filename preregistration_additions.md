@@ -994,3 +994,13 @@ below 3 percent as in the earlier windows (0 of 95 and 1 of 13).
 Metric: /exact_fail_count_txindex. Expected: at most 3 (range 0 to 3) with replayed_n at least 50.
 Falsifier: exact_fail_count_txindex of 4 or more, or replayed_n below 50 (vacuous run).
 Limit: read-only; no addresses written. New flag --summary-only keeps only mismatching per_tx rows, capped at 10.
+
+## 2026-11-19T20:54:34Z 300-txindex-stress proposal:52085111f73bfb8fe8bd7df042fe1e2070c392e4272b3f9f03f1d28306da17f1
+
+Hypothesis: in blocks 23549000 to 23553999 under trace-call-txindex with max-txs 100 and summary-only output,
+replayed_n is at least 50 and exact_fail_count_txindex is at most 3, so the txIndex replay mismatch rate stays at or
+below 3 percent in a dense stress window.
+
+Metric: /exact_fail_count_txindex. Expected: at most 3 (range 0 to 3) with replayed_n at least 50.
+Falsifier: exact_fail_count_txindex of 4 or more, or replayed_n below 50 (vacuous run).
+Limit: read-only; no code change; uses the existing --summary-only flag.
