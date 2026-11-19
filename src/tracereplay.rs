@@ -114,9 +114,10 @@ pub fn split_by_flag(rows: &[(bool, bool)]) -> (u64, u64, u64, u64) {
 }
 
 pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, seed: u64, mode: String, out: PathBuf) -> anyhow::Result<()> {
-    anyhow::ensure!(mode == "trace-call" || mode == "trace-transaction" || mode == "trace-call-ctx" || mode == "trace-call-ctx-oracle", "mode must be trace-call, trace-call-ctx, trace-call-ctx-oracle or trace-transaction");
+    anyhow::ensure!(mode == "trace-call" || mode == "trace-transaction" || mode == "trace-call-ctx" || mode == "trace-call-ctx-oracle" || mode == "trace-call-txindex", "mode must be trace-call, trace-call-ctx, trace-call-ctx-oracle, trace-call-txindex or trace-transaction");
     let by_tx = mode == "trace-transaction";
-    let ctx = mode == "trace-call-ctx" || mode == "trace-call-ctx-oracle";
+    let txindex_mode = mode == "trace-call-txindex";
+    let ctx = mode == "trace-call-ctx" || mode == "trace-call-ctx-oracle" || txindex_mode;
     let oracle_mode = mode == "trace-call-ctx-oracle";
     let started = std::time::Instant::now();
     let started_at = chrono_now();
@@ -159,7 +160,10 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
             let hd = raw(&p, "eth_getBlockByNumber", serde_json::json!([format!("0x{:x}", b), false])).await?;
             cfg["blockOverrides"] = block_override(&hd);
         }
-        let tr = if by_tx {
+        let tr = if txindex_mode {
+            cfg["txIndex"] = serde_json::json!(format!("0x{:x}", ti));
+            raw(&p, "debug_traceCall", serde_json::json!([call, format!("0x{:x}", b), cfg])).await
+        } else if by_tx {
             raw(&p, "debug_traceTransaction", serde_json::json!([hs, cfg])).await
         } else {
             raw(&p, "debug_traceCall", serde_json::json!([call, format!("0x{:x}", b - 1), cfg])).await
@@ -236,6 +240,11 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
         v["exact_fail_count_no_oracle_predecessor"] = no_fail.into();
         v["replayed_n_no_oracle_predecessor"] = no_n.into();
     }
+    if txindex_mode {
+        // Supported means the node answered every request carrying the option without a transport or RPC error.
+        v["txindex_supported"] = (trace_err == 0 && n > 0).into();
+        v["exact_fail_count_txindex"] = fail.into();
+    }
     std::fs::write(&out, serde_json::to_string_pretty(&v)? + "\n")?;
     Ok(())
 }
@@ -249,6 +258,12 @@ mod tests {
         let l = serde_json::json!([{"topics": [format!("{:#x}", LiquidationCall::SIGNATURE_HASH).to_uppercase().replace("0X", "0x")]}, {"topics": ["0xabc"]}, {"topics": []}]);
         assert_eq!(count_liq(&l), 1);
         assert_eq!(count_liq(&serde_json::json!(null)), 0);
+    }
+
+    #[tokio::test]
+    async fn accepts_txindex_mode_name() {
+        let r = tracereplay("none".into(), 2, 1, 1, 7, "trace-call-txindex".into(), "/tmp/x.json".into()).await;
+        assert!(!r.unwrap_err().to_string().contains("mode must be"));
     }
 
     #[test]

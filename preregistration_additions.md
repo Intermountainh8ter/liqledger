@@ -934,3 +934,13 @@ Falsifier: exact_fail_count_oracle_predecessor of 8 or fewer, or a mismatch rate
 higher than the rate without one.
 Limit: read-only; no addresses written. New mode trace-call-ctx-oracle replays as trace-call-ctx and adds the flag
 from eth_getBlockReceipts; the replay logic is unchanged.
+
+## 2026-11-19T20:14:11Z 290-txindex proposal:1db44ad53e07bb4a9066076d7efaace8397bbd8f9a4bf0dde57d8424137733cc
+
+Hypothesis: if the node accepts the TxIndex option in the debug_traceCall config, tracing at the landed transaction's
+index (same-block predecessors applied, header fields from the landed block) leaves at most 8 exact mismatches among the
+replayed transactions in blocks 23550000 to 23550999, down from 17 of 95 in result 288.
+
+Metric: /exact_fail_count_txindex (with /txindex_supported). Expected: at most 8 (range 0 to 8) when /txindex_supported is true.
+Falsifier: /txindex_supported is false, or exact_fail_count_txindex of 17 or more with replayed_n of at least 90.
+Limit: read-only; no addresses written. New mode trace-call-txindex; other modes unchanged.
