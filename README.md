@@ -344,3 +344,7 @@ Source: `results/277-tracereplay.json`, blocks 23543616 to 23544615. The pinned 
 ### Trace replay, stress-day window
 
 Source: `results/279-tracereplay-stress.json`, blocks 23549000 to 23549999 (510 liquidation transactions in the window, first 50 replayed with `debug_traceCall` at the parent block, same-block predecessors not applied). 43 of 50 replays diverged from the receipt; 7 matched exactly. Trace errors: 0.
+
+### Trace replay with same-block predecessors applied
+
+Source: `results/280-tracereplay-predecessors.json`, blocks 23549000 to 23549999, `debug_traceTransaction`. Of 50 replayed Aave V3 liquidation transactions, exact_fail_count_trace_transaction is 0 (exact_match_count 50); 48 of the 50 sat at a nonzero transaction index. The same window replayed with `debug_traceCall` at the parent block gave 43 divergences (`results/279-tracereplay-stress.json`).

@@ -870,3 +870,13 @@ blocks 23549000 to 23549999, because same-block predecessors are not applied.
 Metric: /exact_fail_count. Expected: increases from 0 to at least 5 (range 5 to 50), with replayed_n above 0.
 Falsifier: replayed_n of at least 20 with exact_fail_count below 5 refutes it; replayed_n of 0 is a sizing null that does not test it.
 Limit: read-only; no addresses written. Unchanged rerun of the tracereplay subcommand.
+
+## 2026-11-19T19:35:02Z tracereplay-predecessors proposal:279f6d8efd1583173170bc0cf6ee47be71f7bff945d79324a4d01c6afc51e0d7
+
+Hypothesis: with same-block predecessors applied (debug_traceTransaction), at most 10 of the same 50 Aave V3
+liquidation transactions in blocks 23549000 to 23549999 diverge from the receipt (status or summed LiquidationCall
+log count), versus 43 with debug_traceCall at the parent block.
+
+Metric: /exact_fail_count_trace_transaction. Expected: at most 10 of 50 (range 0 to 10).
+Falsifier: exact_fail_count_trace_transaction above 10 with replayed_n of 50; a trace error on most transactions is a null that does not test it.
+Limit: read-only (debug_traceTransaction with the callTracer); no addresses written. New --mode trace-transaction on tracereplay.

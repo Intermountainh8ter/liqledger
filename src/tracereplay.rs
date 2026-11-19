@@ -56,7 +56,9 @@ pub fn exact(receipt_ok: bool, receipt_liq: usize, replay_ok: bool, replay_liq: 
     receipt_ok == replay_ok && receipt_liq == replay_liq
 }
 
-pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, seed: u64, out: PathBuf) -> anyhow::Result<()> {
+pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, seed: u64, mode: String, out: PathBuf) -> anyhow::Result<()> {
+    anyhow::ensure!(mode == "trace-call" || mode == "trace-transaction", "mode must be trace-call or trace-transaction");
+    let by_tx = mode == "trace-transaction";
     let started = std::time::Instant::now();
     let started_at = chrono_now();
     anyhow::ensure!(end >= start, "end block before start block");
@@ -78,7 +80,11 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
     let liq_txs_in_window = txs.len();
     txs.truncate(max_txs);
     let (mut n, mut fail, mut status_diff, mut count_diff, mut trace_err) = (0u64, 0u64, 0u64, 0u64, 0u64);
-    for (b, _, h) in &txs {
+    let mut nonzero_index = 0u64;
+    for (b, ti, h) in &txs {
+        if *ti > 0 {
+            nonzero_index += 1;
+        }
         let hs = format!("{h:#x}");
         let rc = raw(&p, "eth_getTransactionReceipt", serde_json::json!([hs])).await?;
         let tx = raw(&p, "eth_getTransactionByHash", serde_json::json!([hs])).await?;
@@ -88,7 +94,11 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
             "from": tx["from"], "to": tx["to"], "gas": tx["gas"], "value": tx["value"], "data": tx["input"],
         });
         let cfg = serde_json::json!({"tracer": "callTracer", "tracerConfig": {"withLog": true}});
-        let tr = raw(&p, "debug_traceCall", serde_json::json!([call, format!("0x{:x}", b - 1), cfg])).await;
+        let tr = if by_tx {
+            raw(&p, "debug_traceTransaction", serde_json::json!([hs, cfg])).await
+        } else {
+            raw(&p, "debug_traceCall", serde_json::json!([call, format!("0x{:x}", b - 1), cfg])).await
+        };
         n += 1;
         match tr {
             Ok(t) => {
@@ -115,8 +125,11 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
         }
     }
     let last = end;
+    let fail_key = if by_tx { "exact_fail_count_trace_transaction" } else { "exact_fail_count" };
     let v = serde_json::json!({
-        "exact_fail_count": fail,
+        fail_key: fail,
+        "mode": mode,
+        "nonzero_tx_index_count": nonzero_index,
         "replayed_n": n,
         "exact_match_count": n - fail,
         "status_diff_count": status_diff,
@@ -129,11 +142,11 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
         "provenance": {
             "started_at": started_at,
             "seeds": [seed],
-            "command": format!("tracereplay --chainstack-network {network} --start-block {start} --end-block {end} --max-txs {max_txs} --seed {seed} --out {}", out.display()),
+            "command": format!("tracereplay --chainstack-network {network} --start-block {start} --end-block {end} --max-txs {max_txs} --seed {seed} --mode {mode} --out {}", out.display()),
             "hardware": format!("{} on {} logical cpus", std::env::consts::ARCH, std::thread::available_parallelism().map(|x| x.get()).unwrap_or(1)),
             "wall_s": started.elapsed().as_secs_f64(),
             "data_sources": [
-                {"url": format!("chainstack:{network} blocks {start} to {last} (logs, receipts, debug_traceCall at parent block)"),
+                {"url": format!("chainstack:{network} blocks {start} to {last} (logs, receipts, {})", if by_tx { "debug_traceTransaction" } else { "debug_traceCall at parent block" }),
                  "license": "public chain data via the owner's Chainstack node"}
             ],
         }
@@ -159,6 +172,12 @@ mod tests {
         let mut o = Vec::new();
         trace_logs(&t, &mut o);
         assert_eq!(o.len(), 3);
+    }
+
+    #[tokio::test]
+    async fn rejects_unknown_mode() {
+        let r = tracereplay("ethereum".into(), 2, 1, 1, 7, "bogus".into(), PathBuf::from("/nonexistent/x.json")).await;
+        assert!(r.unwrap_err().to_string().contains("mode must be"));
     }
 
     #[test]
