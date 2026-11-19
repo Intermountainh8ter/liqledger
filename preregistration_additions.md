@@ -974,3 +974,13 @@ Metric: /divergence_located_count. Expected: 1 (range 1 to 1), with exact_fail_c
 Falsifier: divergence_located_count of 0 while exact_fail_count_txindex is 1 or more (call trees identical), or a trace error
 on the mismatching transaction.
 Limit: read-only; no addresses written. New mode trace-call-txindex-calldiff; other modes unchanged.
+
+## 2026-11-19T20:35:30Z 295-calldiff-class proposal:3638ac073b10536c633512c9cab064fecf75693efbbe3c57512058c606726988
+
+Hypothesis: in window 23821000 to 23821999 the single txIndex replay mismatch (located at depth 2, field value) is a
+value-only divergence: same call type, target and input selector in landed and replayed traces, differing only in value.
+
+Metric: /divergence_value_only_count. Expected: 1 (range 1 to 1), with divergence_target_or_selector_diff_count 0 and
+divergence_classified_count equal to exact_fail_count_txindex.
+Falsifier: divergence_value_only_count of 0 (target, selector or call type differs), or divergence_classified_count of 0.
+Limit: read-only; no addresses written. Existing calldiff mode gains classification fields.

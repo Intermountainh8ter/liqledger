@@ -109,6 +109,21 @@ pub fn first_divergence(landed: &serde_json::Value, replay: &serde_json::Value) 
     None
 }
 
+/// Classify the frame at `ordinal` in the two trees: (type, target and 4-byte selector match, value differs, frame emits logs).
+/// Returns booleans only; no address or calldata leaves the function.
+pub fn classify_divergence(landed: &serde_json::Value, replay: &serde_json::Value, ordinal: usize) -> Option<(bool, bool, bool, bool)> {
+    let (mut a, mut b) = (Vec::new(), Vec::new());
+    flatten(landed, 0, &mut a);
+    flatten(replay, 0, &mut b);
+    let (fa, fb) = (&a.get(ordinal)?.1, &b.get(ordinal)?.1);
+    let sel = |f: &serde_json::Value| f["input"].as_str().map(|s| s.chars().take(10).collect::<String>());
+    let same_type = fa["type"] == fb["type"];
+    let same_target_selector = fa["to"] == fb["to"] && sel(fa) == sel(fb);
+    let value_differs = fa["value"] != fb["value"];
+    let emits_logs = fa["logs"].as_array().map_or(false, |l| !l.is_empty()) || fb["logs"].as_array().map_or(false, |l| !l.is_empty());
+    Some((same_type, same_target_selector, value_differs, emits_logs))
+}
+
 /// Block override for debug_traceCall built from the landed block's header.
 fn block_override(h: &serde_json::Value) -> serde_json::Value {
     serde_json::json!({
@@ -184,6 +199,7 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
     let mut oracle_rows: Vec<(bool, bool)> = Vec::new();
     let mut details: Vec<serde_json::Value> = Vec::new();
     let mut located = 0u64;
+    let (mut classified, mut value_only, mut target_diff, mut emits_log) = (0u64, 0u64, 0u64, 0u64);
     for (b, ti, h) in &txs {
         if *ti > 0 {
             nonzero_index += 1;
@@ -243,6 +259,22 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
                             if let Some((d, i, f)) = first_divergence(&lt, &t) {
                                 located += 1;
                                 detail["divergence"] = serde_json::json!({"depth": d, "ordinal": i, "field": f});
+                                if let Some((st, sts, vd, el)) = classify_divergence(&lt, &t, i) {
+                                    classified += 1;
+                                    if st && sts && vd {
+                                        value_only += 1;
+                                    }
+                                    if !st || !sts {
+                                        target_diff += 1;
+                                    }
+                                    if el {
+                                        emits_log += 1;
+                                    }
+                                    detail["divergence"]["same_type"] = st.into();
+                                    detail["divergence"]["same_target_and_selector"] = sts.into();
+                                    detail["divergence"]["value_differs"] = vd.into();
+                                    detail["divergence"]["frame_emits_logs"] = el.into();
+                                }
                             } else {
                                 detail["divergence"] = serde_json::json!({"depth": null, "ordinal": null, "field": "none"});
                             }
@@ -324,6 +356,10 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
         v["exact_fail_count_txindex"] = fail.into();
         if calldiff {
             v["divergence_located_count"] = located.into();
+            v["divergence_classified_count"] = classified.into();
+            v["divergence_value_only_count"] = value_only.into();
+            v["divergence_target_or_selector_diff_count"] = target_diff.into();
+            v["divergence_frame_emits_logs_count"] = emits_log.into();
         }
     }
     std::fs::write(&out, serde_json::to_string_pretty(&v)? + "\n")?;
@@ -405,6 +441,17 @@ mod tests {
         assert_eq!(first_divergence(&a, &b), Some((1, 1, "to")));
         let c = serde_json::json!({"type": "CALL", "to": "0x1", "calls": [{"type": "CALL", "to": "0x2"}]});
         assert_eq!(first_divergence(&a, &c), Some((1, 2, "missing_call")));
+    }
+
+    #[test]
+    fn classifies_value_only_divergence() {
+        let a = serde_json::json!({"type": "CALL", "to": "0x1", "input": "0xaabbccdd00", "value": "0x0", "calls": [{"type": "CALL", "to": "0x2", "input": "0x11223344ff", "value": "0x1"}]});
+        let mut b = a.clone();
+        b["calls"][0]["value"] = "0x2".into();
+        assert_eq!(classify_divergence(&a, &b, 1), Some((true, true, true, false)));
+        b["calls"][0]["input"] = "0x99999999ff".into();
+        assert_eq!(classify_divergence(&a, &b, 1), Some((true, false, true, false)));
+        assert_eq!(classify_divergence(&a, &b, 5), None);
     }
 
     #[test]

@@ -1,0 +1,182 @@
+{
+  "divergence_classified_count": 1,
+  "divergence_frame_emits_logs_count": 0,
+  "divergence_located_count": 1,
+  "divergence_target_or_selector_diff_count": 0,
+  "divergence_value_only_count": 1,
+  "exact_fail_count": 1,
+  "exact_fail_count_index_nonzero": 1,
+  "exact_fail_count_index_zero": 0,
+  "exact_fail_count_txindex": 1,
+  "exact_match_count": 12,
+  "first_block": 23821000,
+  "last_block": 23821999,
+  "liq_count_diff_count": 1,
+  "liquidation_txs_in_window": 13,
+  "log_count_diff_count": 1,
+  "max_txs": 100,
+  "mode": "trace-call-txindex-calldiff",
+  "nonzero_tx_index_count": 13,
+  "per_tx": [
+    {
+      "exact": true,
+      "landed_gas_used": "0x23ecc9",
+      "landed_liq_logs": 4,
+      "landed_status_ok": true,
+      "replayed_gas_used": "0x23ecc9",
+      "replayed_liq_logs": 4,
+      "replayed_status_ok": true,
+      "tx_index": 4
+    },
+    {
+      "exact": true,
+      "landed_gas_used": "0x11ddaa",
+      "landed_liq_logs": 1,
+      "landed_status_ok": true,
+      "replayed_gas_used": "0x11ddaa",
+      "replayed_liq_logs": 1,
+      "replayed_status_ok": true,
+      "tx_index": 1
+    },
+    {
+      "exact": true,
+      "landed_gas_used": "0x3056bc",
+      "landed_liq_logs": 4,
+      "landed_status_ok": true,
+      "replayed_gas_used": "0x3056bc",
+      "replayed_liq_logs": 4,
+      "replayed_status_ok": true,
+      "tx_index": 3
+    },
+    {
+      "exact": true,
+      "landed_gas_used": "0x6a85b",
+      "landed_liq_logs": 1,
+      "landed_status_ok": true,
+      "replayed_gas_used": "0x6cb1f",
+      "replayed_liq_logs": 1,
+      "replayed_status_ok": true,
+      "tx_index": 25
+    },
+    {
+      "exact": true,
+      "landed_gas_used": "0x93e05",
+      "landed_liq_logs": 1,
+      "landed_status_ok": true,
+      "replayed_gas_used": "0x974b5",
+      "replayed_liq_logs": 1,
+      "replayed_status_ok": true,
+      "tx_index": 2
+    },
+    {
+      "exact": true,
+      "landed_gas_used": "0xb95bb",
+      "landed_liq_logs": 1,
+      "landed_status_ok": true,
+      "replayed_gas_used": "0xb95bb",
+      "replayed_liq_logs": 1,
+      "replayed_status_ok": true,
+      "tx_index": 11
+    },
+    {
+      "divergence": {
+        "depth": 2,
+        "field": "value",
+        "frame_emits_logs": false,
+        "ordinal": 147,
+        "same_target_and_selector": true,
+        "same_type": true,
+        "value_differs": true
+      },
+      "exact": false,
+      "landed_gas_used": "0x8ca8d9",
+      "landed_liq_logs": 15,
+      "landed_status_ok": true,
+      "replayed_gas_used": "0x8bf983",
+      "replayed_liq_logs": 16,
+      "replayed_status_ok": true,
+      "tx_index": 1
+    },
+    {
+      "exact": true,
+      "landed_gas_used": "0x97923",
+      "landed_liq_logs": 1,
+      "landed_status_ok": true,
+      "replayed_gas_used": "0x9a3b7",
+      "replayed_liq_logs": 1,
+      "replayed_status_ok": true,
+      "tx_index": 1
+    },
+    {
+      "exact": true,
+      "landed_gas_used": "0xc6374",
+      "landed_liq_logs": 1,
+      "landed_status_ok": true,
+      "replayed_gas_used": "0xc6374",
+      "replayed_liq_logs": 1,
+      "replayed_status_ok": true,
+      "tx_index": 6
+    },
+    {
+      "exact": true,
+      "landed_gas_used": "0xf9111",
+      "landed_liq_logs": 1,
+      "landed_status_ok": true,
+      "replayed_gas_used": "0xf9111",
+      "replayed_liq_logs": 1,
+      "replayed_status_ok": true,
+      "tx_index": 1
+    },
+    {
+      "exact": true,
+      "landed_gas_used": "0xd650e",
+      "landed_liq_logs": 1,
+      "landed_status_ok": true,
+      "replayed_gas_used": "0xd650e",
+      "replayed_liq_logs": 1,
+      "replayed_status_ok": true,
+      "tx_index": 9
+    },
+    {
+      "exact": true,
+      "landed_gas_used": "0x6dfd4",
+      "landed_liq_logs": 1,
+      "landed_status_ok": true,
+      "replayed_gas_used": "0x705b8",
+      "replayed_liq_logs": 1,
+      "replayed_status_ok": true,
+      "tx_index": 142
+    },
+    {
+      "exact": true,
+      "landed_gas_used": "0x1b0a5a",
+      "landed_liq_logs": 2,
+      "landed_status_ok": true,
+      "replayed_gas_used": "0x1b9952",
+      "replayed_liq_logs": 2,
+      "replayed_status_ok": true,
+      "tx_index": 23
+    }
+  ],
+  "provenance": {
+    "command": "tracereplay --chainstack-network ethereum --start-block 23821000 --end-block 23821999 --max-txs 100 --seed 7 --mode trace-call-txindex-calldiff --out results/295-calldiff-class.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 23821000 to 23821999 (logs, receipts, debug_traceCall at parent block)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-19T20:35:42Z",
+    "wall_s": 5.379564707
+  },
+  "replayed_n": 13,
+  "replayed_n_index_nonzero": 13,
+  "replayed_n_index_zero": 0,
+  "status_diff_count": 0,
+  "trace_error_count": 0,
+  "txindex_supported": true
+}
