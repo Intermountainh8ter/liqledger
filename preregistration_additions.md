@@ -911,3 +911,14 @@ Metric: /exact_fail_count_index_zero. Expected: 0 (range 0 to 1) with index-zero
 Falsifier: exact_fail_count_index_zero of 2 or more, or an index-zero replayed count of 0 (sizing null).
 Limit: read-only; no addresses written. tracereplay now also writes one row per transaction (index, exact flag) and
 the split counts; the replay logic is unchanged.
+
+## 2026-11-19T19:58:24Z 286-tracecall-ctx proposal:9a0663101b3ace91d2d880db1ccc876ea6b893b4885d2ffe2ebf4ab1dd0b8f1d
+
+Hypothesis: passing the landed block header fields (number, time, baseFee, coinbase, gasLimit, random) as the
+debug_traceCall block override makes index-zero replays match the receipt, so exact_fail_count_index_zero falls from 7
+of 7 in result 285 to at most 3 of 7 on the same blocks 23550000 to 23550999.
+
+Metric: /exact_fail_count_index_zero. Expected: decrease to at most 3 (range 0 to 3).
+Falsifier: exact_fail_count_index_zero of 4 or more of replayed_n_index_zero 7, or the node rejects the override
+(counted in trace_error_count) so no index-zero replay runs with it.
+Limit: read-only; no addresses written. New mode trace-call-ctx; other modes unchanged.

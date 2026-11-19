@@ -71,8 +71,16 @@ pub fn split_by_index(rows: &[(u64, bool)]) -> (u64, u64, u64, u64) {
     r
 }
 
+/// Block override for debug_traceCall built from the landed block's header.
+fn block_override(h: &serde_json::Value) -> serde_json::Value {
+    serde_json::json!({
+        "number": h["number"], "time": h["timestamp"], "baseFeePerGas": h["baseFeePerGas"],
+        "feeRecipient": h["miner"], "gasLimit": h["gasLimit"], "prevRandao": h["mixHash"],
+    })
+}
+
 pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, seed: u64, mode: String, out: PathBuf) -> anyhow::Result<()> {
-    anyhow::ensure!(mode == "trace-call" || mode == "trace-transaction", "mode must be trace-call or trace-transaction");
+    anyhow::ensure!(mode == "trace-call" || mode == "trace-transaction" || mode == "trace-call-ctx", "mode must be trace-call, trace-call-ctx or trace-transaction");
     let by_tx = mode == "trace-transaction";
     let started = std::time::Instant::now();
     let started_at = chrono_now();
@@ -109,7 +117,11 @@ pub async fn tracereplay(network: String, start: u64, end: u64, max_txs: usize, 
         let call = serde_json::json!({
             "from": tx["from"], "to": tx["to"], "gas": tx["gas"], "value": tx["value"], "data": tx["input"],
         });
-        let cfg = serde_json::json!({"tracer": "callTracer", "tracerConfig": {"withLog": true}});
+        let mut cfg = serde_json::json!({"tracer": "callTracer", "tracerConfig": {"withLog": true}});
+        if mode == "trace-call-ctx" {
+            let hd = raw(&p, "eth_getBlockByNumber", serde_json::json!([format!("0x{:x}", b), false])).await?;
+            cfg["blockOverrides"] = block_override(&hd);
+        }
         let tr = if by_tx {
             raw(&p, "debug_traceTransaction", serde_json::json!([hs, cfg])).await
         } else {
@@ -189,6 +201,15 @@ mod tests {
         let l = serde_json::json!([{"topics": [format!("{:#x}", LiquidationCall::SIGNATURE_HASH).to_uppercase().replace("0X", "0x")]}, {"topics": ["0xabc"]}, {"topics": []}]);
         assert_eq!(count_liq(&l), 1);
         assert_eq!(count_liq(&serde_json::json!(null)), 0);
+    }
+
+    #[test]
+    fn block_override_maps_header_fields() {
+        let h = serde_json::json!({"number": "0x1", "timestamp": "0x2", "baseFeePerGas": "0x3", "miner": "0x4", "gasLimit": "0x5", "mixHash": "0x6"});
+        let o = block_override(&h);
+        assert_eq!(o["time"], "0x2");
+        assert_eq!(o["feeRecipient"], "0x4");
+        assert_eq!(o["prevRandao"], "0x6");
     }
 
     #[test]
