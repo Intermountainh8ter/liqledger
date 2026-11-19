@@ -944,3 +944,12 @@ replayed transactions in blocks 23550000 to 23550999, down from 17 of 95 in resu
 Metric: /exact_fail_count_txindex (with /txindex_supported). Expected: at most 8 (range 0 to 8) when /txindex_supported is true.
 Falsifier: /txindex_supported is false, or exact_fail_count_txindex of 17 or more with replayed_n of at least 90.
 Limit: read-only; no addresses written. New mode trace-call-txindex; other modes unchanged.
+
+## 2026-11-19T20:21:56Z 292-txindex-window3 proposal:8b86bbabf8b7145098f5bfda9d66d8fee0bb589e5af53368be3ae121b625ae10
+
+Hypothesis: on blocks 23821000 to 23821999, trace-call-txindex replay of up to 100 landed liquidation transactions gives
+exact_fail_count_txindex of 0 with replayed_n of at least 50.
+
+Metric: /exact_fail_count_txindex. Expected: 0 (range 0 to 0), valid only if /replayed_n is at least 50.
+Falsifier: exact_fail_count_txindex of 1 or more with replayed_n at least 50; replayed_n below 50 makes the test void.
+Limit: read-only; no addresses written. Existing mode, no code change.
