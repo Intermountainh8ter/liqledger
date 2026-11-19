@@ -860,3 +860,13 @@ Falsifier: exact_fail_count below 5 with replayed_n of 50.
 Limit: read-only (eth_getLogs, eth_getTransactionReceipt, eth_getTransactionByHash, debug_traceCall with the callTracer
 at the parent block); no addresses written. Same-block predecessors are deliberately not applied, so divergence measures
 that omission, not a replay bug.
+
+## 2026-11-19T19:30:59Z tracereplay-stress proposal:6ebd7e9fb684fe359f9d215c2a817fe9e24a843a859f5737faad65b5baf1ea6d
+
+Hypothesis: re-executing landed Aave V3 LiquidationCall transactions with debug_traceCall at the parent block diverges
+from the receipt (status or summed LiquidationCall log count) for at least 5 of up to 50 replayed transactions in
+blocks 23549000 to 23549999, because same-block predecessors are not applied.
+
+Metric: /exact_fail_count. Expected: increases from 0 to at least 5 (range 5 to 50), with replayed_n above 0.
+Falsifier: replayed_n of at least 20 with exact_fail_count below 5 refutes it; replayed_n of 0 is a sizing null that does not test it.
+Limit: read-only; no addresses written. Unchanged rerun of the tracereplay subcommand.

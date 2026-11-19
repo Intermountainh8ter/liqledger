@@ -340,3 +340,7 @@ Source: `results/240-specsize.json`, Ethereum blocks 22800000 to 23199999. Among
 ### tracereplay (null: window held no liquidations)
 
 Source: `results/277-tracereplay.json`, blocks 23543616 to 23544615. The pinned window held 0 Aave V3 liquidation transactions, so replayed_n is 0 and exact_fail_count is 0; the pre-registered hypothesis (at least 5 of 50 diverge) is not tested by this run. A wider window is needed.
+
+### Trace replay, stress-day window
+
+Source: `results/279-tracereplay-stress.json`, blocks 23549000 to 23549999 (510 liquidation transactions in the window, first 50 replayed with `debug_traceCall` at the parent block, same-block predecessors not applied). 43 of 50 replays diverged from the receipt; 7 matched exactly. Trace errors: 0.

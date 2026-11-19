@@ -1,0 +1,27 @@
+{
+  "exact_fail_count": 43,
+  "exact_match_count": 7,
+  "first_block": 23549000,
+  "last_block": 23549999,
+  "liq_count_diff_count": 43,
+  "liquidation_txs_in_window": 510,
+  "max_txs": 50,
+  "provenance": {
+    "command": "tracereplay --chainstack-network ethereum --start-block 23549000 --end-block 23549999 --max-txs 50 --seed 7 --out results/279-tracereplay-stress.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 23549000 to 23549999 (logs, receipts, debug_traceCall at parent block)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-19T19:31:00Z",
+    "wall_s": 6.803938652
+  },
+  "replayed_n": 50,
+  "status_diff_count": 43,
+  "trace_error_count": 0
+}
