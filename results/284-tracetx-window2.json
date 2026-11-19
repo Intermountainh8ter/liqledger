@@ -1,0 +1,29 @@
+{
+  "exact_fail_count_trace_transaction": 0,
+  "exact_match_count": 95,
+  "first_block": 23550000,
+  "last_block": 23550999,
+  "liq_count_diff_count": 0,
+  "liquidation_txs_in_window": 95,
+  "max_txs": 100,
+  "mode": "trace-transaction",
+  "nonzero_tx_index_count": 88,
+  "provenance": {
+    "command": "tracereplay --chainstack-network ethereum --start-block 23550000 --end-block 23550999 --max-txs 100 --seed 7 --mode trace-transaction --out results/284-tracetx-window2.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 23550000 to 23550999 (logs, receipts, debug_traceTransaction)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-19T19:49:13Z",
+    "wall_s": 29.083108566
+  },
+  "replayed_n": 95,
+  "status_diff_count": 0,
+  "trace_error_count": 0
+}

@@ -890,3 +890,13 @@ to 100 transactions in blocks 23550000 to 23550999, as it did for 43 of 50 in bl
 Metric: /exact_fail_count. Expected: at least 50 of up to 100 replayed (mismatch share at least 0.50), with replayed_n above 0.
 Falsifier: replayed_n of at least 50 with exact_fail_count below half of replayed_n refutes it; replayed_n of 0 is a sizing null.
 Limit: read-only; no addresses written. Unchanged rerun of tracereplay in trace-call mode.
+
+## 2026-11-19T19:49:12Z 284-tracetx-window2 proposal:68484ab3f7f3eacf5a5a60d00871b1d9e4c0ceddb24328641993ac7f66ac095c
+
+Hypothesis: on blocks 23550000 to 23550999, trace-transaction re-execution (predecessors applied) matches the landed
+receipt for all up to 95 Aave V3 liquidation transactions that trace-call at the parent block failed on in 80 cases
+(result 282), so the paired gap is closed by predecessor state alone.
+
+Metric: /exact_fail_count_trace_transaction. Expected: 0 (range 0 to 2) with replayed_n 95.
+Falsifier: exact_fail_count_trace_transaction of 3 or more, or replayed_n differing from 95.
+Limit: read-only; no addresses written. Unchanged rerun of tracereplay in trace-transaction mode.
