@@ -880,3 +880,13 @@ log count), versus 43 with debug_traceCall at the parent block.
 Metric: /exact_fail_count_trace_transaction. Expected: at most 10 of 50 (range 0 to 10).
 Falsifier: exact_fail_count_trace_transaction above 10 with replayed_n of 50; a trace error on most transactions is a null that does not test it.
 Limit: read-only (debug_traceTransaction with the callTracer); no addresses written. New --mode trace-transaction on tracereplay.
+
+## 2026-11-19T19:43:01Z 282-tracecall-window2 proposal:7abc94e7430ac9ce656fb262c5c0060483d5a53ab39d534394c7f8b822ac8af7
+
+Hypothesis: replaying landed Aave V3 LiquidationCall transactions with debug_traceCall at the parent block, without
+same-block predecessors, diverges from the receipt (status or summed LiquidationCall log count) for at least 50% of up
+to 100 transactions in blocks 23550000 to 23550999, as it did for 43 of 50 in blocks 23549000 to 23549999.
+
+Metric: /exact_fail_count. Expected: at least 50 of up to 100 replayed (mismatch share at least 0.50), with replayed_n above 0.
+Falsifier: replayed_n of at least 50 with exact_fail_count below half of replayed_n refutes it; replayed_n of 0 is a sizing null.
+Limit: read-only; no addresses written. Unchanged rerun of tracereplay in trace-call mode.
