@@ -847,3 +847,16 @@ units), on a seventh disjoint range.
 Metric: /ranges/0/max_tail_spec_share. Expected: at most 0.05 (range 0.0 to 0.05).
 Falsifier: max_tail_spec_share above 0.05 with at least one non-abstaining cutoff having at least 20 tail txs, or all cutoffs abstaining so the metric is null.
 Limit: read-only getLogs; no traces, no addresses written. Unchanged rerun of the mainoraclespecsweep subcommand.
+
+## 2026-11-19T19:20:02Z tracereplay proposal:800ddc843394c95b216c23043c1a3f457e7190e98beca397e5a319826a019d92
+
+Hypothesis: replaying landed Aave V3 liquidation transactions on parent-block state without the earlier same-block
+transactions diverges from the receipt (status or LiquidationCall log count) for at least 10% of the first 50
+liquidations in blocks 23543616..23544615.
+
+Metric: /exact_fail_count (replays not matching the receipt). Expected: at least 5 of 50 (range 5 to 50).
+/exact_fail_count and /replayed_n are always written, even if replayed_n is below 50.
+Falsifier: exact_fail_count below 5 with replayed_n of 50.
+Limit: read-only (eth_getLogs, eth_getTransactionReceipt, eth_getTransactionByHash, debug_traceCall with the callTracer
+at the parent block); no addresses written. Same-block predecessors are deliberately not applied, so divergence measures
+that omission, not a replay bug.

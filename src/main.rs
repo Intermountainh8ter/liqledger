@@ -35,6 +35,7 @@ mod mainoraclesendercb;
 mod mainoraclesendershare;
 mod mainoracleupdatepair;
 mod mainoraclereliq;
+mod tracereplay;
 mod mainoraclereplayshift;
 mod mainoraclesametx;
 mod mainoraclespec;
@@ -425,6 +426,21 @@ enum Cmd {
         start: u64,
         #[arg(long)]
         blocks: u64,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Read-only trace replay of landed Aave V3 liquidations at parent-block state versus the receipt.
+    Tracereplay {
+        #[arg(long)]
+        chainstack_network: String,
+        #[arg(long)]
+        start_block: u64,
+        #[arg(long)]
+        end_block: u64,
+        #[arg(long)]
+        max_txs: usize,
+        #[arg(long)]
+        seed: u64,
         #[arg(long)]
         out: PathBuf,
     },
@@ -1495,6 +1511,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Stalestate4 { seed, n, out } => stalestate4::stalestate4(seed, n, out),
         Cmd::Denimdrift { rpc_env, post_start, window, max_touched, max_untouched, seed, out } => denimdrift::denimdrift(rpc_env, post_start, window, max_touched, max_untouched, seed, out).await,
         Cmd::Mainoraclereplayshift { chainstack_network, start, blocks, out } => mainoraclereplayshift::mainoraclereplayshift(chainstack_network, start, blocks, out).await,
+        Cmd::Tracereplay { chainstack_network, start_block, end_block, max_txs, seed, out } => tracereplay::tracereplay(chainstack_network, start_block, end_block, max_txs, seed, out).await,
         Cmd::Mainoraclereliq { chainstack_network, start, blocks, out } => mainoraclereliq::mainoraclereliq(chainstack_network, start, blocks, out).await,
         Cmd::Mainoraclespec { chainstack_network, start, blocks, out } => mainoraclespec::mainoraclespec(chainstack_network, start, blocks, out).await,
         Cmd::Mainoraclesametx { chainstack_network, start, blocks, out } => mainoraclesametx::mainoraclesametx(chainstack_network, start, blocks, out).await,
