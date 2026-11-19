@@ -1004,3 +1004,13 @@ below 3 percent in a dense stress window.
 Metric: /exact_fail_count_txindex. Expected: at most 3 (range 0 to 3) with replayed_n at least 50.
 Falsifier: exact_fail_count_txindex of 4 or more, or replayed_n below 50 (vacuous run).
 Limit: read-only; no code change; uses the existing --summary-only flag.
+
+## 2026-11-19T21:10:57Z 305-txindex-late proposal:43b7b22704d5fc94a194b8256665164b70932df353744781525167135f45fa5d
+
+Hypothesis: on Ethereum blocks 25500000 to 25504999, replaying landed liquidation transactions at their transaction
+index with traceCall reproduces the landed liquidation log count in at least 99 of every 100 replayed transactions
+(exact_fail_count_txindex at most 1 with replayed_n at least 50).
+
+Metric: /exact_fail_count_txindex. Expected: at most 1 (range 0 to 1) with replayed_n at least 50.
+Falsifier: exact_fail_count_txindex of 2 or more with replayed_n of at least 50, or replayed_n below 50 (vacuous, not supportive).
+Limit: read-only; no code change; existing --summary-only flag.
