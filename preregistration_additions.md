@@ -1234,3 +1234,11 @@ Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c87
 Metric: /landed_within_max_bonus_tx_count. Expected: at least 120 of 131 (range 120 to 131).
 Falsifier: a landed_within_max_bonus_tx_count below 120 of the 131 reverting transactions, or an unreadable count above 11.
 Limit: read-only eth_getLogs and eth_call at block N-1; the endpoint comes from the Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T21:45:24Z 339-v4bonusabove proposal:4a29a991aeecd67da25e37eeeb4f68f8249c7672f6ae84b1b6ab15f26801c52b
+
+Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe), for at least 1 of the 2 V4 liquidation transactions that result 338 counts above the configured maximum bonus, the landed bonus in basis points exceeds the maxLiquidationBonus read at the landing block N by no more than 100 bps, so the N-1 read of result 338 (oracle price and config key) explains that case.
+
+Metric: /above_max_explained_by_landing_block_tx_count. Expected: at least 1 of 2 (range 1 to 2).
+Falsifier: an above_max_explained_by_landing_block_tx_count equal to 0 of the 2 above-max transactions, or an above-max transaction set of a size other than 2 under the N-1 read.
+Limit: read-only eth_getLogs and eth_call at blocks N-1 and N; the endpoint comes from the Chainstack platform API at run time, never printed or written.
