@@ -1070,3 +1070,17 @@ Metric: /oracle_adjacent_share_zero_fee. Expected: at least 0.55 (range 0.55 to 
 Falsifier: oracle_adjacent_share_zero_fee below 0.55, or its Wilson upper bound below the paid-group share's Wilson lower bound.
 Limit: read-only eth_getLogs, eth_getTransactionReceipt and eth_getBlockByNumber; visible priority fee is a lower bound on the
 builder payment; any-feed adjacency; endpoint from the Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T19:41:23Z 319-v4updategap proposal:858136ac53ad867fc8cbe955db40a0268afc382d1dd9be321c9f7ba7cf9c0a75
+
+Hypothesis: among distinct Aave V4 liquidation transactions in Ethereum blocks 24500000 to 26209999 (address-book commit
+967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe) that land in a block with a Chainlink AnswerUpdated log at a lower transaction index
+(any feed, last such log), at least half land within 3 transaction positions after that log (distance 1 to 3), the backrun
+signature; the Wilson 95% lower bound of that share is at least 0.50.
+
+Metric: /liquidation_within_k_after_update_share (k = 3). Expected: at least 0.50 (range 0.5 to 1.0).
+Falsifier: the Wilson 95% lower bound of the share is below 0.50, or the update transaction index cannot be read from logs.
+Limit: read-only eth_getLogs; the update log is any Chainlink feed, not the position's own feed, and "Spoke oracle update" is read as
+this any-feed AnswerUpdated log, as in results 316 and 318; the denominator excludes liquidations with no preceding update in their
+block (counted separately); the liquidation index is that of the first V4 LiquidationCall log per transaction; the endpoint comes
+from the Chainstack platform API at run time, never printed or written.

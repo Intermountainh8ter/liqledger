@@ -1,0 +1,34 @@
+{
+  "address_book_commit": "967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe",
+  "blocks": 1710000,
+  "first_block": 24500000,
+  "k": 3,
+  "last_block": 26209999,
+  "liquidation_within_k_after_update_share": 0.7232142857142857,
+  "liquidations_with_preceding_update": 112,
+  "liquidations_within_k_after_update": 81,
+  "liquidations_without_preceding_update": 131,
+  "provenance": {
+    "command": "v4updategap --chainstack-network ethereum --start 24500000 --blocks 1710000 --address-book-commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe --k 3 --seed 42 --out results/319-v4updategap.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 24500000 to 26209999 (logs)"
+      },
+      {
+        "license": "MIT (bgd-labs aave-address-book)",
+        "url": "https://raw.githubusercontent.com/bgd-labs/aave-address-book/967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe/src/AaveV4Ethereum.sol"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      42
+    ],
+    "started_at": "2026-11-23T19:41:51Z",
+    "wall_s": 17.833586817
+  },
+  "spoke_count": 14,
+  "v4_liquidation_tx_count": 243,
+  "wilson_high": 0.7976234023931794,
+  "wilson_low": 0.6340004702052653
+}

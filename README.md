@@ -364,3 +364,7 @@ Source: `results/315-v4payment.json`, blocks 24500000 to 26209999. 243 distinct 
 ### v4oraclefee: oracle adjacency by priority fee (Aave V4)
 
 Source: `results/318-v4oraclefee.json`, blocks 24500000 to 26209999, 243 V4 liquidation transactions. Same-block Chainlink update (any feed) share among zero-priority-fee transactions: 0.613 [0.538, 0.682] (n=173); among paid transactions: 0.657 [0.540, 0.758] (n=70). The pre-registered threshold of at least 0.55 is met; the intervals overlap, so the data do not separate the two groups.
+
+### v4updategap: distance after the last same-block oracle update (Aave V4)
+
+Source: `results/319-v4updategap.json`, blocks 24500000 to 26209999, 243 V4 liquidation transactions. Of 112 landing after a Chainlink update (any feed) in the same block, 81 sit within 3 transaction positions after the last one: share 0.723 [0.634, 0.798] (Wilson). The pre-registered lower bound of at least 0.50 is met. 131 liquidations have no preceding update in their block and are not in the denominator.
