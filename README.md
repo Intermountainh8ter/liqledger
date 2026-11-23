@@ -384,3 +384,7 @@ Source: `results/322-v4revertflip.json`, blocks 24500000 to 26209999. Of 153 rep
 ### v4reexecpred: V4 re-execution with same-block predecessors applied (result 323)
 
 Source: `results/323-v4reexecpred.json`, blocks 24500000 to 26209999. Each of 243 distinct V4 liquidation transactions was replayed with debug_traceCall at the landed block with txIndex; 234 replayed and 9 did not. Among the 234, the ordered debtAmountRestored values differed from the landed events in 0.000 (Wilson 95% [0.000, 0.016]; 0 transactions), against 0.698 in result 320 without predecessors. The pre-registered upper bound of 0.40 held. Limit: the 9 failed replays are excluded.
+
+### v4dustrule: remaining debt after V4 liquidations (iteration 325)
+
+Source: `results/325-v4dustrule.json`, blocks 24500000 to 26209999. Of 243 V4 liquidation transactions, 243 were priced from the Spoke oracle at the landing block; 15 left nonzero debt valued below the documented 1000 USD dust threshold (hypothesis of at most 5: not supported), 86 left nonzero debt above it, and the rest left none.

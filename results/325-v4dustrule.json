@@ -1,0 +1,39 @@
+{
+  "abstain_tx_count": 0,
+  "address_book_commit": "967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe",
+  "blocks": 1710000,
+  "dust_rule_violation_count": 15,
+  "dust_threshold_value_1e26_units": "100000000000000000000000000000",
+  "first_block": 24500000,
+  "last_block": 26209999,
+  "nonzero_above_threshold_tx_count": 86,
+  "nonzero_below_threshold_tx_count": 15,
+  "priced_tx_count": 243,
+  "provenance": {
+    "command": "v4dustrule --chainstack-network ethereum --start 24500000 --blocks 1710000 --address-book-commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe --seed 42 --out results/325-v4dustrule.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 24500000 to 26209999 (logs, eth_call at landing block)"
+      },
+      {
+        "license": "MIT (bgd-labs aave-address-book)",
+        "url": "https://raw.githubusercontent.com/bgd-labs/aave-address-book/967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe/src/AaveV4Ethereum.sol"
+      },
+      {
+        "license": "official docs, dust rule read for the threshold definition only",
+        "url": "https://aave.com/docs/aave-v4/positions/liquidations"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      42
+    ],
+    "started_at": "2026-11-23T20:16:38Z",
+    "wall_s": 40.896016561
+  },
+  "spoke_count": 14,
+  "threshold_source": "documented 1000 USD (1e26 value units per USD), https://aave.com/docs/aave-v4/positions/liquidations",
+  "v4_liquidation_tx_count": 243,
+  "zero_remaining_tx_count": 142
+}

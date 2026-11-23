@@ -1137,3 +1137,16 @@ Metric: /reexec_amount_mismatch_share_with_predecessors. Expected: decrease to a
 Falsifier: a mismatch share whose Wilson 95% interval contains 0.6977 or lies above it.
 Limit: read-only eth_getLogs, eth_getTransactionByHash and debug_traceCall; replays that fail are counted separately and excluded from
 the denominator; the endpoint comes from the Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T20:16:00Z 325-v4dustrule proposal:02c22ad4c4c86160f7f063a4f6cd1e2219fea344c38c0566a0cf0a4200d2b409
+
+Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe), at most 5 of the V4 liquidation
+transactions of result 314 leave nonzero remaining debt in the target reserve below the documented dust threshold, because the documented rule
+forbids such remainders.
+
+Metric: /dust_rule_violation_count. Expected: at most 5 (range 0 to 5).
+Falsifier: dust_rule_violation_count is 6 or more of the priced liquidations, or debt cannot be read and priced at a pinned block for more than
+half of the 243 liquidations (reported as an abstain count and the run counts as null).
+Limit: read-only eth_getLogs, eth_call at the landing block; remaining debt is read from the Spoke after the landing block, priced from the Spoke
+oracle at that block; the threshold is read from the Spoke or its documented constant at run time; the endpoint comes from the Chainstack platform
+API at run time, never printed or written.
