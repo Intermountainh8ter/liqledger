@@ -1036,3 +1036,14 @@ Falsifier: v4_liquidation_event_count equals 0 over the pinned range while spoke
 or spoke_all_log_count equals 0 (wrong address list).
 Limit: read-only eth_getLogs; the new --liveness flag fetches every log from the Spokes and counts the LiquidationCall topic0
 locally; endpoint from the Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T19:22:51Z 315-v4payment proposal:73027d11846f0511d27fe363b99c726a0a1ea7d0320b24075d71efb727a72b6a
+
+Hypothesis: among distinct Aave V4 liquidation transactions in Ethereum blocks 24500000 to 26209999 (address-book commit
+967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe), the share paying exactly zero priority fee (effectiveGasPrice equal to the block base fee)
+lies between 0.40 and 0.65, the same band as the Aave V3, Spark and Morpho Blue share of 0.517 in results/summary.json.
+
+Metric: /v4_zero_priority_fee_share. Expected: within 0.40 to 0.65.
+Falsifier: a share below 0.40 or above 0.65 over the distinct V4 liquidation transactions.
+Limit: read-only eth_getLogs, eth_getTransactionReceipt and eth_getBlockByNumber; visible priority fee is a lower bound on the
+builder payment (coinbase transfers not counted); endpoint from the Chainstack platform API at run time, never printed or written.

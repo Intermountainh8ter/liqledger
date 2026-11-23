@@ -1,0 +1,35 @@
+{
+  "address_book_commit": "967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe",
+  "blocks": 1710000,
+  "first_block": 24500000,
+  "last_block": 26209999,
+  "priority_fee_eth_max": 0.5175343105636383,
+  "priority_fee_eth_median": 0.0,
+  "priority_fee_eth_p90": 0.000330802467805596,
+  "provenance": {
+    "command": "v4payment --chainstack-network ethereum --start 24500000 --blocks 1710000 --address-book-commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe --out results/315-v4payment.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 24500000 to 26209999 (logs, receipts, block headers)"
+      },
+      {
+        "license": "MIT (bgd-labs aave-address-book)",
+        "url": "https://raw.githubusercontent.com/bgd-labs/aave-address-book/967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe/src/AaveV4Ethereum.sol"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-23T19:23:19Z",
+    "wall_s": 24.224113766
+  },
+  "spoke_count": 14,
+  "v4_liquidation_event_count": 252,
+  "v4_liquidation_tx_count": 243,
+  "v4_zero_priority_fee_share": 0.7119341563786008,
+  "wilson_high": 0.765227370607383,
+  "wilson_low": 0.6520442724219929,
+  "zero_priority_txs": 173
+}

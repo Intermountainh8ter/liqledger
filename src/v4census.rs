@@ -56,7 +56,7 @@ pub fn parse_spokes(src: &str) -> Vec<(String, String)> {
     out
 }
 
-fn fetch_source(commit: &str) -> anyhow::Result<String> {
+pub(crate) fn fetch_source(commit: &str) -> anyhow::Result<String> {
     let url = format!("https://raw.githubusercontent.com/bgd-labs/aave-address-book/{commit}/src/AaveV4Ethereum.sol");
     let out = std::process::Command::new("curl")
         .args(["-sS", "-f", "-A", "liqledger/0.1 curl", &url])

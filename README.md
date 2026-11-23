@@ -356,3 +356,7 @@ Source: `results/313-v4census.json`. Over Ethereum blocks 26160000 to 26209999, 
 ### v4census-wide: Aave V4 LiquidationCall census with a liveness control
 
 Source: `results/314-v4census-wide.json`, blocks 24500000 to 26209999 (1710000 blocks), 14 Spokes. 252 LiquidationCall logs in 243 transactions from 47 distinct liquidators; 137366 logs of any topic from the same Spokes. Result 313 (0 logs in 50000 blocks) used an event named `V4LiquidationCall`, whose topic hash differs from the on-chain `LiquidationCall`; the event is now declared under its on-chain name.
+
+### Aave V4 builder payment (iteration 315, null on the pre-registered band)
+
+Source: `results/315-v4payment.json`, blocks 24500000 to 26209999. 243 distinct V4 liquidation transactions (252 events); 173 paid exactly zero priority fee, share 0.712 (Wilson 95% interval 0.652 to 0.765), outside the pre-registered band of 0.40 to 0.65. Visible priority fee is a lower bound on the builder payment (coinbase transfers are not counted).
