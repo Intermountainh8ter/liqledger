@@ -1099,3 +1099,17 @@ Limit: read-only eth_getLogs, eth_getTransactionReceipt, eth_getTransactionByHas
 parent block state ignores earlier same-block transactions by construction; a transaction is compared by the ordered list of
 debtAmountRestored values in its V4 LiquidationCall logs; failed replays are counted separately and excluded from the denominator;
 the endpoint comes from the Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T19:55:20Z 321-v4replayfail proposal:1c9cd08f7e82f662a9f2b8b7d9fd93e6cf2b95ede4abc358df31b10024315891
+
+Hypothesis: among the failed V4 replays in blocks 24500000 to 26209999 (address-book commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe), the share
+classified as an execution revert (the position is not yet liquidatable at the parent block state, because an earlier transaction in the same
+block created the opportunity) is at least 0.50, and the total failed count reproduces result 320 at 157.
+
+Metric: /revert_share_of_failed. Expected: at least 0.50 and failed_replay_count equal to 157 (range 0.5 to 1.0).
+Falsifier: the Wilson 95% upper bound of revert_share_of_failed is below 0.50, or failed_replay_count differs from 157, or the error field cannot
+be classified for more than half of the failures (reported as such).
+Limit: read-only eth_getLogs, eth_getTransactionByHash and debug_traceCall at the parent block; classes are by substring of the node's error
+message (revert, state-unavailable, unsupported-method, other); the revert class says the replay reverted, and the same-block-cause reading is an
+interpretation not tested here; error text is not written to the results; the endpoint comes from the Chainstack platform API at run time,
+never printed or written.

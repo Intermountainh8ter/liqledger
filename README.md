@@ -372,3 +372,7 @@ Source: `results/319-v4updategap.json`, blocks 24500000 to 26209999, 243 V4 liqu
 ### v4reexec: local re-execution of V4 liquidations (result 320)
 
 Source: `results/320-v4reexec.json`, blocks 24500000 to 26209999. Each of 243 distinct V4 liquidation transactions was replayed with debug_traceCall at the parent block state (earlier same-block transactions not applied); 86 replayed successfully and 157 did not replay. Among the 86, the ordered debtAmountRestored values differed from the landed events in 0.698 (Wilson 95% [0.594, 0.785]; 60 transactions). By block index: 0.429 at index 0 (3 of 7) and 0.722 above index 0 (57 of 79). The replayed and landed LiquidationCall log counts were equal in every replayed transaction. Limit: the 157 failed replays are excluded, and the index-zero group is small.
+
+### v4replayfail: why V4 replays failed
+
+Source: `results/321-v4replayfail.json`, blocks 24500000 to 26209999. Of 157 failed debug_traceCall replays, 153 were classified as reverts (revert share of failed 0.975), 0 as state-unavailable, 0 as unsupported-method and 4 as other. 86 replays succeeded. The class comes from substring matching on the node's error message; why each replay reverted is not tested here.
