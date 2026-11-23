@@ -1242,3 +1242,11 @@ Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c87
 Metric: /above_max_explained_by_landing_block_tx_count. Expected: at least 1 of 2 (range 1 to 2).
 Falsifier: an above_max_explained_by_landing_block_tx_count equal to 0 of the 2 above-max transactions, or an above-max transaction set of a size other than 2 under the N-1 read.
 Limit: read-only eth_getLogs and eth_call at blocks N-1 and N; the endpoint comes from the Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T21:52:57Z 340-v4bonuschg proposal:70808b3d88c3466472299ceab9c7274bccc558faddeef0a6afce8c7b2f42a693
+
+Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe), the configured maxLiquidationBonus read at the landing block N differs from the one read at N-1 for at least 2 of the 243 V4 liquidation transactions, covering the 2 above-max cases of result 339.
+
+Metric: /config_changed_between_n_minus_1_and_landing_tx_count. Expected: at least 2 of 243 (range 2 to 243).
+Falsifier: a config_changed_between_n_minus_1_and_landing_tx_count below 2 of 243, or an unreadable count above 24.
+Limit: read-only eth_getLogs and eth_call at blocks N-1 and N; the endpoint comes from the Chainstack platform API at run time, never printed or written.

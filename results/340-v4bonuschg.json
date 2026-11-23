@@ -1,0 +1,30 @@
+{
+  "address_book_commit": "967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe",
+  "blocks": 1710000,
+  "changed_details": [],
+  "config_changed_between_n_minus_1_and_landing_tx_count": 0,
+  "first_block": 24500000,
+  "last_block": 26209999,
+  "provenance": {
+    "command": "v4bonuschg --chainstack-network ethereum --start 24500000 --blocks 1710000 --address-book-commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe --seed 42 --out results/340-v4bonuschg.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 24500000 to 26209999 (logs, eth_call at blocks N-1 and N)"
+      },
+      {
+        "license": "MIT (bgd-labs aave-address-book)",
+        "url": "https://raw.githubusercontent.com/bgd-labs/aave-address-book/967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe/src/AaveV4Ethereum.sol"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      42
+    ],
+    "started_at": "2026-11-23T21:53:31Z",
+    "wall_s": 34.528501773
+  },
+  "spoke_count": 14,
+  "unreadable_tx_count": 0,
+  "v4_liquidation_tx_count": 243
+}

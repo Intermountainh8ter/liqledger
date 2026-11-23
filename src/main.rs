@@ -76,6 +76,7 @@ mod v4bonusdebtrid;
 mod v4bonuscfg;
 mod v4bonuscfg32;
 mod v4bonusabove;
+mod v4bonuschg;
 mod v4bonuscmp;
 mod v4bonuspos;
 mod v4bonusdiag;
@@ -569,6 +570,21 @@ enum Cmd {
     },
     /// Read-only Aave V4 config check (uint32 key): dynamic and liquidation config getters at N-1 for transactions whose bonus call reverts.
     V4bonuscfg32 {
+        #[arg(long)]
+        chainstack_network: String,
+        #[arg(long)]
+        start: u64,
+        #[arg(long)]
+        blocks: u64,
+        #[arg(long)]
+        address_book_commit: String,
+        #[arg(long)]
+        seed: u64,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Read-only Aave V4 bonus config change between N-1 and the landing block N.
+    V4bonuschg {
         #[arg(long)]
         chainstack_network: String,
         #[arg(long)]
@@ -1880,6 +1896,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::V4bonuspos { chainstack_network, start, blocks, address_book_commit, seed, out } => v4bonuspos::v4bonuspos(chainstack_network, start, blocks, address_book_commit, seed, out).await,
         Cmd::V4bonuscfg { chainstack_network, start, blocks, address_book_commit, seed, out } => v4bonuscfg::v4bonuscfg(chainstack_network, start, blocks, address_book_commit, seed, out).await,
         Cmd::V4bonuscfg32 { chainstack_network, start, blocks, address_book_commit, seed, out } => v4bonuscfg32::v4bonuscfg32(chainstack_network, start, blocks, address_book_commit, seed, out).await,
+        Cmd::V4bonuschg { chainstack_network, start, blocks, address_book_commit, seed, out } => v4bonuschg::v4bonuschg(chainstack_network, start, blocks, address_book_commit, seed, out).await,
         Cmd::V4bonusabove { chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out } => v4bonusabove::v4bonusabove(chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out).await,
         Cmd::V4bonuscmp { chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out } => v4bonuscmp::v4bonuscmp(chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out).await,
         Cmd::V4bonusdebtrid { chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out } => v4bonusdebtrid::v4bonusdebtrid(chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out).await,
