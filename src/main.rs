@@ -72,6 +72,7 @@ mod v4oracle;
 mod v4oraclefee;
 mod v4reexec;
 mod v4bonuscollrid;
+mod v4bonusdebtrid;
 mod v4bonusdiag;
 mod v4bonuscurve;
 mod v4dustpre;
@@ -499,6 +500,23 @@ enum Cmd {
     },
     /// Read-only Aave V4 bonus diagnosis: per-spoke outcome of each failing Spoke bonus call.
     V4bonusdiag {
+        #[arg(long)]
+        chainstack_network: String,
+        #[arg(long)]
+        start: u64,
+        #[arg(long)]
+        blocks: u64,
+        #[arg(long)]
+        address_book_commit: String,
+        #[arg(long)]
+        tolerance_bps: u64,
+        #[arg(long)]
+        seed: u64,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Read-only Aave V4 bonus debt-id retry: re-issue failing Spoke bonus calls with the debt reserve id.
+    V4bonusdebtrid {
         #[arg(long)]
         chainstack_network: String,
         #[arg(long)]
@@ -1775,6 +1793,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::V4bonuscurve { chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out } => v4bonuscurve::v4bonuscurve(chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out).await,
         Cmd::V4bonuscollrid { chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out } => v4bonuscollrid::v4bonuscollrid(chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out).await,
         Cmd::V4bonusdiag { chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out } => v4bonusdiag::v4bonusdiag(chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out).await,
+        Cmd::V4bonusdebtrid { chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out } => v4bonusdebtrid::v4bonusdebtrid(chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out).await,
         Cmd::V4dustpre { chainstack_network, start, blocks, address_book_commit, seed, out } => v4dustpre::v4dustpre(chainstack_network, start, blocks, address_book_commit, seed, out).await,
         Cmd::V4reexecpred { chainstack_network, start, blocks, address_book_commit, seed, out } => v4reexecpred::v4reexecpred(chainstack_network, start, blocks, address_book_commit, seed, out).await,
         Cmd::V4reexec { chainstack_network, start, blocks, address_book_commit, seed, out } => v4reexec::v4reexec(chainstack_network, start, blocks, address_book_commit, seed, out).await,

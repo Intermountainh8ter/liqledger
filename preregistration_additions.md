@@ -1192,3 +1192,12 @@ error, so the abstentions come from the call itself and not from the node. Failu
 Metric: /bonus_call_revert_or_empty_count. Expected: at least 120 of 131 (range 120 to 131).
 Falsifier: a revert-or-empty count below 120, a timeout-or-transport count above 11, or an unreadable total different from 131.
 Limit: read-only eth_getLogs and eth_call at block N-1; the endpoint comes from the Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T20:53:27Z 332-v4bonusdebtrid proposal:c84b4c4837f36e0a31578b1a2763562b751dc9fec0c390b3099f308b5a2a36c6
+
+Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe), re-issuing the Spoke bonus call with the
+debt reserve id makes at least 100 of the 131 transactions unreadable in result 331 readable, so the collateral reserve id was the wrong argument for those spokes.
+
+Metric: /retry_readable_tx_count. Expected: rises from 0 to at least 100 of 131 (range 100 to 131).
+Falsifier: a retry_readable_tx_count below 100 of the 131 unreadable transactions in result 331.
+Limit: read-only eth_getLogs and eth_call at block N-1; the endpoint comes from the Chainstack platform API at run time, never printed or written.
