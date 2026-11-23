@@ -1226,3 +1226,11 @@ Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c87
 Metric: /dynamic_config_u32_answering_tx_count. Expected: rises from 0 (result 336) to at least 125 of 131 (range 125 to 131).
 Falsifier: a dynamic_config_u32_answering_tx_count below 125 of the 131 reverting transactions, or an unreadable (timeout or transport) count above 6.
 Limit: read-only eth_getLogs and eth_call at block N-1; the endpoint comes from the Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T21:22:35Z 338-v4bonuscmp proposal:8bc10fd0fe574ec6310b6b216267725e479fadb862c8dc8d284dba6a1731b558
+
+Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe), for at least 120 of the 131 V4 liquidation transactions whose Spoke bonus call reverts in result 332, the landed bonus in basis points does not exceed the configured maxLiquidationBonus read at N-1 (uint32-keyed dynamic config) by more than 100 bps, so the landed bonus is consistent with the configured cap.
+
+Metric: /landed_within_max_bonus_tx_count. Expected: at least 120 of 131 (range 120 to 131).
+Falsifier: a landed_within_max_bonus_tx_count below 120 of the 131 reverting transactions, or an unreadable count above 11.
+Limit: read-only eth_getLogs and eth_call at block N-1; the endpoint comes from the Chainstack platform API at run time, never printed or written.
