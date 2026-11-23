@@ -1218,3 +1218,11 @@ Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c87
 Metric: /dynamic_config_answering_tx_count. Expected: at least 125 of 131 (range 125 to 131).
 Falsifier: a dynamic_config_answering_tx_count below 125 of the 131 reverting transactions, or an unreadable (timeout or transport) count above 6.
 Limit: read-only eth_getLogs and eth_call at block N-1; the endpoint comes from the Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T21:17:06Z 337-v4bonuscfg32 proposal:c3d488e6c0eea1b6a9e4d5285e9929a88b3c5cf4abe2306c6198e14e1a28b0a7
+
+Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe), calling the dynamic-reserve-config getter with a uint32 dynamic config key read from the borrower's position at N-1 returns data for at least 125 of the 131 V4 liquidation transactions whose Spoke bonus call reverts in result 332, while the uint24 control still answers for 0, so the failure in result 336 was the selector width and not state.
+
+Metric: /dynamic_config_u32_answering_tx_count. Expected: rises from 0 (result 336) to at least 125 of 131 (range 125 to 131).
+Falsifier: a dynamic_config_u32_answering_tx_count below 125 of the 131 reverting transactions, or an unreadable (timeout or transport) count above 6.
+Limit: read-only eth_getLogs and eth_call at block N-1; the endpoint comes from the Chainstack platform API at run time, never printed or written.

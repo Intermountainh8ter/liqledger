@@ -74,6 +74,7 @@ mod v4reexec;
 mod v4bonuscollrid;
 mod v4bonusdebtrid;
 mod v4bonuscfg;
+mod v4bonuscfg32;
 mod v4bonuspos;
 mod v4bonusdiag;
 mod v4bonuscurve;
@@ -551,6 +552,21 @@ enum Cmd {
     },
     /// Read-only Aave V4 config check: dynamic and liquidation config getters at N-1 for transactions whose bonus call reverts.
     V4bonuscfg {
+        #[arg(long)]
+        chainstack_network: String,
+        #[arg(long)]
+        start: u64,
+        #[arg(long)]
+        blocks: u64,
+        #[arg(long)]
+        address_book_commit: String,
+        #[arg(long)]
+        seed: u64,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Read-only Aave V4 config check (uint32 key): dynamic and liquidation config getters at N-1 for transactions whose bonus call reverts.
+    V4bonuscfg32 {
         #[arg(long)]
         chainstack_network: String,
         #[arg(long)]
@@ -1827,6 +1843,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::V4bonusdiag { chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out } => v4bonusdiag::v4bonusdiag(chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out).await,
         Cmd::V4bonuspos { chainstack_network, start, blocks, address_book_commit, seed, out } => v4bonuspos::v4bonuspos(chainstack_network, start, blocks, address_book_commit, seed, out).await,
         Cmd::V4bonuscfg { chainstack_network, start, blocks, address_book_commit, seed, out } => v4bonuscfg::v4bonuscfg(chainstack_network, start, blocks, address_book_commit, seed, out).await,
+        Cmd::V4bonuscfg32 { chainstack_network, start, blocks, address_book_commit, seed, out } => v4bonuscfg32::v4bonuscfg32(chainstack_network, start, blocks, address_book_commit, seed, out).await,
         Cmd::V4bonusdebtrid { chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out } => v4bonusdebtrid::v4bonusdebtrid(chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out).await,
         Cmd::V4dustpre { chainstack_network, start, blocks, address_book_commit, seed, out } => v4dustpre::v4dustpre(chainstack_network, start, blocks, address_book_commit, seed, out).await,
         Cmd::V4reexecpred { chainstack_network, start, blocks, address_book_commit, seed, out } => v4reexecpred::v4reexecpred(chainstack_network, start, blocks, address_book_commit, seed, out).await,
