@@ -36,7 +36,7 @@ pub fn classify(msg: &str) -> FailClass {
 }
 
 /// One debug_traceCall; Ok(trace) on a clean result, Err(class) otherwise. Rate-limit answers are retried with back-off.
-async fn trace_once(p: &impl Provider, params: serde_json::Value) -> Result<serde_json::Value, FailClass> {
+pub async fn trace_once(p: &impl Provider, params: serde_json::Value) -> Result<serde_json::Value, FailClass> {
     let mut tries = 0u32;
     loop {
         match p.raw_request::<_, serde_json::Value>("debug_traceCall".into(), params.clone()).await {

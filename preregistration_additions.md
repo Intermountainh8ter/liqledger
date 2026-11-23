@@ -1113,3 +1113,16 @@ Limit: read-only eth_getLogs, eth_getTransactionByHash and debug_traceCall at th
 message (revert, state-unavailable, unsupported-method, other); the revert class says the replay reverted, and the same-block-cause reading is an
 interpretation not tested here; error text is not written to the results; the endpoint comes from the Chainstack platform API at run time,
 never printed or written.
+
+## 2026-11-23T20:00:30Z 322-v4revertflip proposal:f8a412cbe1dd5f97d21c9946a1a13191dd47f807a946c1c2151f2dda82e9f963
+
+Hypothesis: among the 153 V4 replays that revert at parent-block state in blocks 24500000 to 26209999 (result 321, address-book commit
+967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe), at least half no longer revert when replayed at the landed block with the earlier transactions
+of the same block applied (txIndex).
+
+Metric: /revert_flip_to_success_share. Expected: at least 0.50 (range 0.5 to 1.0), with the reverting count reproducing 153.
+Falsifier: the Wilson 95% upper bound of revert_flip_to_success_share is below 0.50, or the node cannot trace at a transaction index
+(reported as an abstain count).
+Limit: read-only eth_getLogs, eth_getTransactionByHash and debug_traceCall; the revert class is by substring of the node's error message as
+in result 321; a flip to success says the call no longer reverts, not that its output matches the landed event; the endpoint comes from the
+Chainstack platform API at run time, never printed or written.

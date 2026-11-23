@@ -376,3 +376,7 @@ Source: `results/320-v4reexec.json`, blocks 24500000 to 26209999. Each of 243 di
 ### v4replayfail: why V4 replays failed
 
 Source: `results/321-v4replayfail.json`, blocks 24500000 to 26209999. Of 157 failed debug_traceCall replays, 153 were classified as reverts (revert share of failed 0.975), 0 as state-unavailable, 0 as unsupported-method and 4 as other. 86 replays succeeded. The class comes from substring matching on the node's error message; why each replay reverted is not tested here.
+
+### v4revertflip: do parent-state reverts succeed with earlier same-block transactions applied
+
+Source: `results/322-v4revertflip.json`, blocks 24500000 to 26209999. Of 153 replays that revert at parent-block state, 148 no longer revert when replayed at the landed block with debug_traceCall's txIndex (flip share 0.967 [0.926, 0.986]); 5 still revert and 0 abstained. The pre-registered lower bound of 0.50 held. A flip means the call does not revert, not that its output matches the landed event.
