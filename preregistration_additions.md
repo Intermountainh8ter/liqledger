@@ -1250,3 +1250,11 @@ Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c87
 Metric: /config_changed_between_n_minus_1_and_landing_tx_count. Expected: at least 2 of 243 (range 2 to 243).
 Falsifier: a config_changed_between_n_minus_1_and_landing_tx_count below 2 of 243, or an unreadable count above 24.
 Limit: read-only eth_getLogs and eth_call at blocks N-1 and N; the endpoint comes from the Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T21:58:28Z 341-v4bonusprice proposal:dd3525506649dd4851d8e46baf822255fd61a65eb969d1153842095c9ce9fe70
+
+Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe), for at least 1 of the 2 above-max V4 liquidation transactions of result 339, the oracle price of the collateral or the debt reserve read at the landing block N differs from the one read at N-1, so a same-block price move rather than a config change explains the N-1 versus N discrepancy.
+
+Metric: /above_max_price_changed_tx_count. Expected: at least 1 of 2 (range 1 to 2).
+Falsifier: an above_max_price_changed_tx_count of 0 of the 2 above-max transactions, an above-max set of a size other than 2, or an unreadable count above 0.
+Limit: read-only eth_getLogs and eth_call at blocks N-1 and N; the endpoint comes from the Chainstack platform API at run time, never printed or written.
