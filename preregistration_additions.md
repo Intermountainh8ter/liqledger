@@ -1024,3 +1024,15 @@ ISpoke LiquidationCall log, so a V4 liquidation census is non-empty.
 Metric: /v4_liquidation_event_count. Expected: at least 1 (range 1 to 100000).
 Falsifier: v4_liquidation_event_count equals 0 over the pinned range, or the Spoke list cannot be read from the pinned commit (then spoke_count is 0 and the run reports it).
 Limit: read-only eth_getLogs; endpoint taken from the Chainstack platform API at run time and never printed or written.
+
+## 2026-11-23T19:13:30Z 314-v4census-wide proposal:dc33e396ba90d66266efe30daf1dc1e2476f960950a4178985553c2e89644cef
+
+Hypothesis: over Ethereum blocks 24500000 to 26209999, the Aave V4 Spokes listed in AaveV4EthereumSpokes at aave-address-book
+commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe emit at least one ISpoke LiquidationCall log, and the count of all logs from
+the same Spokes (any topic0) is above zero, so the zero in result 313 reflects a quiet window and not a wrong Spoke list.
+
+Metric: /v4_liquidation_event_count. Expected: at least 1 (range 1 to 100000), with /spoke_all_log_count at least 1.
+Falsifier: v4_liquidation_event_count equals 0 over the pinned range while spoke_all_log_count is above 0 (quiet or wrong topic),
+or spoke_all_log_count equals 0 (wrong address list).
+Limit: read-only eth_getLogs; the new --liveness flag fetches every log from the Spokes and counts the LiquidationCall topic0
+locally; endpoint from the Chainstack platform API at run time, never printed or written.

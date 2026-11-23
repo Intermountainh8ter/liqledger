@@ -1,0 +1,115 @@
+{
+  "address_book_commit": "967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe",
+  "blocks": 1710000,
+  "first_block": 24500000,
+  "last_block": 26209999,
+  "liveness": true,
+  "per_spoke": [
+    {
+      "events": 88,
+      "spoke": "BLUECHIP_SPOKE"
+    },
+    {
+      "events": 1,
+      "spoke": "ETHENA_CORRELATED_SPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "ETHENA_ECOSYSTEM_SPOKE"
+    },
+    {
+      "events": 12,
+      "spoke": "FOREX_SPOKE"
+    },
+    {
+      "events": 11,
+      "spoke": "GOLD_SPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "LOMBARD_BTC_SPOKE"
+    },
+    {
+      "events": 138,
+      "spoke": "MAIN_SPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "PAXG_GOLD_SPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "USDG_PENDLE_SPOKE"
+    },
+    {
+      "events": 2,
+      "spoke": "ETHERFI_ESPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "KELP_ESPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "LIDO_ESPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "PAXG_PAXOS_ESPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "USDG_MAPLE_ESPOKE"
+    }
+  ],
+  "provenance": {
+    "command": "v4census --chainstack-network ethereum --start 24500000 --blocks 1710000 --address-book-commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe --liveness --out results/314-v4census-wide.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 24500000 to 26209999 (logs)"
+      },
+      {
+        "license": "MIT (bgd-labs aave-address-book)",
+        "url": "https://raw.githubusercontent.com/bgd-labs/aave-address-book/967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe/src/AaveV4Ethereum.sol"
+      },
+      {
+        "license": "public source (Aave V4 repository)",
+        "url": "https://raw.githubusercontent.com/aave/aave-v4/main/src/spoke/interfaces/ISpoke.sol"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-23T19:16:48Z",
+    "wall_s": 67.933138697
+  },
+  "spoke_all_log_count": 137366,
+  "spoke_count": 14,
+  "spoke_other_topic0": [
+    "0x18a45d070f507b6387b78837652d7468e733927acc7f9a13d9cc308675735c08",
+    "0x2f658b440c35314f52658ea8a740e05b284cdc84dc9ae01e891f21b8933e7cad",
+    "0x413bea992b9956f4f10f6c819bf7a6c8ed5baa119a2901fe221ae03171d52277",
+    "0x4763df430bc5274807f8ab4ce0734e7898513638418d6eec0c5285ef85f7f51f",
+    "0x5790b5f096c9cfee6b98a4e2d4f54ff3fc4ca306df5bc2093d93a36496d917b8",
+    "0x6d87c7e547bc13244d61719fa011b6947b26036a16d69a607c1cf72a77d052bc",
+    "0x7e644d79422f17c01e4894b5f4f588d331ebfa28653d42ae832dc59e38c9798f",
+    "0x837314749a8459031ad895d39a13552d1627fddc93d64b404bab0ae5f0798da7",
+    "0x8e04e916c2b397f8ab1cf9a55e94728a44837b3751f72369339ad991d371edc4",
+    "0x9062eec1933c38394d82dc926d7ddcd777a5cd08e1ae6baa94e90047338d3459",
+    "0xb2d3221c3db1eb0d586556ae23399acdfe3e52ff0fcd184c19069c730f9ca2e9",
+    "0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b",
+    "0xc7f505b2f371ae2175ee4913f4499e1f2633a7b5936321eed1cdaeb6115181d2",
+    "0xd765a0263e8a360da8dd4fdb8c0dc5553adec12a96f29a462cdb45e5bea407dd",
+    "0xd986db228cb1fe8392c5f45ff5f2c639b7db6cbd9ca7d1fe70b2de90c2c8c961",
+    "0xe9495512a0eb05fe0cbdd52286bdeb54cb8e5a8d50e7e17d75f75903a98e2af8",
+    "0xef18174796a5d2f91d51dc5e907a4d7867bbd6e800f6225168e0453d581d0dcd",
+    "0xfcede5501ba87e3766118ae6ed360a87ee9b6570156ae9cac52d35ff0de0403b",
+    "0xfe7813e2866053d5c3938554e517b554fce6666a6561bed9eaa7419b29fa9b68"
+  ],
+  "spoke_other_topic0_count": 19,
+  "v4_distinct_liquidator_count": 47,
+  "v4_liquidation_event_count": 252,
+  "v4_liquidation_tx_count": 243
+}

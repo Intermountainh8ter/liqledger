@@ -14,7 +14,7 @@ use std::path::PathBuf;
 
 sol! {
     struct PremiumDelta { int256 sharesDelta; int256 offsetRayDelta; uint256 restoredPremiumRay; }
-    event V4LiquidationCall(
+    event LiquidationCall(
         uint256 indexed collateralReserveId,
         uint256 indexed debtReserveId,
         address indexed user,
@@ -78,20 +78,38 @@ pub fn tally(logs: &[Log], spokes: &[Address]) -> (u64, u64, u64, Vec<u64>) {
         if let Some(t) = l.transaction_hash {
             txs.insert(t);
         }
-        if let Ok(ev) = V4LiquidationCall::decode_log(&l.inner) {
+        if let Ok(ev) = LiquidationCall::decode_log(&l.inner) {
             liqs.insert(ev.data.liquidator);
         }
     }
     (logs.len() as u64, txs.len() as u64, liqs.len() as u64, per)
 }
 
-pub async fn v4census(network: String, start: u64, blocks: u64, commit: String, out: PathBuf) -> anyhow::Result<()> {
+/// All logs from the Spokes over [from, to], halving the span when the node refuses it.
+async fn all_logs_span(p: &impl alloy::providers::Provider, spokes: &[Address], from: u64, to: u64) -> anyhow::Result<Vec<Log>> {
+    let f = Filter::new().address(spokes.to_vec()).from_block(from).to_block(to);
+    match logs_retry(p, &f).await {
+        Ok(v) => Ok(v),
+        Err(e) if to > from => {
+            let _ = e;
+            let mid = from + (to - from) / 2;
+            let mut l = Box::pin(all_logs_span(p, spokes, from, mid)).await?;
+            l.extend(Box::pin(all_logs_span(p, spokes, mid + 1, to)).await?);
+            Ok(l)
+        }
+        Err(e) => Err(e),
+    }
+}
+
+pub async fn v4census(network: String, start: u64, blocks: u64, commit: String, liveness: bool, out: PathBuf) -> anyhow::Result<()> {
     let started = std::time::Instant::now();
     let started_at = chrono_now();
     anyhow::ensure!(blocks >= 1, "blocks must be at least 1");
     let last = start + blocks - 1;
     let found = parse_spokes(&fetch_source(&commit)?);
     let spokes: Vec<Address> = found.iter().filter_map(|(_, a)| a.parse().ok()).collect();
+    let mut all_count: u64 = 0;
+    let mut other_topics = BTreeSet::new();
     let (count, ntx, nliq, per) = if spokes.is_empty() {
         (0, 0, 0, vec![])
     } else {
@@ -101,8 +119,20 @@ pub async fn v4census(network: String, start: u64, blocks: u64, commit: String, 
         let mut a = start;
         while a <= last {
             let z = (a + 9_999).min(last);
-            let f = Filter::new().address(spokes.clone()).event_signature(V4LiquidationCall::SIGNATURE_HASH).from_block(a).to_block(z);
-            logs.extend(logs_retry(&p, &f).await?);
+            if liveness {
+                let got = all_logs_span(&p, &spokes, a, z).await?;
+                all_count += got.len() as u64;
+                for l in got {
+                    if l.topic0() == Some(&LiquidationCall::SIGNATURE_HASH) {
+                        logs.push(l);
+                    } else if let Some(t) = l.topic0() {
+                        other_topics.insert(format!("{t:#x}"));
+                    }
+                }
+            } else {
+                let f = Filter::new().address(spokes.clone()).event_signature(LiquidationCall::SIGNATURE_HASH).from_block(a).to_block(z);
+                logs.extend(logs_retry(&p, &f).await?);
+            }
             a = z + 1;
         }
         tally(&logs, &spokes)
@@ -113,13 +143,17 @@ pub async fn v4census(network: String, start: u64, blocks: u64, commit: String, 
         "v4_liquidation_tx_count": ntx,
         "v4_distinct_liquidator_count": nliq,
         "spoke_count": spokes.len(),
+        "liveness": liveness,
+        "spoke_all_log_count": all_count,
+        "spoke_other_topic0_count": other_topics.len(),
+        "spoke_other_topic0": other_topics.iter().take(20).collect::<Vec<_>>(),
         "per_spoke": per_spoke,
         "first_block": start, "last_block": last, "blocks": blocks,
         "address_book_commit": commit,
         "provenance": {
             "started_at": started_at,
             "seeds": [7],
-            "command": format!("v4census --chainstack-network {network} --start {start} --blocks {blocks} --address-book-commit {commit} --out {}", out.display()),
+            "command": format!("v4census --chainstack-network {network} --start {start} --blocks {blocks} --address-book-commit {commit}{} --out {}", if liveness { " --liveness" } else { "" }, out.display()),
             "hardware": format!("{} on {} logical cpus", std::env::consts::ARCH, std::thread::available_parallelism().map(|x| x.get()).unwrap_or(1)),
             "wall_s": started.elapsed().as_secs_f64(),
             "data_sources": [
@@ -152,5 +186,16 @@ mod tests {
     #[test]
     fn tally_empty() {
         assert_eq!(tally(&[], &[]), (0, 0, 0, vec![]));
+    }
+}
+
+#[cfg(test)]
+mod liveness_tests {
+    use super::*;
+
+    #[test]
+    fn signature_hash_is_stable_and_nonzero() {
+        assert_ne!(LiquidationCall::SIGNATURE_HASH, alloy::primitives::B256::ZERO);
+        assert!(LiquidationCall::SIGNATURE.starts_with("LiquidationCall("));
     }
 }

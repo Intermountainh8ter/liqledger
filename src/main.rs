@@ -386,6 +386,8 @@ enum Cmd {
         #[arg(long)]
         address_book_commit: String,
         #[arg(long)]
+        liveness: bool,
+        #[arg(long)]
         out: PathBuf,
     },
     /// Read-only Ethereum log study: share of Aave liquidation transactions directly after an oracle update transaction.
@@ -1551,7 +1553,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Mainoraclesizecb { chainstack_network, start, blocks, out } => mainoraclesizecb::mainoraclesizecb(chainstack_network, start, blocks, out).await,
         Cmd::Mainoracleimmediatesize { chainstack_network, start, blocks, out } => mainoracleimmediatesize::mainoracleimmediatesize(chainstack_network, start, blocks, out).await,
         Cmd::Mainoracleimmediatesplit { chainstack_network, start, blocks, out } => mainoracleimmediatesplit::mainoracleimmediatesplit(chainstack_network, start, blocks, out).await,
-        Cmd::V4census { chainstack_network, start, blocks, address_book_commit, out } => v4census::v4census(chainstack_network, start, blocks, address_book_commit, out).await,
+        Cmd::V4census { chainstack_network, start, blocks, address_book_commit, liveness, out } => v4census::v4census(chainstack_network, start, blocks, address_book_commit, liveness, out).await,
         Cmd::Mainoracleimmediate { chainstack_network, start, blocks, out } => mainoracleimmediate::mainoracleimmediate(chainstack_network, start, blocks, out).await,
         Cmd::Denimoracle { rpc_env, start, blocks, out } => denimoracle::denimoracle(rpc_env, start, blocks, out).await,
         Cmd::Denimempty { rpc_env, post_start, pre_end, window, out } => denimempty::denimempty(rpc_env, post_start, pre_end, window, out).await,

@@ -352,3 +352,7 @@ Source: `results/280-tracereplay-predecessors.json`, blocks 23549000 to 23549999
 ### v4census: Aave V4 LiquidationCall census (null result)
 
 Source: `results/313-v4census.json`. Over Ethereum blocks 26160000 to 26209999, the 14 Spokes (`/spoke_count`) listed in the bgd-labs address book at the pinned commit emitted 0 `LiquidationCall` logs (`/v4_liquidation_event_count`). The pre-registered falsifier (count equals 0) holds, so there is no V4 liquidation to study in this window. Oracle, treasury and tokenization constants are excluded by name; no addresses are written.
+
+### v4census-wide: Aave V4 LiquidationCall census with a liveness control
+
+Source: `results/314-v4census-wide.json`, blocks 24500000 to 26209999 (1710000 blocks), 14 Spokes. 252 LiquidationCall logs in 243 transactions from 47 distinct liquidators; 137366 logs of any topic from the same Spokes. Result 313 (0 logs in 50000 blocks) used an event named `V4LiquidationCall`, whose topic hash differs from the on-chain `LiquidationCall`; the event is now declared under its on-chain name.
