@@ -1059,3 +1059,14 @@ Metric: /v4_same_block_oracle_share. Expected: within 0.40 to 0.80, with /enrich
 Falsifier: a share below 0.40 or above 0.80, or an enrichment below 1.5, over the distinct V4 liquidation blocks.
 Limit: read-only eth_getLogs; baseline blocks are drawn with seed 42 from the range excluding liquidation blocks; any-feed adjacency,
 not the position's own feed; endpoint from the Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T19:35:39Z 318-v4oraclefee proposal:a401c5a692b99ac7ad599a1717373d62167939f5b4aeaf33a3b9a29eccb5829c
+
+Hypothesis: among distinct Aave V4 liquidation transactions in Ethereum blocks 24500000 to 26209999 (address-book commit
+967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe) paying exactly zero priority fee, the share landing in a block with a Chainlink
+AnswerUpdated log is at least 0.55, and that share is not lower than the share among transactions paying a positive priority fee.
+
+Metric: /oracle_adjacent_share_zero_fee. Expected: at least 0.55 (range 0.55 to 0.9).
+Falsifier: oracle_adjacent_share_zero_fee below 0.55, or its Wilson upper bound below the paid-group share's Wilson lower bound.
+Limit: read-only eth_getLogs, eth_getTransactionReceipt and eth_getBlockByNumber; visible priority fee is a lower bound on the
+builder payment; any-feed adjacency; endpoint from the Chainstack platform API at run time, never printed or written.

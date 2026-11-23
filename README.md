@@ -360,3 +360,7 @@ Source: `results/314-v4census-wide.json`, blocks 24500000 to 26209999 (1710000 b
 ### Aave V4 builder payment (iteration 315, null on the pre-registered band)
 
 Source: `results/315-v4payment.json`, blocks 24500000 to 26209999. 243 distinct V4 liquidation transactions (252 events); 173 paid exactly zero priority fee, share 0.712 (Wilson 95% interval 0.652 to 0.765), outside the pre-registered band of 0.40 to 0.65. Visible priority fee is a lower bound on the builder payment (coinbase transfers are not counted).
+
+### v4oraclefee: oracle adjacency by priority fee (Aave V4)
+
+Source: `results/318-v4oraclefee.json`, blocks 24500000 to 26209999, 243 V4 liquidation transactions. Same-block Chainlink update (any feed) share among zero-priority-fee transactions: 0.613 [0.538, 0.682] (n=173); among paid transactions: 0.657 [0.540, 0.758] (n=70). The pre-registered threshold of at least 0.55 is met; the intervals overlap, so the data do not separate the two groups.

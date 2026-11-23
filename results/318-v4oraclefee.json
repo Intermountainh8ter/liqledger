@@ -1,0 +1,37 @@
+{
+  "address_book_commit": "967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe",
+  "blocks": 1710000,
+  "first_block": 24500000,
+  "last_block": 26209999,
+  "oracle_adjacent_share_paid": 0.6571428571428571,
+  "oracle_adjacent_share_zero_fee": 0.6127167630057804,
+  "paid_tx_count": 70,
+  "paid_tx_with_update": 46,
+  "paid_wilson_high": 0.7575417291710302,
+  "paid_wilson_low": 0.5403933101563949,
+  "provenance": {
+    "command": "v4oraclefee --chainstack-network ethereum --start 24500000 --blocks 1710000 --address-book-commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe --out results/318-v4oraclefee.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 24500000 to 26209999 (logs, receipts, block headers)"
+      },
+      {
+        "license": "MIT (bgd-labs aave-address-book)",
+        "url": "https://raw.githubusercontent.com/bgd-labs/aave-address-book/967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe/src/AaveV4Ethereum.sol"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-23T19:36:23Z",
+    "wall_s": 30.634451036
+  },
+  "spoke_count": 14,
+  "v4_liquidation_tx_count": 243,
+  "zero_fee_tx_count": 173,
+  "zero_fee_tx_with_update": 106,
+  "zero_fee_wilson_high": 0.68210720905401,
+  "zero_fee_wilson_low": 0.5384291353355454
+}
