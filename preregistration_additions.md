@@ -1161,3 +1161,14 @@ Metric: /subthreshold_with_abovethreshold_predebt_count. Expected: at least 10 (
 Falsifier: a count below 10, or an abstention that prevents classifying the sub-threshold transactions.
 Limit: read-only eth_getLogs and eth_call at blocks N-1 and N; debt is priced from the Spoke oracle at the same block; the endpoint comes from the
 Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T20:32:30Z 328-v4bonuscurve100 proposal:0722750d127c42863ac62e0e74d329b82601816d9064ed3b8cf9f136efe92fa1
+
+Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe), at most 5 percent of priced V4 liquidation
+transactions have a landed bonus (seized collateral value over repaid debt value, minus one) differing from the Spoke's health-factor bonus by more
+than 100 basis points; every unpriced transaction is counted under the reason it could not be priced.
+
+Metric: /bonus_outside_100bps_count. Expected: at most 12 of 243 V4 liquidation transactions (range 0 to 12).
+Falsifier: a count above 12 among priced transactions, or a priced count below 200 (then the check is underpowered and the hypothesis is not supported).
+Limit: read-only eth_getLogs and eth_call at block N-1; values priced from the Spoke oracle at that block; the endpoint comes from the Chainstack
+platform API at run time, never printed or written.
