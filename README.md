@@ -388,3 +388,7 @@ Source: `results/323-v4reexecpred.json`, blocks 24500000 to 26209999. Each of 24
 ### v4dustrule: remaining debt after V4 liquidations (iteration 325)
 
 Source: `results/325-v4dustrule.json`, blocks 24500000 to 26209999. Of 243 V4 liquidation transactions, 243 were priced from the Spoke oracle at the landing block; 15 left nonzero debt valued below the documented 1000 USD dust threshold (hypothesis of at most 5: not supported), 86 left nonzero debt above it, and the rest left none.
+
+### v4dustpre: debt before landing for the sub-threshold remainders (iteration 326)
+
+Source: `results/326-v4dustpre.json`, blocks 24500000 to 26209999. Of the 15 V4 liquidation transactions that left nonzero debt valued below the documented 1000 USD dust threshold, 4 had a debt value at or above the threshold at the block before landing and 11 did not (hypothesis of at least 10: not supported). Unreadable pre-landing debt: 0. Limit: debt is read at block N-1, so same-block predecessors are not applied.

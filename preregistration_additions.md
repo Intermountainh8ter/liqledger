@@ -1150,3 +1150,14 @@ half of the 243 liquidations (reported as an abstain count and the run counts as
 Limit: read-only eth_getLogs, eth_call at the landing block; remaining debt is read from the Spoke after the landing block, priced from the Spoke
 oracle at that block; the threshold is read from the Spoke or its documented constant at run time; the endpoint comes from the Chainstack platform
 API at run time, never printed or written.
+
+## 2026-11-23T20:20:56Z 326-v4dustpre proposal:19aa70ba37d51eb68318a6301e0d3de85f0d647c80b11ebc446ed73757826049
+
+Hypothesis: of the V4 liquidation transactions of result 325 that leave nonzero debt valued below the documented 1000 USD threshold (15 in result 325),
+at least 10 had a debt value at or above 1000 USD at the block before landing, on blocks 24500000 to 26209999 (address-book commit
+967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe), so the rule does not explain them by pre-existing dust.
+
+Metric: /subthreshold_with_abovethreshold_predebt_count. Expected: at least 10 (range 10 to 15).
+Falsifier: a count below 10, or an abstention that prevents classifying the sub-threshold transactions.
+Limit: read-only eth_getLogs and eth_call at blocks N-1 and N; debt is priced from the Spoke oracle at the same block; the endpoint comes from the
+Chainstack platform API at run time, never printed or written.
