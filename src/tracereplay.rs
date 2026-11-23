@@ -11,7 +11,7 @@ use alloy::sol_types::SolEvent;
 use std::path::PathBuf;
 
 
-async fn raw(p: &impl Provider, method: &'static str, params: serde_json::Value) -> anyhow::Result<serde_json::Value> {
+pub(crate) async fn raw(p: &impl Provider, method: &'static str, params: serde_json::Value) -> anyhow::Result<serde_json::Value> {
     let mut tries = 0;
     loop {
         match p.raw_request::<_, serde_json::Value>(method.into(), params.clone()).await {

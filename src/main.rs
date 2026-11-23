@@ -70,6 +70,7 @@ mod dustcheck;
 mod v4census;
 mod v4oracle;
 mod v4oraclefee;
+mod v4reexec;
 mod v4updategap;
 mod v4payment;
 mod follow;
@@ -421,6 +422,21 @@ enum Cmd {
         blocks: u64,
         #[arg(long)]
         address_book_commit: String,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Read-only Aave V4 re-execution: share of V4 liquidation transactions whose replayed debtAmountRestored differs from the landed event.
+    V4reexec {
+        #[arg(long)]
+        chainstack_network: String,
+        #[arg(long)]
+        start: u64,
+        #[arg(long)]
+        blocks: u64,
+        #[arg(long)]
+        address_book_commit: String,
+        #[arg(long)]
+        seed: u64,
         #[arg(long)]
         out: PathBuf,
     },
@@ -1619,6 +1635,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Mainoracleimmediatesplit { chainstack_network, start, blocks, out } => mainoracleimmediatesplit::mainoracleimmediatesplit(chainstack_network, start, blocks, out).await,
         Cmd::V4oracle { chainstack_network, start, blocks, address_book_commit, baseline_blocks, seed, out } => v4oracle::v4oracle(chainstack_network, start, blocks, address_book_commit, baseline_blocks, seed, out).await,
         Cmd::V4oraclefee { chainstack_network, start, blocks, address_book_commit, out } => v4oraclefee::v4oraclefee(chainstack_network, start, blocks, address_book_commit, out).await,
+        Cmd::V4reexec { chainstack_network, start, blocks, address_book_commit, seed, out } => v4reexec::v4reexec(chainstack_network, start, blocks, address_book_commit, seed, out).await,
         Cmd::V4updategap { chainstack_network, start, blocks, address_book_commit, k, seed, out } => v4updategap::v4updategap(chainstack_network, start, blocks, address_book_commit, k, seed, out).await,
         Cmd::V4payment { chainstack_network, start, blocks, address_book_commit, out } => v4payment::v4payment(chainstack_network, start, blocks, address_book_commit, out).await,
         Cmd::V4census { chainstack_network, start, blocks, address_book_commit, liveness, out } => v4census::v4census(chainstack_network, start, blocks, address_book_commit, liveness, out).await,

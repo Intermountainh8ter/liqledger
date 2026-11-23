@@ -368,3 +368,7 @@ Source: `results/318-v4oraclefee.json`, blocks 24500000 to 26209999, 243 V4 liqu
 ### v4updategap: distance after the last same-block oracle update (Aave V4)
 
 Source: `results/319-v4updategap.json`, blocks 24500000 to 26209999, 243 V4 liquidation transactions. Of 112 landing after a Chainlink update (any feed) in the same block, 81 sit within 3 transaction positions after the last one: share 0.723 [0.634, 0.798] (Wilson). The pre-registered lower bound of at least 0.50 is met. 131 liquidations have no preceding update in their block and are not in the denominator.
+
+### v4reexec: local re-execution of V4 liquidations (result 320)
+
+Source: `results/320-v4reexec.json`, blocks 24500000 to 26209999. Each of 243 distinct V4 liquidation transactions was replayed with debug_traceCall at the parent block state (earlier same-block transactions not applied); 86 replayed successfully and 157 did not replay. Among the 86, the ordered debtAmountRestored values differed from the landed events in 0.698 (Wilson 95% [0.594, 0.785]; 60 transactions). By block index: 0.429 at index 0 (3 of 7) and 0.722 above index 0 (57 of 79). The replayed and landed LiquidationCall log counts were equal in every replayed transaction. Limit: the 157 failed replays are excluded, and the index-zero group is small.

@@ -1084,3 +1084,18 @@ Limit: read-only eth_getLogs; the update log is any Chainlink feed, not the posi
 this any-feed AnswerUpdated log, as in results 316 and 318; the denominator excludes liquidations with no preceding update in their
 block (counted separately); the liquidation index is that of the first V4 LiquidationCall log per transaction; the endpoint comes
 from the Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T19:49:29Z 320-v4reexec proposal:e2ad6e5a8938d0622cefcb36fd1b514a402530f5ffa44e07290bf3eb2800e7ae
+
+Hypothesis: replaying the distinct Aave V4 liquidation transactions of results 314 and 319 (Ethereum blocks 24500000 to 26209999,
+address-book commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe) with debug_traceCall at the parent block state yields a different
+debtAmountRestored from the landed event in at least 0.20 of the transactions that replay successfully, and the mismatch share is
+higher for transactions at block index above 0 than at index 0.
+
+Metric: /reexec_amount_mismatch_share. Expected: at least 0.20 (range 0.20 to 1.0).
+Falsifier: the mismatch share among successfully replayed transactions is below 0.20 (Wilson upper bound below 0.20), or the share at
+index 0 is not lower than at index above 0.
+Limit: read-only eth_getLogs, eth_getTransactionReceipt, eth_getTransactionByHash, eth_getBlockByNumber and debug_traceCall; replay at the
+parent block state ignores earlier same-block transactions by construction; a transaction is compared by the ordered list of
+debtAmountRestored values in its V4 LiquidationCall logs; failed replays are counted separately and excluded from the denominator;
+the endpoint comes from the Chainstack platform API at run time, never printed or written.
