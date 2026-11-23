@@ -400,3 +400,7 @@ Source: `results/328-v4bonuscurve100.json`. Of 243 V4 liquidation transactions, 
 ### V4 bonus check with the collateral reserve id (iteration 329)
 
 Source: `results/329-v4bonuscollrid.json`. Querying the Spoke bonus with the collateral reserve id instead of the debt reserve id left 131 of 243 V4 liquidation transactions unpriced (reason: bonus unreadable, 131) and 112 priced, so the reserve id argument does not explain the abstentions; the hypothesis (at most 20 unpriced) is not supported. Among the 112 priced, 0 had a landed bonus more than 100 bps from the Spoke bonus (largest gap 17 bps).
+
+### V4 bonus call diagnosis (iteration 331)
+
+Source: `results/331-v4bonusdiag.json`. Of the 243 V4 liquidation transactions, 131 had a Spoke bonus call that failed, and all 131 failed with an on-chain revert (revert-or-empty count 131, timeout-or-transport count 0); 112 were readable. The hypothesis (at least 120 revert or empty) is supported: the abstentions come from the call itself, not from the node. Per-spoke counts are in the results file.

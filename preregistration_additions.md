@@ -1182,3 +1182,13 @@ unpriced as bonus unreadable.
 Metric: /abstain_tx_count. Expected: falls from 131 to at most 20 (range 0 to 20).
 Falsifier: an abstain_tx_count above 20, or a bonus-unreadable reason count above 20.
 Limit: read-only eth_getLogs and eth_call at block N-1; the endpoint comes from the Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T20:48:45Z 331-v4bonusdiag proposal:1d4fbcd613a26a17afc51daa032403250a3df8ca7b6cdd70c46b102aa8cdcd19
+
+Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe), at least 120 of the 131 V4 liquidation
+transactions left unreadable in result 329 fail the Spoke bonus call with an on-chain revert or an empty return rather than a timeout or transport
+error, so the abstentions come from the call itself and not from the node. Failures are also counted per spoke.
+
+Metric: /bonus_call_revert_or_empty_count. Expected: at least 120 of 131 (range 120 to 131).
+Falsifier: a revert-or-empty count below 120, a timeout-or-transport count above 11, or an unreadable total different from 131.
+Limit: read-only eth_getLogs and eth_call at block N-1; the endpoint comes from the Chainstack platform API at run time, never printed or written.
