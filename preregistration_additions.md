@@ -1126,3 +1126,14 @@ Falsifier: the Wilson 95% upper bound of revert_flip_to_success_share is below 0
 Limit: read-only eth_getLogs, eth_getTransactionByHash and debug_traceCall; the revert class is by substring of the node's error message as
 in result 321; a flip to success says the call no longer reverts, not that its output matches the landed event; the endpoint comes from the
 Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T20:05:26Z 323-v4reexecpred proposal:83d54dafcf5eccf3573bf83cb6ce9cc509e6f41066b88b517bc474276a757f54
+
+Hypothesis: with same-block predecessors applied (debug_traceCall at the landed block with txIndex), the share of replayed V4 liquidation
+transactions whose ordered debtAmountRestored values differ from the landed events is lower than the 0.6977 of result 320, with the upper
+Wilson bound of the new share below 0.6977, on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe).
+
+Metric: /reexec_amount_mismatch_share_with_predecessors. Expected: decrease to at most 0.40 (range 0.0 to 0.40).
+Falsifier: a mismatch share whose Wilson 95% interval contains 0.6977 or lies above it.
+Limit: read-only eth_getLogs, eth_getTransactionByHash and debug_traceCall; replays that fail are counted separately and excluded from
+the denominator; the endpoint comes from the Chainstack platform API at run time, never printed or written.

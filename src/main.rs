@@ -71,6 +71,7 @@ mod v4census;
 mod v4oracle;
 mod v4oraclefee;
 mod v4reexec;
+mod v4reexecpred;
 mod v4replayfail;
 mod v4revertflip;
 mod v4updategap;
@@ -429,6 +430,21 @@ enum Cmd {
     },
     /// Read-only Aave V4 re-execution: share of V4 liquidation transactions whose replayed debtAmountRestored differs from the landed event.
     V4reexec {
+        #[arg(long)]
+        chainstack_network: String,
+        #[arg(long)]
+        start: u64,
+        #[arg(long)]
+        blocks: u64,
+        #[arg(long)]
+        address_book_commit: String,
+        #[arg(long)]
+        seed: u64,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Read-only Aave V4 re-execution with same-block predecessors applied (txIndex): amount-mismatch share.
+    V4reexecpred {
         #[arg(long)]
         chainstack_network: String,
         #[arg(long)]
@@ -1669,6 +1685,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::V4oraclefee { chainstack_network, start, blocks, address_book_commit, out } => v4oraclefee::v4oraclefee(chainstack_network, start, blocks, address_book_commit, out).await,
         Cmd::V4replayfail { chainstack_network, start, blocks, address_book_commit, seed, out } => v4replayfail::v4replayfail(chainstack_network, start, blocks, address_book_commit, seed, out).await,
         Cmd::V4revertflip { chainstack_network, start, blocks, address_book_commit, seed, out } => v4revertflip::v4revertflip(chainstack_network, start, blocks, address_book_commit, seed, out).await,
+        Cmd::V4reexecpred { chainstack_network, start, blocks, address_book_commit, seed, out } => v4reexecpred::v4reexecpred(chainstack_network, start, blocks, address_book_commit, seed, out).await,
         Cmd::V4reexec { chainstack_network, start, blocks, address_book_commit, seed, out } => v4reexec::v4reexec(chainstack_network, start, blocks, address_book_commit, seed, out).await,
         Cmd::V4updategap { chainstack_network, start, blocks, address_book_commit, k, seed, out } => v4updategap::v4updategap(chainstack_network, start, blocks, address_book_commit, k, seed, out).await,
         Cmd::V4payment { chainstack_network, start, blocks, address_book_commit, out } => v4payment::v4payment(chainstack_network, start, blocks, address_book_commit, out).await,

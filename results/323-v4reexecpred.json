@@ -1,0 +1,40 @@
+{
+  "address_book_commit": "967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe",
+  "blocks": 1710000,
+  "failed_replay_count": 9,
+  "first_block": 24500000,
+  "last_block": 26209999,
+  "log_count_diff_count": 0,
+  "mismatch_count": 0,
+  "mismatch_count_index_nonzero": 0,
+  "mismatch_count_index_zero": 0,
+  "mismatch_share_index_nonzero": 0.0,
+  "mismatch_share_index_zero": 0.0,
+  "provenance": {
+    "command": "v4reexecpred --chainstack-network ethereum --start 24500000 --blocks 1710000 --address-book-commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe --seed 42 --out results/323-v4reexecpred.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 24500000 to 26209999 (logs, debug_traceCall at landed block with txIndex)"
+      },
+      {
+        "license": "MIT (bgd-labs aave-address-book)",
+        "url": "https://raw.githubusercontent.com/bgd-labs/aave-address-book/967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe/src/AaveV4Ethereum.sol"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      42
+    ],
+    "started_at": "2026-11-23T20:06:05Z",
+    "wall_s": 64.211965877
+  },
+  "reexec_amount_mismatch_share_with_predecessors": 0.0,
+  "replayed_n": 234,
+  "replayed_n_index_nonzero": 215,
+  "replayed_n_index_zero": 19,
+  "spoke_count": 14,
+  "v4_liquidation_tx_count": 243,
+  "wilson_high": 0.01615192632407451,
+  "wilson_low": 0.0
+}

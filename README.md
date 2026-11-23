@@ -380,3 +380,7 @@ Source: `results/321-v4replayfail.json`, blocks 24500000 to 26209999. Of 157 fai
 ### v4revertflip: do parent-state reverts succeed with earlier same-block transactions applied
 
 Source: `results/322-v4revertflip.json`, blocks 24500000 to 26209999. Of 153 replays that revert at parent-block state, 148 no longer revert when replayed at the landed block with debug_traceCall's txIndex (flip share 0.967 [0.926, 0.986]); 5 still revert and 0 abstained. The pre-registered lower bound of 0.50 held. A flip means the call does not revert, not that its output matches the landed event.
+
+### v4reexecpred: V4 re-execution with same-block predecessors applied (result 323)
+
+Source: `results/323-v4reexecpred.json`, blocks 24500000 to 26209999. Each of 243 distinct V4 liquidation transactions was replayed with debug_traceCall at the landed block with txIndex; 234 replayed and 9 did not. Among the 234, the ordered debtAmountRestored values differed from the landed events in 0.000 (Wilson 95% [0.000, 0.016]; 0 transactions), against 0.698 in result 320 without predecessors. The pre-registered upper bound of 0.40 held. Limit: the 9 failed replays are excluded.
