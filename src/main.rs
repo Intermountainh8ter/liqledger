@@ -77,6 +77,7 @@ mod v4bonuscfg;
 mod v4bonuscfg32;
 mod v4bonusabove;
 mod v4bonusprice;
+mod v4pricerate;
 mod v4bonuschg;
 mod v4bonuscmp;
 mod v4bonuspos;
@@ -618,6 +619,23 @@ enum Cmd {
     },
     /// Read-only Aave V4 oracle price at N-1 versus N for the above-max transactions.
     V4bonusprice {
+        #[arg(long)]
+        chainstack_network: String,
+        #[arg(long)]
+        start: u64,
+        #[arg(long)]
+        blocks: u64,
+        #[arg(long)]
+        address_book_commit: String,
+        #[arg(long)]
+        tolerance_bps: u64,
+        #[arg(long)]
+        seed: u64,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Read-only Aave V4 oracle price at N-1 versus N for all reverting transactions, split by within and above max.
+    V4pricerate {
         #[arg(long)]
         chainstack_network: String,
         #[arg(long)]
@@ -1917,6 +1935,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::V4bonuschg { chainstack_network, start, blocks, address_book_commit, seed, out } => v4bonuschg::v4bonuschg(chainstack_network, start, blocks, address_book_commit, seed, out).await,
         Cmd::V4bonusabove { chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out } => v4bonusabove::v4bonusabove(chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out).await,
         Cmd::V4bonusprice { chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out } => v4bonusprice::v4bonusprice(chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out).await,
+        Cmd::V4pricerate { chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out } => v4pricerate::v4pricerate(chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out).await,
         Cmd::V4bonuscmp { chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out } => v4bonuscmp::v4bonuscmp(chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out).await,
         Cmd::V4bonusdebtrid { chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out } => v4bonusdebtrid::v4bonusdebtrid(chainstack_network, start, blocks, address_book_commit, tolerance_bps, seed, out).await,
         Cmd::V4dustpre { chainstack_network, start, blocks, address_book_commit, seed, out } => v4dustpre::v4dustpre(chainstack_network, start, blocks, address_book_commit, seed, out).await,

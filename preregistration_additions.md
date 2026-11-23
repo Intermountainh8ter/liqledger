@@ -1258,3 +1258,11 @@ Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c87
 Metric: /above_max_price_changed_tx_count. Expected: at least 1 of 2 (range 1 to 2).
 Falsifier: an above_max_price_changed_tx_count of 0 of the 2 above-max transactions, an above-max set of a size other than 2, or an unreadable count above 0.
 Limit: read-only eth_getLogs and eth_call at blocks N-1 and N; the endpoint comes from the Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T22:09:31Z 343-v4pricerate proposal:09afe746d260f51538c3878ca270d77ecc69c8eb38e1689768504560555a3b37
+
+Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe), the oracle price of the collateral or debt reserve differs between N-1 and N for at least 65 of the within-max reverting V4 liquidation transactions, so a changed price is common among the controls and the 2 of 2 of result 341 is not specific to the above-max cases.
+
+Metric: /within_max_price_changed_tx_count. Expected: at least 65 (range 65 to 131).
+Falsifier: a within_max_price_changed_tx_count below 65, or an unreadable count above 13.
+Limit: read-only eth_getLogs and eth_call at blocks N-1 and N; the endpoint comes from the Chainstack platform API at run time, never printed or written.
