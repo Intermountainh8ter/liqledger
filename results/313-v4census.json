@@ -1,0 +1,91 @@
+{
+  "address_book_commit": "967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe",
+  "blocks": 50000,
+  "first_block": 26160000,
+  "last_block": 26209999,
+  "per_spoke": [
+    {
+      "events": 0,
+      "spoke": "BLUECHIP_SPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "ETHENA_CORRELATED_SPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "ETHENA_ECOSYSTEM_SPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "FOREX_SPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "GOLD_SPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "LOMBARD_BTC_SPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "MAIN_SPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "PAXG_GOLD_SPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "USDG_PENDLE_SPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "ETHERFI_ESPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "KELP_ESPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "LIDO_ESPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "PAXG_PAXOS_ESPOKE"
+    },
+    {
+      "events": 0,
+      "spoke": "USDG_MAPLE_ESPOKE"
+    }
+  ],
+  "provenance": {
+    "command": "v4census --chainstack-network ethereum --start 26160000 --blocks 50000 --address-book-commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe --out results/313-v4census.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 26160000 to 26209999 (logs)"
+      },
+      {
+        "license": "MIT (bgd-labs aave-address-book)",
+        "url": "https://raw.githubusercontent.com/bgd-labs/aave-address-book/967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe/src/AaveV4Ethereum.sol"
+      },
+      {
+        "license": "public source (Aave V4 repository)",
+        "url": "https://raw.githubusercontent.com/aave/aave-v4/main/src/spoke/interfaces/ISpoke.sol"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      7
+    ],
+    "started_at": "2026-11-23T19:09:15Z",
+    "wall_s": 2.494699091
+  },
+  "spoke_count": 14,
+  "v4_distinct_liquidator_count": 0,
+  "v4_liquidation_event_count": 0,
+  "v4_liquidation_tx_count": 0
+}

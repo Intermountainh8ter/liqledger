@@ -1014,3 +1014,13 @@ index with traceCall reproduces the landed liquidation log count in at least 99 
 Metric: /exact_fail_count_txindex. Expected: at most 1 (range 0 to 1) with replayed_n at least 50.
 Falsifier: exact_fail_count_txindex of 2 or more with replayed_n of at least 50, or replayed_n below 50 (vacuous, not supportive).
 Limit: read-only; no code change; existing --summary-only flag.
+
+## 2026-11-23T19:08:30Z 313-v4census proposal:64ebe58fee2c149abfb5578e37de96a90459bda02331de7732d11db0a46184d9
+
+Hypothesis: over Ethereum blocks 26160000 to 26209999, the Aave V4 Spokes listed in AaveV4EthereumSpokes at aave-address-book
+commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe (oracle, treasury and tokenization constants excluded by name) emit at least one
+ISpoke LiquidationCall log, so a V4 liquidation census is non-empty.
+
+Metric: /v4_liquidation_event_count. Expected: at least 1 (range 1 to 100000).
+Falsifier: v4_liquidation_event_count equals 0 over the pinned range, or the Spoke list cannot be read from the pinned commit (then spoke_count is 0 and the run reports it).
+Limit: read-only eth_getLogs; endpoint taken from the Chainstack platform API at run time and never printed or written.

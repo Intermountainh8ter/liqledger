@@ -348,3 +348,7 @@ Source: `results/279-tracereplay-stress.json`, blocks 23549000 to 23549999 (510 
 ### Trace replay with same-block predecessors applied
 
 Source: `results/280-tracereplay-predecessors.json`, blocks 23549000 to 23549999, `debug_traceTransaction`. Of 50 replayed Aave V3 liquidation transactions, exact_fail_count_trace_transaction is 0 (exact_match_count 50); 48 of the 50 sat at a nonzero transaction index. The same window replayed with `debug_traceCall` at the parent block gave 43 divergences (`results/279-tracereplay-stress.json`).
+
+### v4census: Aave V4 LiquidationCall census (null result)
+
+Source: `results/313-v4census.json`. Over Ethereum blocks 26160000 to 26209999, the 14 Spokes (`/spoke_count`) listed in the bgd-labs address book at the pinned commit emitted 0 `LiquidationCall` logs (`/v4_liquidation_event_count`). The pre-registered falsifier (count equals 0) holds, so there is no V4 liquidation to study in this window. Oracle, treasury and tokenization constants are excluded by name; no addresses are written.
