@@ -1201,3 +1201,12 @@ debt reserve id makes at least 100 of the 131 transactions unreadable in result 
 Metric: /retry_readable_tx_count. Expected: rises from 0 to at least 100 of 131 (range 100 to 131).
 Falsifier: a retry_readable_tx_count below 100 of the 131 unreadable transactions in result 331.
 Limit: read-only eth_getLogs and eth_call at block N-1; the endpoint comes from the Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T20:58:10Z 333-v4bonuspos proposal:08aa9d2841a77825587ddb4063860f723547e396efa7ae65f4b138368f38fbcf
+
+Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe), at least 100 of the 131 V4 liquidation
+transactions whose Spoke bonus call reverts at N-1 in result 332 still show a non-zero borrower collateral position in the liquidated reserve at N-1, so the reverts are not explained by a position already closed.
+
+Metric: /position_nonzero_tx_count. Expected: at least 100 of 131 (range 100 to 131).
+Falsifier: a position_nonzero_tx_count below 100 of the 131 reverting transactions, or an unreadable position count above 31.
+Limit: read-only eth_getLogs and eth_call at block N-1; the endpoint comes from the Chainstack platform API at run time, never printed or written.
