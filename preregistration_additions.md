@@ -1210,3 +1210,11 @@ transactions whose Spoke bonus call reverts at N-1 in result 332 still show a no
 Metric: /position_nonzero_tx_count. Expected: at least 100 of 131 (range 100 to 131).
 Falsifier: a position_nonzero_tx_count below 100 of the 131 reverting transactions, or an unreadable position count above 31.
 Limit: read-only eth_getLogs and eth_call at block N-1; the endpoint comes from the Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T21:12:03Z 336-v4bonuscfg proposal:827d7c66ef11816c7aa845dd27362702e2d664f50cd4899fdafebaf28604c0b3
+
+Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe), when the dynamic-reserve-config getter is keyed by the dynamic config key read from the borrower's own position at N-1, it returns data for at least 125 of the 131 V4 liquidation transactions whose Spoke bonus call reverts in result 332. The liquidation-config getter is also counted. Both are counted per spoke.
+
+Metric: /dynamic_config_answering_tx_count. Expected: at least 125 of 131 (range 125 to 131).
+Falsifier: a dynamic_config_answering_tx_count below 125 of the 131 reverting transactions, or an unreadable (timeout or transport) count above 6.
+Limit: read-only eth_getLogs and eth_call at block N-1; the endpoint comes from the Chainstack platform API at run time, never printed or written.

@@ -1,0 +1,58 @@
+{
+  "address_book_commit": "967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe",
+  "blocks": 1710000,
+  "config_by_spoke": {
+    "0x58131e79531cab1d52301228d1f7b842f26b9649": {
+      "dynamic-not-answering": 1,
+      "liquidation-answering": 1
+    },
+    "0x65407b940966954b23dfa3caa5c0702bb42984dc": {
+      "dynamic-not-answering": 5,
+      "liquidation-answering": 5
+    },
+    "0x94e7a5dcbe816e498b89ab752661904e2f56c485": {
+      "dynamic-not-answering": 66,
+      "liquidation-answering": 66
+    },
+    "0x973a023a77420ba610f06b3858ad991df6d85a08": {
+      "dynamic-not-answering": 48,
+      "liquidation-answering": 48
+    },
+    "0xbf10bdfe177de0336afd7fccf80a904e15386219": {
+      "dynamic-not-answering": 1,
+      "liquidation-answering": 1
+    },
+    "0xd8b93635b8c6d0ff98cbe90b5988e3f2d1cd9da1": {
+      "dynamic-not-answering": 10,
+      "liquidation-answering": 10
+    }
+  },
+  "config_read": "getDynamicReserveConfig(collateral reserve id, key from getUserPosition) and getLiquidationConfig() at block N-1",
+  "dynamic_config_answering_tx_count": 0,
+  "first_block": 24500000,
+  "last_block": 26209999,
+  "liquidation_config_answering_tx_count": 131,
+  "provenance": {
+    "command": "v4bonuscfg --chainstack-network ethereum --start 24500000 --blocks 1710000 --address-book-commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe --seed 42 --out results/336-v4bonuscfg.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 24500000 to 26209999 (logs, eth_call at block N-1)"
+      },
+      {
+        "license": "MIT (bgd-labs aave-address-book)",
+        "url": "https://raw.githubusercontent.com/bgd-labs/aave-address-book/967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe/src/AaveV4Ethereum.sol"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      42
+    ],
+    "started_at": "2026-11-23T21:12:47Z",
+    "wall_s": 40.439491691
+  },
+  "reverting_tx_count": 131,
+  "spoke_count": 14,
+  "unreadable_tx_count": 0,
+  "v4_liquidation_tx_count": 243
+}
