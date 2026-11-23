@@ -1282,3 +1282,11 @@ Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c87
 Metric: /reverting_with_preceding_update_tx_count. Expected: at least 66 of 131 (range 66 to 131).
 Falsifier: a reverting_with_preceding_update_tx_count below 66, a reverting_tx_count other than 131, or an unreadable count above 13.
 Limit: read-only eth_getLogs and eth_call at block N-1; the endpoint comes from the Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T22:32:39Z 346-basedenim-later proposal:1bd35e39a82d25c27fccd3481970890c2ebe87d5e6d81c25382267cb03d0ed61
+
+Hypothesis: on Base mainnet blocks 53988127 to 53988426, at least 100 of the 300 blocks contain only deposit-type (0x7e) system transactions, so the system-only share of result 344 persists one day after its window.
+
+Metric: /first_300_blocks_system_only_count. Expected: at least 100 of 300 (range 100 to 300).
+Falsifier: a first_300_blocks_system_only_count below 100, or an unreadable block count above 0.
+Limit: read-only eth_getBlockByNumber on the Chainstack Base node; the endpoint comes from the Chainstack platform API at run time, never printed or written.

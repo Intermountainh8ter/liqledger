@@ -1,0 +1,26 @@
+{
+  "blocks_read": 300,
+  "blocks_requested": 300,
+  "distinct_timestamp_seconds": 60,
+  "first_300_blocks_system_only_count": 0,
+  "first_block": 53988127,
+  "first_block_sharing_timestamp_with_successor": 53988127,
+  "max_blocks_in_one_timestamp_second": 5,
+  "provenance": {
+    "command": "basedenim --chainstack-network base --start 53988127 --blocks 300 --seed 42 --out results/346-basedenim-later.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:base blocks 53988127 to 53988426 (full blocks with transactions)"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      42
+    ],
+    "started_at": "2026-11-23T22:32:39Z",
+    "wall_s": 10.540514486
+  },
+  "system_only_share": 0.0,
+  "unreadable_blocks": 0
+}
