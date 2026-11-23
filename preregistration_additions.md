@@ -1274,3 +1274,11 @@ Hypothesis: on Base mainnet blocks 53556127 to 53556426, at least 100 of the 300
 Metric: /first_300_blocks_system_only_count. Expected: at least 100 of 300 (range 100 to 300).
 Falsifier: a first_300_blocks_system_only_count below 100, a first block sharing its timestamp with its successor other than 53556127, or an unreadable block count above 0.
 Limit: read-only eth_getBlockByNumber on the Chainstack Base node; the endpoint comes from the Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T22:25:15Z 345-v4revertadj proposal:1fd9dab641d2fa7a5330124c9b6ee961171ecd9e0bd6446be1cc6057f0d75e02
+
+Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe), at least 66 of the 131 V4 liquidation transactions whose Spoke bonus call reverts at N-1 have a Chainlink AnswerUpdated log at a lower transaction index in the same block, so the N-1 versus N price change of result 343 coincides with an in-block oracle update ahead of the liquidation.
+
+Metric: /reverting_with_preceding_update_tx_count. Expected: at least 66 of 131 (range 66 to 131).
+Falsifier: a reverting_with_preceding_update_tx_count below 66, a reverting_tx_count other than 131, or an unreadable count above 13.
+Limit: read-only eth_getLogs and eth_call at block N-1; the endpoint comes from the Chainstack platform API at run time, never printed or written.

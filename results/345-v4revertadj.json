@@ -1,0 +1,35 @@
+{
+  "above_max_at_n_minus_1_tx_count": 2,
+  "above_max_with_preceding_update_tx_count": 1,
+  "address_book_commit": "967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe",
+  "blocks": 1710000,
+  "first_block": 24500000,
+  "last_block": 26209999,
+  "other_tx_count": 112,
+  "other_with_preceding_update_tx_count": 31,
+  "provenance": {
+    "command": "v4revertadj --chainstack-network ethereum --start 24500000 --blocks 1710000 --address-book-commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe --tolerance-bps 100 --seed 42 --out results/345-v4revertadj.json",
+    "data_sources": [
+      {
+        "license": "public chain data via the owner's Chainstack node",
+        "url": "chainstack:ethereum blocks 24500000 to 26209999 (logs, eth_call at block N-1)"
+      },
+      {
+        "license": "MIT (bgd-labs aave-address-book)",
+        "url": "https://raw.githubusercontent.com/bgd-labs/aave-address-book/967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe/src/AaveV4Ethereum.sol"
+      }
+    ],
+    "hardware": "x86_64 on 56 logical cpus",
+    "seeds": [
+      42
+    ],
+    "started_at": "2026-11-23T22:26:20Z",
+    "wall_s": 73.389808609
+  },
+  "reverting_tx_count": 131,
+  "reverting_with_preceding_update_tx_count": 81,
+  "spoke_count": 14,
+  "tolerance_bps": 100,
+  "unreadable_tx_count": 0,
+  "v4_liquidation_tx_count": 243
+}
