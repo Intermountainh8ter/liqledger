@@ -82,7 +82,7 @@ async fn read_val<P: alloy::providers::Provider>(p: &P, spoke: Address, rid: U25
     debt_value(amount, res.decimals, price, od)
 }
 
-async fn check_event<P: alloy::providers::Provider>(p: &P, ev: &Ev, tol: i128) -> Result<(i128, i128, bool), Reason> {
+async fn check_event<P: alloy::providers::Provider>(p: &P, ev: &Ev, tol: i128, coll_rid: bool) -> Result<(i128, i128, bool), Reason> {
     let (b, spoke, user, crid, drid, debt_amt, coll_amt) = *ev;
     let t = std::time::Duration::from_secs(30);
     let blk = BlockId::number(b - 1);
@@ -93,7 +93,7 @@ async fn check_event<P: alloy::providers::Provider>(p: &P, ev: &Ev, tol: i128) -
         .and_then(|r| r.ok())
         .ok_or(Reason::HealthFactorUnreadable)?
         .healthFactor;
-    let raw = tokio::time::timeout(t, sp.getLiquidationBonus(drid, user, hf).block(blk).call())
+    let raw = tokio::time::timeout(t, sp.getLiquidationBonus(if coll_rid { crid } else { drid }, user, hf).block(blk).call())
         .await
         .ok()
         .and_then(|r| r.ok())
@@ -106,6 +106,12 @@ async fn check_event<P: alloy::providers::Provider>(p: &P, ev: &Ev, tol: i128) -
 }
 
 pub async fn v4bonuscurve(network: String, start: u64, blocks: u64, commit: String, tolerance_bps: u64, seed: u64, out: PathBuf) -> anyhow::Result<()> {
+    run("v4bonuscurve", false, network, start, blocks, commit, tolerance_bps, seed, out).await
+}
+
+/// Shared scan; `coll_rid` selects the collateral reserve id (true) or the debt reserve id (false) as the bonus query argument.
+#[allow(clippy::too_many_arguments)]
+pub async fn run(name: &str, coll_rid: bool, network: String, start: u64, blocks: u64, commit: String, tolerance_bps: u64, seed: u64, out: PathBuf) -> anyhow::Result<()> {
     let started = std::time::Instant::now();
     let started_at = chrono_now();
     anyhow::ensure!(blocks >= 1 && start >= 2, "blocks must be at least 1 and start at least 2");
@@ -138,7 +144,7 @@ pub async fn v4bonuscurve(network: String, start: u64, blocks: u64, commit: Stri
         let mut tx_out = false;
         let mut fail: Option<Reason> = None;
         for ev in evs {
-            match check_event(&p, ev, tol).await {
+            match check_event(&p, ev, tol, coll_rid).await {
                 Ok((l, d, o)) => {
                     max_abs = max_abs.max((l - d).abs());
                     tx_out |= o;
@@ -168,6 +174,7 @@ pub async fn v4bonuscurve(network: String, start: u64, blocks: u64, commit: Stri
         "unpriced_by_reason": reasons,
         "max_abs_bonus_diff_bps_priced": max_abs,
         "tolerance_bps": tolerance_bps,
+        "bonus_reserve_id_argument": if coll_rid { "collateral" } else { "debt" },
         "v4_liquidation_tx_count": txs.len(),
         "spoke_count": spokes.len(),
         "first_block": start, "last_block": last, "blocks": blocks,
@@ -175,7 +182,7 @@ pub async fn v4bonuscurve(network: String, start: u64, blocks: u64, commit: Stri
         "provenance": {
             "started_at": started_at,
             "seeds": [seed],
-            "command": format!("v4bonuscurve --chainstack-network {network} --start {start} --blocks {blocks} --address-book-commit {commit} --tolerance-bps {tolerance_bps} --seed {seed} --out {}", out.display()),
+            "command": format!("{name} --chainstack-network {network} --start {start} --blocks {blocks} --address-book-commit {commit} --tolerance-bps {tolerance_bps} --seed {seed} --out {}", out.display()),
             "hardware": format!("{} on {} logical cpus", std::env::consts::ARCH, std::thread::available_parallelism().map(|x| x.get()).unwrap_or(1)),
             "wall_s": started.elapsed().as_secs_f64(),
             "data_sources": [

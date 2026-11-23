@@ -396,3 +396,7 @@ Source: `results/326-v4dustpre.json`, blocks 24500000 to 26209999. Of the 15 V4 
 ### V4 bonus check (iteration 328)
 
 Source: `results/328-v4bonuscurve100.json`. Of 243 V4 liquidation transactions, 112 could be priced and 131 could not (reason: bonus unreadable, 131). Among the priced, 65 had a landed bonus more than 100 bps from the Spoke's health-factor bonus (largest gap 794 bps). The hypothesis (at most 12 outside, at least 200 priced) is not supported: the priced count is below 200 and the outside count is above 12.
+
+### V4 bonus check with the collateral reserve id (iteration 329)
+
+Source: `results/329-v4bonuscollrid.json`. Querying the Spoke bonus with the collateral reserve id instead of the debt reserve id left 131 of 243 V4 liquidation transactions unpriced (reason: bonus unreadable, 131) and 112 priced, so the reserve id argument does not explain the abstentions; the hypothesis (at most 20 unpriced) is not supported. Among the 112 priced, 0 had a landed bonus more than 100 bps from the Spoke bonus (largest gap 17 bps).

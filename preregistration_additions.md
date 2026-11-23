@@ -1172,3 +1172,13 @@ Metric: /bonus_outside_100bps_count. Expected: at most 12 of 243 V4 liquidation 
 Falsifier: a count above 12 among priced transactions, or a priced count below 200 (then the check is underpowered and the hypothesis is not supported).
 Limit: read-only eth_getLogs and eth_call at block N-1; values priced from the Spoke oracle at that block; the endpoint comes from the Chainstack
 platform API at run time, never printed or written.
+
+## 2026-11-23T20:38:24Z 329-v4bonuscollrid proposal:68835baa31b414d17942cd024aa8b19d96109dfc274b35228b59425dbebaea0c
+
+Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c8728c2a3bcf34f6bd5b0ff9abe), querying the Spoke liquidation bonus with
+the collateral reserve id instead of the debt reserve id leaves at most 20 of the 243 V4 liquidation transactions unpriced, where result 328 left 131
+unpriced as bonus unreadable.
+
+Metric: /abstain_tx_count. Expected: falls from 131 to at most 20 (range 0 to 20).
+Falsifier: an abstain_tx_count above 20, or a bonus-unreadable reason count above 20.
+Limit: read-only eth_getLogs and eth_call at block N-1; the endpoint comes from the Chainstack platform API at run time, never printed or written.
