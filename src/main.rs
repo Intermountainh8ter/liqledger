@@ -68,6 +68,7 @@ mod attribcheck;
 mod fallbackcheck;
 mod dustcheck;
 mod v4census;
+mod v4oracle;
 mod v4payment;
 mod follow;
 mod price;
@@ -388,6 +389,23 @@ enum Cmd {
         address_book_commit: String,
         #[arg(long)]
         liveness: bool,
+        #[arg(long)]
+        out: PathBuf,
+    },
+    /// Read-only Aave V4 oracle adjacency: share of V4 liquidation blocks holding a Chainlink AnswerUpdated log, with a seeded baseline.
+    V4oracle {
+        #[arg(long)]
+        chainstack_network: String,
+        #[arg(long)]
+        start: u64,
+        #[arg(long)]
+        blocks: u64,
+        #[arg(long)]
+        address_book_commit: String,
+        #[arg(long)]
+        baseline_blocks: usize,
+        #[arg(long)]
+        seed: u64,
         #[arg(long)]
         out: PathBuf,
     },
@@ -1567,6 +1585,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::Mainoraclesizecb { chainstack_network, start, blocks, out } => mainoraclesizecb::mainoraclesizecb(chainstack_network, start, blocks, out).await,
         Cmd::Mainoracleimmediatesize { chainstack_network, start, blocks, out } => mainoracleimmediatesize::mainoracleimmediatesize(chainstack_network, start, blocks, out).await,
         Cmd::Mainoracleimmediatesplit { chainstack_network, start, blocks, out } => mainoracleimmediatesplit::mainoracleimmediatesplit(chainstack_network, start, blocks, out).await,
+        Cmd::V4oracle { chainstack_network, start, blocks, address_book_commit, baseline_blocks, seed, out } => v4oracle::v4oracle(chainstack_network, start, blocks, address_book_commit, baseline_blocks, seed, out).await,
         Cmd::V4payment { chainstack_network, start, blocks, address_book_commit, out } => v4payment::v4payment(chainstack_network, start, blocks, address_book_commit, out).await,
         Cmd::V4census { chainstack_network, start, blocks, address_book_commit, liveness, out } => v4census::v4census(chainstack_network, start, blocks, address_book_commit, liveness, out).await,
         Cmd::Mainoracleimmediate { chainstack_network, start, blocks, out } => mainoracleimmediate::mainoracleimmediate(chainstack_network, start, blocks, out).await,
