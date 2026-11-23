@@ -1290,3 +1290,11 @@ Hypothesis: on Base mainnet blocks 53988127 to 53988426, at least 100 of the 300
 Metric: /first_300_blocks_system_only_count. Expected: at least 100 of 300 (range 100 to 300).
 Falsifier: a first_300_blocks_system_only_count below 100, or an unreadable block count above 0.
 Limit: read-only eth_getBlockByNumber on the Chainstack Base node; the endpoint comes from the Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T22:37:00Z 347-basedenim-third proposal:6081d80aaa632d0351e9bc5fe93a45cb68fbc3d9d5ad656f27f504f13464fc4e
+
+Hypothesis: on Base mainnet blocks 54420127 to 54420426, fewer than 10 of the 300 blocks contain only deposit-type (0x7e) system transactions, so the near-zero system-only share of result 346 persists in a third window and the 146 of 300 of result 344 was confined to the first window.
+
+Metric: /first_300_blocks_system_only_count. Expected: below 10 of 300 (range 0 to 9).
+Falsifier: a first_300_blocks_system_only_count of 10 or more, or an unreadable block count above 0.
+Limit: read-only eth_getBlockByNumber on the Chainstack Base node; the endpoint comes from the Chainstack platform API at run time, never printed or written.
