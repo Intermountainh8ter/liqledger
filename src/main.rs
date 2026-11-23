@@ -24,6 +24,7 @@ mod stalestate4;
 mod stalestate5;
 mod reviewerdet;
 mod denimorder;
+mod basedenim;
 mod denimempty;
 mod denimoracle;
 mod mainoracleimmediate;
@@ -1021,6 +1022,19 @@ enum Cmd {
         #[arg(long)]
         out: PathBuf,
     },
+    /// Read-only Base study: blocks per timestamp second and system-only blocks after the Denim activation.
+    Basedenim {
+        #[arg(long)]
+        chainstack_network: String,
+        #[arg(long)]
+        start: u64,
+        #[arg(long)]
+        blocks: u64,
+        #[arg(long, default_value_t = 42)]
+        seed: u64,
+        #[arg(long)]
+        out: PathBuf,
+    },
     /// Read-only Base block study: share of blocks with no non-system transactions around a pinned boundary.
     Denimempty {
         #[arg(long)]
@@ -1946,6 +1960,7 @@ async fn main() -> anyhow::Result<()> {
         Cmd::V4census { chainstack_network, start, blocks, address_book_commit, liveness, out } => v4census::v4census(chainstack_network, start, blocks, address_book_commit, liveness, out).await,
         Cmd::Mainoracleimmediate { chainstack_network, start, blocks, out } => mainoracleimmediate::mainoracleimmediate(chainstack_network, start, blocks, out).await,
         Cmd::Denimoracle { rpc_env, start, blocks, out } => denimoracle::denimoracle(rpc_env, start, blocks, out).await,
+        Cmd::Basedenim { chainstack_network, start, blocks, seed, out } => basedenim::basedenim(chainstack_network, start, blocks, seed, out).await,
         Cmd::Denimempty { rpc_env, post_start, pre_end, window, out } => denimempty::denimempty(rpc_env, post_start, pre_end, window, out).await,
         Cmd::Denimfee { rpc_env, post_start, pre_end, window, out } => denimfee::denimfee(rpc_env, post_start, pre_end, window, out).await,
         Cmd::Denimorder { rpc_env, post_start, pre_end, window, out } => denimorder::denimorder(rpc_env, post_start, pre_end, window, out).await,

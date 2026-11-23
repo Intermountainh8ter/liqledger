@@ -1266,3 +1266,11 @@ Hypothesis: on blocks 24500000 to 26209999 (address-book commit 967c772c19c63c87
 Metric: /within_max_price_changed_tx_count. Expected: at least 65 (range 65 to 131).
 Falsifier: a within_max_price_changed_tx_count below 65, or an unreadable count above 13.
 Limit: read-only eth_getLogs and eth_call at blocks N-1 and N; the endpoint comes from the Chainstack platform API at run time, never printed or written.
+
+## 2026-11-23T22:20:22Z 344-basedenim proposal:82c7509aa5e879407780f74267f8a7899b401d875519da5447c41dca5e6a202b
+
+Hypothesis: on Base mainnet blocks 53556127 to 53556426, at least 100 of the 300 blocks contain only deposit-type (0x7e) system transactions, and block 53556127 is the first block whose timestamp equals that of its successor, so a full node confirms the single-outlet report of 146 of the first 300 blocks being system-only within a wide band.
+
+Metric: /first_300_blocks_system_only_count. Expected: at least 100 of 300 (range 100 to 300).
+Falsifier: a first_300_blocks_system_only_count below 100, a first block sharing its timestamp with its successor other than 53556127, or an unreadable block count above 0.
+Limit: read-only eth_getBlockByNumber on the Chainstack Base node; the endpoint comes from the Chainstack platform API at run time, never printed or written.
